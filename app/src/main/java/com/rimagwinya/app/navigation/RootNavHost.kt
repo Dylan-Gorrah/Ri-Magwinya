@@ -22,13 +22,14 @@ import androidx.navigation.navigation
 import com.rimagwinya.app.R
 import com.rimagwinya.app.core.designsystem.component.RoleTabBar
 import com.rimagwinya.app.core.designsystem.theme.RmTheme
+import com.rimagwinya.app.core.money.Money
 import com.rimagwinya.app.data.repository.AuthState
 import com.rimagwinya.app.domain.model.UserRole
 import com.rimagwinya.app.feature.auth.LoginScreen
 import com.rimagwinya.app.feature.auth.RegisterScreen
 import com.rimagwinya.app.feature.auth.SessionViewModel
 import com.rimagwinya.app.feature.auth.WelcomeScreen
-import com.rimagwinya.app.feature.menu.MenuSmokeScreen
+import com.rimagwinya.app.feature.menu.MenuScreen
 
 @Composable
 fun RootNavHost(
@@ -41,7 +42,8 @@ fun RootNavHost(
     // The role comes from the profile on the server, every time. Nothing the
     // phone chose is trusted — which is why the welcome screen's two cards
     // only pick which sign-in copy you see.
-    val role = (session as? AuthState.SignedIn)?.profile?.role
+    val profile = (session as? AuthState.SignedIn)?.profile
+    val role = profile?.role
     val signedIn = role != null
 
     val tabs = if (role == UserRole.Staff) staffTabs else studentTabs
@@ -93,7 +95,10 @@ fun RootNavHost(
                 startDestination = Route.AuthGraph,
             ) {
                 authGraph(navController)
-                studentGraph()
+                studentGraph(
+                    firstName = profile?.fullName?.substringBefore(' ').orEmpty(),
+                    balance = profile?.walletBalance ?: Money.ZERO,
+                )
                 staffGraph()
                 // Profile is shared by both roles, so it lives at the root
                 // rather than being declared twice — two graphs cannot own
@@ -135,10 +140,10 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 }
 
-/** Menu, cart, checkout, orders. Phases 4, 6 and 7. */
-private fun NavGraphBuilder.studentGraph() {
+/** Menu, cart, checkout, orders. Phases 6 and 7 fill in the rest. */
+private fun NavGraphBuilder.studentGraph(firstName: String, balance: Money) {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
-        composable<Route.Menu> { MenuSmokeScreen() }
+        composable<Route.Menu> { MenuScreen(fullName = firstName, balance = balance) }
         composable<Route.Cart> { PlaceholderScreen(R.string.title_cart, icon = R.drawable.ic_cart) }
         composable<Route.Checkout> { PlaceholderScreen(R.string.title_checkout, icon = R.drawable.ic_wallet) }
         composable<Route.Orders> { PlaceholderScreen(R.string.title_orders, icon = R.drawable.ic_clock) }

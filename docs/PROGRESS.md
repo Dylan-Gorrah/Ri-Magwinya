@@ -16,8 +16,8 @@ Start at `Ri-magwinya.md`.
 applied to the real project)
 **Phase 3 — Authentication · BLOCKED on Phase 2** (built and compiling, cannot
 be exercised until the database exists)
-**Phase 4 — Student menu · STARTED** (`PriceCalculator` done and tested; the
-menu screen and item sheet still to build)
+**Phase 4 — Student menu · BUILT, unverified** (everything written; needs a
+live database to be tried)
 
 Both blockers are the same two things: approve the Supabase MCP connector,
 and put the anon key in `local.properties`.
@@ -376,16 +376,44 @@ The same six orders are asserted twice, independently:
 | Tea, any options | R10.00 | R10.00 |
 | 4 Cokes | R64.00 | R64.00 |
 
+### Done: the cart
+
+`CartRepository`, in memory behind a `StateFlow<Cart>`. Phase 10 backs it
+with Room and the shape the screens see does not change.
+
+A line is keyed by the item **and** the selection, so "Vetkoek · 2 Polony"
+and "Vetkoek · Snoek" stay separate while the same build merges. Build items
+have no outer quantity — the steppers are the count — so `setQuantity` on one
+is ignored rather than creating a second way to say the same thing.
+
+**`CartRepositoryTest` — 10 tests.**
+
+### Done: the screens
+
+- **`MenuScreen`** — navy hero with greeting, wallet balance and bell;
+  search; category chips; "Today's menu" with a live pill; one grouped list
+  with a stock pill per row; "from R…" on variable-priced items; sold-out
+  rows dimmed and unopenable. Loading, empty, error and success all handled.
+- **`ItemSheetContent`** — the option engine on screen. One sheet drives
+  every item because the behaviour is data: base step, qty group,
+  single-select, or single-select that replaces the price. Nothing is
+  special-cased per item. The button carries the live total and reads
+  "Choose something first" while the unit price is zero.
+- **`MenuIcons`** maps `icon_key` to a drawable, so staff can add an item and
+  pick its icon without an app release.
+- `MenuSmokeScreen` from Phase 2 is deleted, replaced by the real screen.
+
 ### Still to build
 
-- The menu screen proper: navy hero, wallet balance, search, category chips,
-  stock pills, "from R…" pricing, active order card
-- The item sheet with the full option engine
-- `CartRepository` in memory
-- Realtime stock updates
+- **Realtime stock updates.** Left until the database is live, because
+  subscribing to a table that does not exist yet cannot be tested.
 
-These need a live database to be worth testing, so they wait on the same two
-blockers.
+### Verified
+
+- `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
+- `./gradlew testDebugUnitTest` — **58 tests, 0 failures**
+- Not run on the phone. The menu will show "Backend not configured" until
+  the keys are in `local.properties`.
 
 ---
 
