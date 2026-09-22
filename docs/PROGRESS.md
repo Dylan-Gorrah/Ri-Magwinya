@@ -26,6 +26,7 @@ account and make a staff user)
 **Phase 11 — Push notifications · BUILT, dormant** (waiting on Dylan's Firebase project)
 **Phase 12 — Google sign-in · BUILT, dormant** (waiting on Dylan's Google Cloud client id)
 **Phase 13 — Multi-language · DONE** (translations need a first-language review)
+**Phase 14 — Weather · DONE**
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -759,6 +760,28 @@ Same shape as Phase 11: it is all written, and it hides itself until
 are machine-assisted and will contain mistakes, the Sesotho more than the
 Afrikaans. Both files say so at the top. Tuckshop words were kept as people
 say them on campus ("snoepie", and "vetkoek" left alone in both).
+
+---
+
+## Phase 14 — Weather · DONE
+
+- **Open-Meteo** on its own Retrofit client: no Supabase key, no bearer
+  token, nothing about a student — only the tuckshop's coordinates.
+- **Cached in Room for 60 minutes.** A failed call falls back to the stale
+  copy; an empty cache returns null rather than an error. The menu never
+  waits for it — it is a separate call that only reorders the list.
+- **The rules from 9.4**: below 15°C **or** 50%+ rain puts hot items first;
+  27°C or more puts cold items first; otherwise the tuckshop's own order.
+  Rain beats heat, because the argument is standing outside in the wet.
+- **Menu strip**: "14°C · Rain · Hot food first today", and a banner at 50%+
+  rain telling students to order ahead.
+- **Staff sales screen**: tomorrow's range and sky with one useful line —
+  "Cold tomorrow. Check tea and coffee stock."
+- Each group keeps its own menu order when sorted, so the weather lifts a
+  group without scrambling the list.
+
+**`WeatherTest` — 13 tests**, including both thresholds from either side,
+the WMO mapping, and all four cache cases. 140 passing.
 
 ---
 

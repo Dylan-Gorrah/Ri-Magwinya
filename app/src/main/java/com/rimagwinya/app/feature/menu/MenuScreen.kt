@@ -78,7 +78,12 @@ fun MenuScreen(
     var notificationsOpen by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        MenuHero(fullName = fullName, balance = balance, onBell = { notificationsOpen = true })
+        MenuHero(
+            fullName = fullName,
+            balance = balance,
+            weather = state.weather,
+            onBell = { notificationsOpen = true },
+        )
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -87,6 +92,14 @@ fun MenuScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(Space.x16),
         ) {
+            state.weather?.takeIf { it.expectsRain }?.let {
+                item {
+                    Box(Modifier.padding(horizontal = Space.screen).padding(top = Space.x16)) {
+                        Banner(text = stringResource(R.string.weather_rain_banner), tone = BannerTone.Info)
+                    }
+                }
+            }
+
             state.activeOrder?.let { order ->
                 item {
                     Box(Modifier.padding(horizontal = Space.screen).padding(top = Space.x16)) {
@@ -229,7 +242,12 @@ fun MenuScreen(
 }
 
 @Composable
-private fun MenuHero(fullName: String, balance: Money, onBell: () -> Unit = {}) {
+private fun MenuHero(
+    fullName: String,
+    balance: Money,
+    weather: com.rimagwinya.app.domain.model.Weather? = null,
+    onBell: () -> Unit = {},
+) {
     val c = RmTheme.colors
     Column(
         Modifier
@@ -268,6 +286,21 @@ private fun MenuHero(fullName: String, balance: Money, onBell: () -> Unit = {}) 
                     modifier = Modifier.size(20.dp),
                 )
             }
+        }
+
+        // A slim strip, not a weather app: the temperature, the sky, and
+        // what it did to the order of the menu.
+        weather?.let {
+            Text(
+                stringResource(
+                    R.string.weather_strip,
+                    it.roundedC,
+                    stringResource(it.sky.labelRes()),
+                    stringResource(it.mood.menuHintRes()),
+                ),
+                style = RmTheme.type.caption,
+                color = Color.White.copy(alpha = 0.75f),
+            )
         }
     }
 }

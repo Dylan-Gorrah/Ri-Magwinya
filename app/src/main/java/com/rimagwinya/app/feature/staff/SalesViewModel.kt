@@ -20,6 +20,8 @@ import javax.inject.Inject
 data class SalesUiState(
     val day: LocalDate? = null,
     val summary: SalesSummary? = null,
+    /** Tomorrow's forecast, for the stock hint. Null if it did not load. */
+    val weather: com.rimagwinya.app.domain.model.Weather? = null,
     val loading: Boolean = true,
     val error: UiText? = null,
 )
@@ -28,6 +30,7 @@ data class SalesUiState(
 class SalesViewModel @Inject constructor(
     private val staff: StaffRepository,
     private val orders: OrderRepository,
+    private val weather: com.rimagwinya.app.data.repository.WeatherRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SalesUiState())
@@ -35,6 +38,9 @@ class SalesViewModel @Inject constructor(
 
     init {
         load()
+        viewModelScope.launch {
+            weather.weather()?.let { forecast -> _state.update { it.copy(weather = forecast) } }
+        }
         // Collected orders are what count, so refresh as the queue moves.
         viewModelScope.launch { orders.orderChanges().collect { load() } }
     }

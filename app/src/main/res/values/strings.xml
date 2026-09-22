@@ -353,6 +353,26 @@
     <string name="claim_saving">Saving…</string>
     <string name="claim_taken">That student number is already registered to another account. Check the number on your card.</string>
 
+    <!-- Weather -->
+    <string name="weather_strip">%1$d°C · %2$s · %3$s</string>
+    <string name="weather_hot_first">Hot food first today</string>
+    <string name="weather_cold_first">Cold drinks first today</string>
+    <string name="weather_normal">Today\'s menu as usual</string>
+    <string name="weather_rain_banner">Rain expected. Order ahead so you\'re not queueing outside.</string>
+    <string name="weather_sky_clear">Clear</string>
+    <string name="weather_sky_partly">Partly cloudy</string>
+    <string name="weather_sky_fog">Fog</string>
+    <string name="weather_sky_drizzle">Drizzle</string>
+    <string name="weather_sky_rain">Rain</string>
+    <string name="weather_sky_showers">Showers</string>
+    <string name="weather_sky_storm">Thunderstorm</string>
+    <string name="weather_tomorrow">Tomorrow</string>
+    <string name="weather_tomorrow_line">%1$d° to %2$d° · %3$s</string>
+    <string name="weather_hint_cold">Cold tomorrow. Check tea and coffee stock.</string>
+    <string name="weather_hint_hot">Hot tomorrow. Check cold drinks stock.</string>
+    <string name="weather_hint_rain">Rain tomorrow. Expect more pre-orders and fewer walk-ups.</string>
+    <string name="weather_hint_none">An ordinary day tomorrow. Stock as usual.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

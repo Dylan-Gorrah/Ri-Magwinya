@@ -10,6 +10,10 @@ import com.rimagwinya.app.core.network.messageRes
 import com.rimagwinya.app.data.repository.CartRepository
 import com.rimagwinya.app.data.repository.MenuRepository
 import com.rimagwinya.app.data.repository.OrderRepository
+import com.rimagwinya.app.data.repository.WeatherRepository
+import com.rimagwinya.app.domain.model.Weather
+import com.rimagwinya.app.domain.model.WeatherMood
+import com.rimagwinya.app.domain.model.sortedForWeather
 import com.rimagwinya.app.domain.model.Order
 import com.rimagwinya.app.domain.model.Cart
 import com.rimagwinya.app.domain.model.MenuCategory
@@ -45,10 +49,13 @@ data class MenuUiState(
     val openItem: MenuItem? = null,
     /** The student's live order, shown as a card above the menu. */
     val activeOrder: Order? = null,
+    /** Null until it loads, or for ever if the call fails. Never blocks. */
+    val weather: Weather? = null,
 ) {
-    /** Search and category applied. Sold-out items stay, dimmed. */
+    /** Search and category applied, in weather order. Sold-out stay, dimmed. */
     val visible: List<MenuItem>
         get() = items
+            .sortedForWeather(weather?.mood ?: WeatherMood.Neutral)
             .filter { item ->
                 category == CategoryFilter.All ||
                     item.category.name.equals(category.name, ignoreCase = true)
@@ -72,6 +79,7 @@ class MenuViewModel @Inject constructor(
     private val repository: MenuRepository,
     private val cartRepository: CartRepository,
     private val orders: OrderRepository,
+    private val weather: WeatherRepository,
 ) : ViewModel() {
 
     private val local = MutableStateFlow(MenuUiState())
@@ -82,9 +90,22 @@ class MenuViewModel @Inject constructor(
 
     init {
         load()
+        loadWeather()
         watchLive()
         if (AppConfig.isBackendConfigured) {
             viewModelScope.launch { orders.orderChanges().collect { loadActiveOrder() } }
+        }
+    }
+
+    /**
+     * The weather, which only reorders the menu. Deliberately its own call:
+     * a slow or broken forecast must never hold up the food.
+     */
+    private fun loadWeather() {
+        if (!AppConfig.isBackendConfigured) return
+        viewModelScope.launch {
+            val current = weather.weather() ?: return@launch
+            local.update { it.copy(weather = current) }
         }
     }
 

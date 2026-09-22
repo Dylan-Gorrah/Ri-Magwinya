@@ -36,6 +36,8 @@ import com.rimagwinya.app.core.designsystem.theme.RmTheme
 import com.rimagwinya.app.core.designsystem.theme.Space
 import com.rimagwinya.app.core.util.resolve
 import com.rimagwinya.app.domain.model.SalesSummary
+import com.rimagwinya.app.feature.menu.labelRes
+import com.rimagwinya.app.feature.menu.tomorrowHintRes
 import java.io.File
 import java.time.LocalDate
 
@@ -43,7 +45,6 @@ import java.time.LocalDate
 fun SalesScreen(
     modifier: Modifier = Modifier,
     viewModel: SalesViewModel = hiltViewModel(),
-    forecast: @Composable () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -61,7 +62,31 @@ fun SalesScreen(
                 .padding(bottom = Space.x32),
             verticalArrangement = Arrangement.spacedBy(Space.x20),
         ) {
-            forecast()
+            // Tomorrow, with the one thing staff can do about it.
+            state.weather?.let { weather ->
+                RmCard {
+                    Text(
+                        stringResource(R.string.weather_tomorrow),
+                        style = RmTheme.type.label,
+                        color = RmTheme.colors.text3,
+                    )
+                    Text(
+                        stringResource(
+                            R.string.weather_tomorrow_line,
+                            Math.round(weather.tomorrowMinC).toInt(),
+                            Math.round(weather.tomorrowMaxC).toInt(),
+                            stringResource(weather.tomorrowSky.labelRes()),
+                        ),
+                        style = RmTheme.type.bodyStrong,
+                        color = RmTheme.colors.text,
+                    )
+                    Text(
+                        stringResource(weather.tomorrowHintRes()),
+                        style = RmTheme.type.secondary,
+                        color = RmTheme.colors.text2,
+                    )
+                }
+            }
 
             val summary = state.summary
             when {

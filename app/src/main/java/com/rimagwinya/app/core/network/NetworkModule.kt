@@ -4,6 +4,7 @@ import com.rimagwinya.app.BuildConfig
 import com.rimagwinya.app.core.config.AppConfig
 import com.rimagwinya.app.data.remote.FunctionsApi
 import com.rimagwinya.app.data.remote.SupabaseApi
+import com.rimagwinya.app.data.remote.WeatherApi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -101,6 +102,25 @@ object NetworkModule {
     @Provides
     @Singleton
     fun functionsApi(retrofit: Retrofit): FunctionsApi = retrofit.create(FunctionsApi::class.java)
+
+    /**
+     * Open-Meteo gets its own client: no Supabase key, no bearer token, and
+     * nothing identifying a student — only the tuckshop's coordinates.
+     */
+    @Provides
+    @Singleton
+    fun weatherApi(errors: ErrorMappingInterceptor, json: Json): WeatherApi = Retrofit.Builder()
+        .baseUrl("https://api.open-meteo.com/")
+        .client(
+            OkHttpClient.Builder()
+                .addInterceptor(errors)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .build()
+        )
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .build()
+        .create(WeatherApi::class.java)
 }
 
 @Module
