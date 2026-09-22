@@ -26,3 +26,8 @@ app/google-services.json
 
 # Local test scratch
 supabase/tests/err.txt
+
+# Built apps. GitHub Actions builds these and attaches them to a Release;
+# committing one would bloat the repo and go stale immediately.
+*.apk
+*.aab

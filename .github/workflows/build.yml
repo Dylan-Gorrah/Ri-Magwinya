@@ -11,6 +11,8 @@ name: Build
 on:
   push:
     branches: [main]
+    # A tag like v1.0.0 also publishes the APK to Releases.
+    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -21,6 +23,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # Needed by the release step to attach the APK. Read-only otherwise.
+    permissions:
+      contents: write
 
     # Read by app/build.gradle.kts when local.properties is absent, which it
     # always is here — it is gitignored. Empty secrets are fine: the app
@@ -53,12 +59,41 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
 
+      # A name a person can recognise in their Downloads folder, rather than
+      # app-debug.apk. The version comes from build.gradle.kts, so it cannot
+      # drift from what the app reports about itself.
+      - name: Name the APK
+        id: apk
+        run: |
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
+          NAME="Ri-magwinya-v${VERSION}.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "$NAME"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "Built $NAME"
+
       - name: Upload the APK
         uses: actions/upload-artifact@v4
         with:
-          name: rimagwinya-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: Ri-magwinya-apk
+          path: ${{ steps.apk.outputs.name }}
           if-no-files-found: error
+
+      # Pushing a tag publishes the APK on the repo's Releases page, where
+      # anyone can download it without a GitHub account. Uses the token
+      # GitHub provides to every run, so there is no secret to set up.
+      - name: Publish to Releases
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.apk.outputs.name }}
+          generate_release_notes: true
+          body: |
+            Ri-magwinya, built by GitHub Actions from this tag.
+
+            **Installing it:** download the .apk on an Android phone, open
+            it, and allow installing from this source when asked. Android 7
+            (2016) and newer. It is signed with the standard debug key, so
+            it installs by sideloading rather than through the Play Store.
 
       - name: Upload test reports
         # Uploaded even when the tests fail — that is when they are wanted.
