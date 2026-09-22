@@ -1,6 +1,7 @@
 package com.rimagwinya.app.feature.menu
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,9 +75,10 @@ fun MenuScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     androidx.compose.runtime.LaunchedEffect(Unit) { viewModel.loadActiveOrder() }
+    var notificationsOpen by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
-        MenuHero(fullName = fullName, balance = balance)
+        MenuHero(fullName = fullName, balance = balance, onBell = { notificationsOpen = true })
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -202,6 +207,17 @@ fun MenuScreen(
         }
     }
 
+    if (notificationsOpen) {
+        RmBottomSheet(onDismiss = { notificationsOpen = false }) {
+            com.rimagwinya.app.feature.notifications.NotificationsSheetContent(
+                onOpenOrder = { id ->
+                    notificationsOpen = false
+                    onOpenOrder(id)
+                },
+            )
+        }
+    }
+
     state.openItem?.let { item ->
         RmBottomSheet(onDismiss = viewModel::closeSheet) {
             ItemSheetContent(
@@ -213,7 +229,7 @@ fun MenuScreen(
 }
 
 @Composable
-private fun MenuHero(fullName: String, balance: Money) {
+private fun MenuHero(fullName: String, balance: Money, onBell: () -> Unit = {}) {
     val c = RmTheme.colors
     Column(
         Modifier
@@ -241,7 +257,8 @@ private fun MenuHero(fullName: String, balance: Money) {
                 Modifier
                     .size(Space.touchTarget)
                     .clip(RoundedCornerShape(Radius.r12))
-                    .background(Color.White.copy(alpha = 0.10f)),
+                    .background(Color.White.copy(alpha = 0.10f))
+                    .clickable(onClick = onBell),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

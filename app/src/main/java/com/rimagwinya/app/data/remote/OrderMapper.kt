@@ -13,7 +13,7 @@ import java.time.LocalTime
 import java.time.OffsetDateTime
 
 /** Postgres timestamptz, e.g. "2026-09-22T18:56:17.12+00:00". */
-internal fun parseInstant(raw: String): Instant = OffsetDateTime.parse(raw).toInstant()
+fun parseInstant(raw: String): Instant = OffsetDateTime.parse(raw).toInstant()
 
 /** Postgres time, "09:40:00". */
 internal fun parseTime(raw: String): LocalTime = LocalTime.parse(raw)

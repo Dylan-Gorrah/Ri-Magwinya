@@ -8,6 +8,15 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+// The Google Services plugin fails the build when google-services.json is
+// missing, which would stop anyone building the app before Firebase is set
+// up (and would stop CI without the secret). Applied only when the file is
+// there; without it, push is simply off and everything else works.
+val hasFirebaseConfig = file("google-services.json").exists()
+if (hasFirebaseConfig) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+}
+
 android {
     namespace = "com.rimagwinya.app"
     compileSdk {
@@ -27,6 +36,9 @@ android {
         // Empty defaults so the project builds for anyone without them.
         buildConfigField("String", "SUPABASE_URL", "\"${localProperty("SUPABASE_URL")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProperty("SUPABASE_ANON_KEY")}\"")
+        // Push only works once Firebase is set up; the app checks this
+        // rather than crashing on a missing FirebaseApp.
+        buildConfigField("boolean", "PUSH_ENABLED", hasFirebaseConfig.toString())
     }
 
     buildTypes {
@@ -91,6 +103,10 @@ dependencies {
     implementation(libs.supabase.realtime)
     // supabase-kt runs on Ktor and needs an engine on the classpath.
     implementation(libs.ktor.client.okhttp)
+
+    // --- Push notifications (Phase 11) ---
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
 
     // --- Offline cache and sync (Phase 10) ---
     implementation(libs.androidx.room.runtime)

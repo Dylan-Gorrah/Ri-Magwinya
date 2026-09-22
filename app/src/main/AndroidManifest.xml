@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- The "You're offline" banner and the sync worker's network constraint. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Android 13+. Asked for in the app, with a reason, not at launch. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".RimagwinyaApp"
@@ -29,6 +31,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Pushes: the token, and messages arriving while the app is open. -->
+        <service
+            android:name=".notifications.RimagwinyaMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="orders" />
 
         <!-- WorkManager is configured by RimagwinyaApp (Hilt builds the
              workers), so its own startup initialiser is switched off. -->

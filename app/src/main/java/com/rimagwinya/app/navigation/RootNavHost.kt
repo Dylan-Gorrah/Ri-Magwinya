@@ -40,6 +40,7 @@ import com.rimagwinya.app.feature.auth.WelcomeScreen
 import com.rimagwinya.app.feature.cart.CartScreen
 import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
+import com.rimagwinya.app.feature.notifications.NotificationPermissionGate
 import com.rimagwinya.app.feature.offline.SyncViewModel
 import com.rimagwinya.app.feature.orders.OrderDetailScreen
 import com.rimagwinya.app.feature.orders.OrdersScreen
@@ -54,6 +55,8 @@ import com.rimagwinya.app.feature.staff.TopUpScreen
 @Composable
 fun RootNavHost(
     biometricUnlock: Boolean = false,
+    deepLinkOrderId: String? = null,
+    onDeepLinkHandled: () -> Unit = {},
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     sessionViewModel: SessionViewModel = hiltViewModel(),
@@ -109,6 +112,22 @@ fun RootNavHost(
     }
 
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
+
+    // A tapped notification opens that order, once the graph is in place.
+    LaunchedEffect(deepLinkOrderId, signedIn) {
+        val id = deepLinkOrderId
+        if (id != null && signedIn) {
+            navController.navigate(Route.OrderDetail(id))
+            onDeepLinkHandled()
+        }
+    }
+
+    if (signedIn) {
+        NotificationPermissionGate(
+            enabled = true,
+            onGranted = { sessionViewModel.syncPushToken() },
+        )
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),

@@ -23,6 +23,7 @@ account and make a staff user)
 **Phase 8 — Staff · DONE** (built and unit tested; needs two phones to try properly)
 **Phase 9 — Profile and settings · DONE** (built and unit tested)
 **Phase 10 — Offline mode with sync · DONE** (built and unit tested)
+**Phase 11 — Push notifications · BUILT, dormant** (waiting on Dylan's Firebase project)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -673,6 +674,41 @@ Fixed by removing the old key when the key changes.
 
 **`SyncRepositoryTest` — 7 tests**, `CartRepositoryTest` rewritten over a
 fake DAO (11). 127 passing.
+
+---
+
+## Phase 11 — Push notifications · BUILT, waiting on Firebase
+
+All the code is in and the app builds and runs **without** Firebase. Push
+simply does nothing until `google-services.json` is in `app/` and the two
+Edge Function secrets exist.
+
+- **The build does not depend on it.** The Google Services plugin is applied
+  only when `app/google-services.json` exists, and `BuildConfig.PUSH_ENABLED`
+  follows. Without it the app builds, runs and is fully usable — which also
+  keeps CI green before the secret is added.
+- **Three channels** (orders, wallet, stock warnings), so the phone's own
+  settings can separate "my order is ready" from a stock warning.
+- **`RimagwinyaMessagingService`** saves refreshed tokens to
+  `profiles.fcm_token` and shows foreground messages, honouring the
+  notifications toggle.
+- **Sign-out clears the token**, so the next person on a shared phone does
+  not get the last person's order notifications.
+- **POST_NOTIFICATIONS** is asked for with a sentence explaining why, in the
+  app, rather than as a cold system dialog at launch.
+- **Tapping a notification opens that order**, whether the app was closed or
+  already open.
+- **The bell on the menu** opens the in-app notifications sheet, read from
+  the `notifications` table — those rows are written by the database, so
+  they are there whether or not a push ever arrived.
+
+### What Dylan owes for this phase
+
+1. Firebase project, Android app with package `com.rimagwinya.app`,
+   download `google-services.json` into `app/` (gitignored already).
+2. *Project settings → Service accounts → Generate new private key*, then
+   set Edge Function secrets `FCM_SERVICE_ACCOUNT` (the whole JSON) and
+   `FCM_PROJECT_ID`.
 
 ---
 

@@ -9,7 +9,14 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rimagwinya.app.core.datastore.Settings
 import com.rimagwinya.app.core.datastore.SettingsRepository
+import android.content.Intent
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.core.util.Consumer
 import com.rimagwinya.app.core.designsystem.theme.RimagwinyaTheme
+import com.rimagwinya.app.notifications.Notifications
 import javax.inject.Inject
 import com.rimagwinya.app.navigation.RootNavHost
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,12 +40,28 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Notifications.createChannels(this)
+
         setContent {
+            // An order id arrives here when a notification was tapped.
+            var deepLinkOrderId by remember { mutableStateOf(intent?.getStringExtra(Notifications.EXTRA_ORDER_ID)) }
+            DisposableEffect(Unit) {
+                val listener = Consumer<Intent> { newIntent ->
+                    deepLinkOrderId = newIntent.getStringExtra(Notifications.EXTRA_ORDER_ID)
+                }
+                addOnNewIntentListener(listener)
+                onDispose { removeOnNewIntentListener(listener) }
+            }
+
             // The chosen theme, from DataStore. System until it has loaded,
             // which is also what someone who never changed it wants.
             val settings by settingsRepository.settings.collectAsStateWithLifecycle(Settings())
             RimagwinyaTheme(choice = settings.theme) {
-                RootNavHost(biometricUnlock = settings.biometricUnlock)
+                RootNavHost(
+                    biometricUnlock = settings.biometricUnlock,
+                    deepLinkOrderId = deepLinkOrderId,
+                    onDeepLinkHandled = { deepLinkOrderId = null },
+                )
             }
         }
     }

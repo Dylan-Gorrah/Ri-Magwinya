@@ -23,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SessionViewModel @Inject constructor(
     private val auth: AuthRepository,
+    private val push: com.rimagwinya.app.data.repository.PushTokenRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
@@ -57,9 +58,17 @@ class SessionViewModel @Inject constructor(
         }
     }
 
+    /** Saves this phone's push token against the signed-in profile. */
+    fun syncPushToken() {
+        viewModelScope.launch { push.syncToken() }
+    }
+
     private suspend fun loadProfile() {
         auth.profile()
-            .onSuccess { _state.value = AuthState.SignedIn(it) }
+            .onSuccess {
+                _state.value = AuthState.SignedIn(it)
+                push.syncToken()
+            }
             .onFailure {
                 // A valid session with no readable profile is not a usable
                 // state, so fall back to signed out rather than guessing a
@@ -73,6 +82,12 @@ class SessionViewModel @Inject constructor(
     }
 
     fun signOut() {
-        viewModelScope.launch { auth.signOut() }
+        viewModelScope.launch {
+            // Clear the token first: after sign-out the request would be
+            // refused, and the next person on this phone would keep getting
+            // the last person's notifications.
+            push.clear()
+            auth.signOut()
+        }
     }
 }

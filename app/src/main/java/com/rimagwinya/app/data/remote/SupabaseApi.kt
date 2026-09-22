@@ -95,6 +95,21 @@ interface SupabaseApi {
         @Query("limit") limit: Int = 1,
     ): List<IdOnly>
 
+    /** The bell: the caller's notifications, newest first. */
+    @GET("rest/v1/notifications")
+    suspend fun notifications(
+        @Query("select") select: String = "*",
+        @Query("order") order: String = "sent_at.desc",
+        @Query("limit") limit: Int = 50,
+    ): List<NotificationDto>
+
+    /** Marking as read is the only change a user may make to one. */
+    @PATCH("rest/v1/notifications")
+    suspend fun markNotificationsRead(
+        @Query("is_read") isRead: String = "eq.false",
+        @Body body: MarkReadBody = MarkReadBody(),
+    )
+
     /** The caller's loyalty stamps. RLS scopes it to them. */
     @GET("rest/v1/loyalty_stamps")
     suspend fun loyaltyStamps(
@@ -139,6 +154,20 @@ interface SupabaseApi {
 
 @Serializable
 data class IdOnly(val id: String)
+
+@Serializable
+data class NotificationDto(
+    val id: String,
+    val title: String,
+    val message: String,
+    val type: String,
+    @kotlinx.serialization.SerialName("is_read") val isRead: Boolean = false,
+    @kotlinx.serialization.SerialName("order_id") val orderId: String? = null,
+    @kotlinx.serialization.SerialName("sent_at") val sentAt: String,
+)
+
+@Serializable
+data class MarkReadBody(@kotlinx.serialization.SerialName("is_read") val isRead: Boolean = true)
 
 @Serializable
 data class AdjustStockBody(val p_item_id: String, val p_delta: Int)

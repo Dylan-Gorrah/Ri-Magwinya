@@ -329,6 +329,19 @@
     <string name="offline_failed_dismiss">Got it</string>
     <string name="offline_menu_cached">Showing the menu from your last visit. Stock may have changed.</string>
 
+    <!-- Notifications -->
+    <string name="channel_orders">Order updates</string>
+    <string name="channel_wallet">Wallet</string>
+    <string name="channel_stock">Stock warnings</string>
+    <string name="notif_permission_title">Turn on notifications?</string>
+    <string name="notif_permission_body">So we can tell you the moment your order is ready to collect. You can change this later in settings.</string>
+    <string name="notif_permission_allow">Yes, notify me</string>
+    <string name="notif_permission_skip">Not now</string>
+    <string name="notif_sheet_title">Notifications</string>
+    <string name="notif_empty_title">Nothing yet</string>
+    <string name="notif_empty_body">Order updates and wallet top-ups appear here.</string>
+    <string name="notif_mark_read">Mark all as read</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 
