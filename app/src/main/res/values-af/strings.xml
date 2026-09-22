@@ -374,4 +374,24 @@
     <string name="action_back">Terug</string>
     <string name="action_close">Maak toe</string>
     <string name="placeholder_coming">Kom in \'n latere fase.</string>
+
+    <!-- Weer -->
+    <string name="weather_strip">%1$d°C · %2$s · %3$s</string>
+    <string name="weather_hot_first">Warm kos eerste vandag</string>
+    <string name="weather_cold_first">Koue drankies eerste vandag</string>
+    <string name="weather_normal">Vandag se spyskaart soos gewoonlik</string>
+    <string name="weather_rain_banner">Reën word verwag. Bestel vooruit sodat jy nie buite hoef te staan nie.</string>
+    <string name="weather_sky_clear">Helder</string>
+    <string name="weather_sky_partly">Gedeeltelik bewolk</string>
+    <string name="weather_sky_fog">Mis</string>
+    <string name="weather_sky_drizzle">Motreën</string>
+    <string name="weather_sky_rain">Reën</string>
+    <string name="weather_sky_showers">Buie</string>
+    <string name="weather_sky_storm">Donderstorm</string>
+    <string name="weather_tomorrow">Môre</string>
+    <string name="weather_tomorrow_line">%1$d° tot %2$d° · %3$s</string>
+    <string name="weather_hint_cold">Koud môre. Kontroleer tee- en koffievoorraad.</string>
+    <string name="weather_hint_hot">Warm môre. Kontroleer koue drankies se voorraad.</string>
+    <string name="weather_hint_rain">Reën môre. Verwag meer voorafbestellings en minder instappers.</string>
+    <string name="weather_hint_none">\'n Gewone dag môre. Voorraad soos gewoonlik.</string>
 </resources>

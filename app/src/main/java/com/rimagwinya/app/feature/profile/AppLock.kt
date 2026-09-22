@@ -50,6 +50,9 @@ fun AppLockScreen(
 ) {
     val context = LocalContext.current
     val activity = context.findActivity()
+    // Read as resources, so a language or configuration change is picked up.
+    val promptTitle = stringResource(R.string.lock_prompt_title)
+    val promptSubtitle = stringResource(R.string.lock_prompt_subtitle)
 
     fun prompt() {
         if (activity == null) {
@@ -64,8 +67,8 @@ fun AppLockScreen(
             },
         ).authenticate(
             BiometricPrompt.PromptInfo.Builder()
-                .setTitle(context.getString(R.string.lock_prompt_title))
-                .setSubtitle(context.getString(R.string.lock_prompt_subtitle))
+                .setTitle(promptTitle)
+                .setSubtitle(promptSubtitle)
                 .setAllowedAuthenticators(ALLOWED)
                 .build()
         )

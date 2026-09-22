@@ -374,4 +374,24 @@
     <string name="action_back">Morao</string>
     <string name="action_close">Kwala</string>
     <string name="placeholder_coming">E tla tla mokgahlelong o latelang.</string>
+
+    <!-- Boemo ba lehodimo -->
+    <string name="weather_strip">%1$d°C · %2$s · %3$s</string>
+    <string name="weather_hot_first">Dijo tse tjhesang pele kajeno</string>
+    <string name="weather_cold_first">Dino tse batang pele kajeno</string>
+    <string name="weather_normal">Menu ya kajeno jwalo ka tlwaelo</string>
+    <string name="weather_rain_banner">Ho lebelletswe pula. Odara esale pele hore o se eme ka ntle.</string>
+    <string name="weather_sky_clear">Ho hlwekile</string>
+    <string name="weather_sky_partly">Maru a seng makae</string>
+    <string name="weather_sky_fog">Mouwane</string>
+    <string name="weather_sky_drizzle">Moholi wa pula</string>
+    <string name="weather_sky_rain">Pula</string>
+    <string name="weather_sky_showers">Dipula tse potlakileng</string>
+    <string name="weather_sky_storm">Sefefo sa maru</string>
+    <string name="weather_tomorrow">Hosane</string>
+    <string name="weather_tomorrow_line">%1$d° ho isa ho %2$d° · %3$s</string>
+    <string name="weather_hint_cold">Ho tla bata hosane. Sheba setoko sa tee le kofi.</string>
+    <string name="weather_hint_hot">Ho tla tjhesa hosane. Sheba setoko sa dino tse batang.</string>
+    <string name="weather_hint_rain">Pula hosane. Lebella diodara tse ngata esale pele.</string>
+    <string name="weather_hint_none">Letsatsi le tlwaelehileng hosane. Setoko jwalo ka tlwaelo.</string>
 </resources>

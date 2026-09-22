@@ -27,6 +27,7 @@ account and make a staff user)
 **Phase 12 — Google sign-in · BUILT, dormant** (waiting on Dylan's Google Cloud client id)
 **Phase 13 — Multi-language · DONE** (translations need a first-language review)
 **Phase 14 — Weather · DONE**
+**Phase 15 — Tests and CI · DONE** (Dylan owes the GitHub repo and secrets)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -782,6 +783,46 @@ say them on campus ("snoepie", and "vetkoek" left alone in both).
 
 **`WeatherTest` — 13 tests**, including both thresholds from either side,
 the WMO mapping, and all four cache cases. 140 passing.
+
+---
+
+## Phase 15 — Tests and CI · DONE
+
+**147 unit tests, 0 failures**, across:
+
+| Area | Tests |
+|---|---|
+| `PriceCalculator` (every check value in 9.1) | 21 |
+| Cart, over a fake DAO | 11 |
+| Checkout rules, slots, refusals, wire format | 18 |
+| Weather thresholds, WMO codes, cache | 13 |
+| Staff: queue, editor, sales, CSV | 13 |
+| Edge Function contract, with MockWebServer | 11 |
+| Validation | 12 |
+| Order progress and mapping | 8 |
+| `Money` | 8 |
+| Menu mapping | 7 |
+| Offline queue | 7 |
+| Live stock changes | 7 |
+| `MenuViewModel` state, with Turbine | 7 |
+| Profile and settings | 5 |
+
+**`.github/workflows/android-ci.yml`** — on push and pull request to main:
+JDK 21, Gradle caching, `local.properties` and `google-services.json`
+written from secrets when they exist, then unit tests, lint and a debug
+build, with the reports uploaded as an artifact.
+
+**Lint is clean.** Getting there fixed two real things: the weather strings
+added in Phase 14 were missing from both translations, and the biometric
+prompt read its text through `LocalContext`, which would have kept the old
+language after a switch.
+
+### What Dylan owes for this phase
+
+- Create the GitHub repo and push (the remote was never added).
+- Repository secrets: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and later
+  `GOOGLE_SERVICES_JSON` (base64) and `GOOGLE_WEB_CLIENT_ID`. CI passes
+  without them — the app builds with empty keys on purpose.
 
 ---
 

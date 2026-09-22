@@ -81,6 +81,10 @@ object Notifications {
             .setAutoCancel(true)
             .build()
 
+        // hasPermission() above is the check lint is asking for; it cannot
+        // follow it across the early return, and a revoked permission mid-
+        // flight would throw, so this catches that too.
+        @android.annotation.SuppressLint("MissingPermission")
         runCatching {
             NotificationManagerCompat.from(context).notify(orderId?.hashCode() ?: 1, notification)
         }
