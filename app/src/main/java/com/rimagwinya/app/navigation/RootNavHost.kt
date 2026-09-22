@@ -18,6 +18,7 @@ import androidx.navigation.navigation
 import com.rimagwinya.app.R
 import com.rimagwinya.app.core.designsystem.component.RoleTabBar
 import com.rimagwinya.app.core.designsystem.theme.RmTheme
+import com.rimagwinya.app.feature.menu.MenuSmokeScreen
 
 /**
  * Which side of the app is loaded.
@@ -118,7 +119,8 @@ private fun androidx.navigation.NavGraphBuilder.authGraph(
 /** Menu, cart, checkout, orders, profile. Phases 4, 6, 7 and 9. */
 private fun androidx.navigation.NavGraphBuilder.studentGraph() {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
-        composable<Route.Menu> { PlaceholderScreen(R.string.title_menu, icon = R.drawable.ic_grid) }
+        // Phase 4 replaces this with the real menu screen.
+        composable<Route.Menu> { MenuSmokeScreen() }
         composable<Route.Cart> { PlaceholderScreen(R.string.title_cart, icon = R.drawable.ic_cart) }
         composable<Route.Checkout> { PlaceholderScreen(R.string.title_checkout, icon = R.drawable.ic_wallet) }
         composable<Route.Orders> { PlaceholderScreen(R.string.title_orders, icon = R.drawable.ic_clock) }

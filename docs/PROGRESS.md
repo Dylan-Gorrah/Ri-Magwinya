@@ -12,7 +12,8 @@ Start at `Ri-magwinya.md`.
 
 **Phase 0 — Project setup · DONE**
 **Phase 1 — Foundation · DONE**
-**Next: Phase 2 — Backend** (not started, waiting for go)
+**Phase 2 — Backend · BLOCKED on Dylan** (everything written, nothing applied)
+**Next: Phase 3 — Authentication**
 
 Supabase MCP connector is configured in `.mcp.json` for project
 `jykswltsegssjmvnqqbi`. It needs a Claude Code restart and an OAuth sign-in
@@ -170,6 +171,68 @@ server.
 
 ---
 
+## Phase 2 — Backend · BLOCKED
+
+All the code is written. What is missing is the anon key and a way to run
+the migrations — see "Dylan still owes".
+
+### Migrations — `supabase/migrations/`
+
+Ten numbered files, run in order. `supabase/README.md` has the full guide,
+the verification queries and the curl checks.
+
+0001 enums · 0002 tables · 0003 indexes · 0004 helpers · 0005 place_order ·
+0006 set_order_status · 0007 wallet_and_sales · 0008 rls · 0009 realtime ·
+0010 seed_menu
+
+Worth knowing about the schema:
+
+- **`student_number` is nullable.** Google sign-in creates a profile from a
+  token with no student number in it, so there is a window where the account
+  exists and the number does not. `place_order` raises
+  `STUDENT_NUMBER_REQUIRED` without one, so such a profile can browse and
+  nothing else. This was not in the brief — it is a consequence of the open
+  sign-up decision and it would have surfaced as a Phase 12 crash.
+- **No insert or update policies** on orders, order_items or
+  wallet_transactions. The security definer functions are the only way in.
+- **Column grants**, not just row policies, are what stop a student PATCHing
+  their own `wallet_balance` or `role`. They may update `full_name`,
+  `language` and `fcm_token` and nothing else.
+- **Slot capacity is a check constraint**, so even a bug in `place_order`
+  cannot oversell a break.
+- **`place_order` is idempotent** on `(student_id, client_ref)`.
+- **Pay-at-counter requires a prior top-up**, per section 12.1.
+
+### Networking — `core/network/`, `data/`
+
+- Retrofit + OkHttp + kotlinx.serialization, base URL from `BuildConfig`
+- Auth interceptor sending `apikey` and `Authorization`. A `TokenProvider`
+  interface returns null for now and the interceptor falls back to the anon
+  key; Phase 3 rebinds it to the live session without touching this layer
+- `ErrorMappingInterceptor` turns HTTP failures into a typed `ApiError`
+  before they reach a repository, so screens match on a case rather than
+  parsing a status code. `ConflictCode` holds the 409 reason codes
+- Body logging in debug only, with `Authorization` and `apikey` redacted
+- `SupabaseApi` — menu with nested options in one round trip, slots,
+  `ensure_slots`
+- DTOs, and `MenuMapper` as the single place `Double` becomes `Money`
+- `MenuRepository`, `MenuViewModel` with one `UiState`, and
+  `MenuSmokeScreen` wired onto the Menu route
+
+`MenuSmokeScreen` is deliberately plain — no hero, no search, no categories.
+Phase 4 replaces the file. It shows a clear "Backend not configured" banner
+until the keys are in `local.properties`.
+
+### Verified
+
+- `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
+- `./gradlew testDebugUnitTest` — **15 tests, 0 failures**
+  (`MoneyTest` 8, `MenuMapperTest` 7)
+- **Not verified against a live database.** No migration has been run and no
+  request has been made. That is the blocked part.
+
+---
+
 ## Decisions settled
 
 See `magwinya Notes/04 Build phases/Open decisions.md` for the reasoning.
@@ -201,8 +264,16 @@ the speed point. `CLAUDE.md` section 12.1.
   repo is committed and ready.
 - **Now:** launcher icon via *File → New → Image Asset*.
 - **Now:** restart Claude Code and sign in to the Supabase MCP connector.
-- **Phase 2:** Supabase project URL + anon key into `local.properties`, and
-  turn off Confirm email under *Authentication → Sign In / Providers*.
+- **Phase 2, blocking:** the **anon key**. URL is
+  `https://jykswltsegssjmvnqqbi.supabase.co`; the key must be pasted into
+  `local.properties`. Claude will not guess a secret.
+- **Phase 2, blocking:** run the ten migrations — either restart Claude Code
+  and sign in to the MCP connector, or paste them into the SQL Editor in
+  order. `supabase/README.md` has the steps.
+- **Phase 2:** turn off Confirm email under *Authentication → Sign In /
+  Providers → Email*.
+- **Phase 3:** make a staff account and promote it (SQL in
+  `supabase/README.md`).
 - Later phases: Firebase (11), Google Cloud OAuth (12), a first-language
   review of the Afrikaans and Sesotho (13), GitHub secrets (15), the upload
   keystore (16).

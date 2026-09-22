@@ -78,6 +78,13 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
+    // --- Network (Phase 2) ---
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.kotlinx.serialization.json)
+
     // --- Java 8+ APIs on API 24 ---
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
