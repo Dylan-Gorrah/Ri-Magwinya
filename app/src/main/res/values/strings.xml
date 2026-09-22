@@ -57,6 +57,16 @@
     <string name="error_network">No connection. Check your signal and try again.</string>
     <string name="error_generic">Something went wrong. Try again.</string>
 
+    <!-- General request failures -->
+    <string name="error_signed_out">Please sign in again.</string>
+    <string name="error_forbidden">You do not have access to that.</string>
+    <string name="error_not_found">We could not find that.</string>
+    <string name="error_conflict">That did not go through. Please try again.</string>
+    <string name="error_server">The tuckshop system is having a moment. Try again shortly.</string>
+
+    <!-- Developer-only: shown when local.properties has no Supabase keys -->
+    <string name="dev_backend_not_configured" translatable="false">Add SUPABASE_URL and SUPABASE_ANON_KEY to local.properties, then rebuild.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

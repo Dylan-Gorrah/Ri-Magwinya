@@ -114,8 +114,7 @@ fun MenuScreen(
                         Banner(
                             tone = BannerTone.Warning,
                             title = "Backend not configured",
-                            text = "Add SUPABASE_URL and SUPABASE_ANON_KEY to " +
-                                "local.properties, then rebuild.",
+                            text = stringResource(R.string.dev_backend_not_configured),
                         )
                     }
                 }
@@ -136,7 +135,10 @@ fun MenuScreen(
                         Modifier.padding(horizontal = Space.screen),
                         verticalArrangement = Arrangement.spacedBy(Space.x12),
                     ) {
-                        Banner(tone = BannerTone.Error, text = state.error.orEmpty())
+                        Banner(
+                            tone = BannerTone.Error,
+                            text = state.error?.let { stringResource(it) }.orEmpty(),
+                        )
                         RmButton(
                             text = stringResource(R.string.action_retry),
                             onClick = viewModel::load,

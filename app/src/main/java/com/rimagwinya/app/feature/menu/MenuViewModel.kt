@@ -1,22 +1,27 @@
 package com.rimagwinya.app.feature.menu
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.core.config.AppConfig
 import com.rimagwinya.app.core.network.ApiError
 import com.rimagwinya.app.core.network.asApiError
+import com.rimagwinya.app.core.network.messageRes
 import com.rimagwinya.app.data.repository.CartRepository
 import com.rimagwinya.app.data.repository.MenuRepository
-import com.rimagwinya.app.data.repository.friendly
 import com.rimagwinya.app.domain.model.Cart
 import com.rimagwinya.app.domain.model.MenuCategory
+import com.rimagwinya.app.domain.model.MenuChange
 import com.rimagwinya.app.domain.model.MenuItem
+import com.rimagwinya.app.domain.model.applying
 import com.rimagwinya.app.domain.pricing.Selection
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,7 +36,7 @@ data class MenuUiState(
     val query: String = "",
     val category: CategoryFilter = CategoryFilter.All,
     val cart: Cart = Cart(),
-    val error: String? = null,
+    @StringRes val error: Int? = null,
     /** True until the Supabase keys are in local.properties. */
     val notConfigured: Boolean = false,
     /** The item whose sheet is open, if any. */
@@ -72,6 +77,7 @@ class MenuViewModel @Inject constructor(
 
     init {
         load()
+        watchLive()
     }
 
     fun load() {
@@ -91,8 +97,47 @@ class MenuViewModel @Inject constructor(
                 }
                 .onFailure { throwable ->
                     val error = (throwable as? ApiError) ?: throwable.asApiError()
-                    local.update { it.copy(isLoading = false, error = error.friendly()) }
+                    local.update { it.copy(isLoading = false, error = error.messageRes()) }
                 }
+        }
+    }
+
+    /**
+     * Stock moves while the student is looking: the last Score sells and the
+     * row goes Sold out on every phone at once.
+     *
+     * Realtime is a nicety on top of the fetch, never a requirement. If the
+     * socket fails the menu still works, and this quietly tries again.
+     */
+    private fun watchLive() {
+        if (!AppConfig.isBackendConfigured) return
+        viewModelScope.launch {
+            repository.changes()
+                .retryWhen { _, attempt ->
+                    delay(minOf(30_000L, 2_000L shl attempt.toInt().coerceAtMost(4)))
+                    true
+                }
+                .collect { change ->
+                    when (change) {
+                        is MenuChange.Updated -> local.update { state ->
+                            val items = state.items.applying(change)
+                            state.copy(
+                                items = items,
+                                openItem = state.openItem?.let { open ->
+                                    items.firstOrNull { it.id == open.id }
+                                },
+                            )
+                        }
+                        MenuChange.Reload -> refreshQuietly()
+                    }
+                }
+        }
+    }
+
+    /** Reload without a spinner. A failure keeps what is on screen. */
+    private suspend fun refreshQuietly() {
+        repository.menu().onSuccess { items ->
+            local.update { it.copy(items = items, error = null, isLoading = false) }
         }
     }
 

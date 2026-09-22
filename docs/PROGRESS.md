@@ -16,7 +16,7 @@ Start at `Ri-magwinya.md`.
 on 2026-09-22; waiting on one run on the phone)
 **Phase 3 — Authentication · READY TO TRY** (needs Dylan to register an
 account and make a staff user)
-**Phase 4 — Student menu · BUILT** (realtime stock updates still to add)
+**Phase 4 — Student menu · BUILT** (live stock updates in; waiting on a phone check)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -431,17 +431,31 @@ is ignored rather than creating a second way to say the same thing.
   pick its icon without an app release.
 - `MenuSmokeScreen` from Phase 2 is deleted, replaced by the real screen.
 
-### Still to build
+### Done: live stock updates
 
-- **Realtime stock updates.** Left until the database is live, because
-  subscribing to a table that does not exist yet cannot be tested.
+`MenuRealtime` subscribes to `menu_items` over the supabase-kt socket while
+the menu screen is alive. An update patches stock, availability and price on
+the one item it names, in place, with no spinner. An insert or delete, and
+every (re)connect, triggers a quiet full reload instead — the payload has no
+option groups, and anything changed while the socket was down was never
+sent. If the socket fails, the menu still works and it retries with backoff
+up to 30 seconds.
+
+Rows are read field by field (`toMenuUpdate`) rather than decoded whole, so
+a missing column or a numeric sent as a string patches what it can.
+**`MenuChangeTest` — 7 tests.**
+
+### Fixed: strings in code
+
+`MenuRepository.friendly()` returned English sentences and the menu screen
+had the "not configured" text inline, against rule 11. Both are now string
+resources; `ApiError.messageRes()` in `core/network` is the shared mapping.
 
 ### Verified
 
 - `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
-- `./gradlew testDebugUnitTest` — **58 tests, 0 failures**
-- Not run on the phone. The menu will show "Backend not configured" until
-  the keys are in `local.properties`.
+- `./gradlew testDebugUnitTest` — **65 tests, 0 failures**
+- Not yet run on the phone against the live database.
 
 ---
 
