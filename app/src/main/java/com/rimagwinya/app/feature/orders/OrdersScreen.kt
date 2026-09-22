@@ -35,6 +35,7 @@ import com.rimagwinya.app.core.designsystem.component.StatusPill
 import com.rimagwinya.app.core.designsystem.theme.RmTheme
 import com.rimagwinya.app.core.designsystem.theme.Space
 import com.rimagwinya.app.core.network.asApiError
+import com.rimagwinya.app.core.util.resolve
 import com.rimagwinya.app.core.network.messageRes
 import com.rimagwinya.app.data.repository.OrderRepository
 import com.rimagwinya.app.domain.model.Order
@@ -66,6 +67,12 @@ class OrdersViewModel @Inject constructor(
     val state: StateFlow<OrdersUiState> = _state.asStateFlow()
 
     init {
+        // The cache first, so the list is there before the network answers.
+        viewModelScope.launch {
+            repository.observeOrders().collect { cached ->
+                _state.update { it.copy(orders = cached, loading = false) }
+            }
+        }
         if (AppConfig.isBackendConfigured) {
             viewModelScope.launch { repository.orderChanges().collect { load() } }
         }
@@ -74,7 +81,7 @@ class OrdersViewModel @Inject constructor(
     fun load() {
         viewModelScope.launch {
             repository.orders()
-                .onSuccess { list -> _state.value = OrdersUiState(orders = list, loading = false) }
+                .onSuccess { list -> _state.update { it.copy(orders = list, loading = false, error = null) } }
                 .onFailure { e ->
                     _state.update {
                         it.copy(loading = false, error = if (it.orders.isEmpty()) e.asApiError().messageRes() else null)
@@ -89,8 +96,10 @@ fun OrdersScreen(
     onOpen: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: OrdersViewModel = hiltViewModel(),
+    syncViewModel: com.rimagwinya.app.feature.offline.SyncViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val sync by syncViewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) { viewModel.load() }
 
     Column(modifier.fillMaxSize()) {
@@ -104,6 +113,35 @@ fun OrdersScreen(
                 .padding(bottom = Space.x32),
             verticalArrangement = Arrangement.spacedBy(Space.x24),
         ) {
+            // Orders placed with no signal, before anything the server knows about.
+            sync.waiting.forEach { action ->
+                Banner(
+                    title = stringResource(R.string.offline_queued_title),
+                    text = stringResource(R.string.offline_queued_body, action.summary),
+                    tone = BannerTone.Info,
+                )
+            }
+            sync.refused.forEach { action ->
+                Column(verticalArrangement = Arrangement.spacedBy(Space.x8)) {
+                    Banner(
+                        title = stringResource(R.string.offline_failed_title),
+                        text = com.rimagwinya.app.feature.cart.CheckoutViewModel.messageFor(
+                            com.rimagwinya.app.core.network.ApiError.Conflict(
+                                com.rimagwinya.app.core.network.ConflictCode.from(action.failureCode),
+                                action.failureDetail,
+                            )
+                        ).resolve(),
+                        tone = BannerTone.Error,
+                    )
+                    RmButton(
+                        text = stringResource(R.string.offline_failed_dismiss),
+                        onClick = { syncViewModel.dismiss(action.id) },
+                        style = RmButtonStyle.Quiet,
+                        fillWidth = false,
+                    )
+                }
+            }
+
             when {
                 state.loading && state.orders.isEmpty() -> GroupedList {
                     repeat(4) { i -> SkeletonRow(); if (i < 3) ListDivider() }

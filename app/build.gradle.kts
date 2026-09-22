@@ -92,6 +92,14 @@ dependencies {
     // supabase-kt runs on Ktor and needs an engine on the classpath.
     implementation(libs.ktor.client.okhttp)
 
+    // --- Offline cache and sync (Phase 10) ---
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
     // --- Settings storage and biometrics (Phase 9) ---
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.biometric)

@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 /**
  * Dispatchers are injected rather than referenced directly so tests can
@@ -32,4 +33,13 @@ object DispatcherModule {
      */
     @Provides
     fun clock(): java.time.Clock = java.time.Clock.systemUTC()
+
+    /**
+     * Lives as long as the app. For work that must finish even if the screen
+     * that started it has gone — writing the cart to Room, mostly.
+     */
+    @Provides
+    @Singleton
+    fun applicationScope(): kotlinx.coroutines.CoroutineScope =
+        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + Dispatchers.Default)
 }

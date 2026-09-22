@@ -98,6 +98,8 @@ data class StockUiState(
     val loading: Boolean = true,
     val error: UiText? = null,
     val editor: EditorForm? = null,
+    /** Stock taps made with no signal, waiting for the sync worker. */
+    val queuedChanges: Int = 0,
 ) {
     /** At or under the reorder level, including sold out. */
     val needsAttention: List<MenuItem>
@@ -108,6 +110,7 @@ data class StockUiState(
 class StockViewModel @Inject constructor(
     private val menu: MenuRepository,
     private val staff: StaffRepository,
+    private val sync: com.rimagwinya.app.data.sync.SyncRepository,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(StockUiState())
@@ -147,8 +150,18 @@ class StockViewModel @Inject constructor(
             staff.adjustStock(item.id, delta)
                 .onSuccess { updated -> patchLocal(item.id) { it.copy(stockQuantity = updated.stockQuantity) } }
                 .onFailure { e ->
-                    patchLocal(item.id) { it.copy(stockQuantity = it.stockQuantity - delta) }
-                    _state.update { it.copy(error = UiText(e.asApiError().messageRes())) }
+                    if (e.asApiError() is com.rimagwinya.app.core.network.ApiError.Offline) {
+                        // A change, not a total, so replaying it later still
+                        // lands on the right number.
+                        sync.queueStockChange(
+                            com.rimagwinya.app.data.remote.AdjustStockBody(item.id, delta),
+                            "${item.name} ${if (delta > 0) "+" else ""}$delta",
+                        )
+                        _state.update { it.copy(queuedChanges = it.queuedChanges + 1) }
+                    } else {
+                        patchLocal(item.id) { it.copy(stockQuantity = it.stockQuantity - delta) }
+                        _state.update { it.copy(error = UiText(e.asApiError().messageRes())) }
+                    }
                 }
         }
     }

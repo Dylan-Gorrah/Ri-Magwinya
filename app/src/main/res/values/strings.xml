@@ -319,6 +319,16 @@
     <string name="privacy_h_security">Security</string>
     <string name="privacy_b_security">Your password is hashed by our sign-in provider and is never stored by the app. All traffic is encrypted. The database refuses to show one student another student\'s information.</string>
 
+    <!-- Offline -->
+    <string name="offline_banner">You\'re offline. You can still look around; changes go through when you\'re back.</string>
+    <string name="offline_queued_title">Waiting for signal</string>
+    <string name="offline_queued_body">We\'ll send this order as soon as you\'re back online: %1$s</string>
+    <string name="offline_queued_order">Order waiting for signal</string>
+    <string name="offline_queued_stock">Stock change waiting for signal</string>
+    <string name="offline_failed_title">This order could not be sent</string>
+    <string name="offline_failed_dismiss">Got it</string>
+    <string name="offline_menu_cached">Showing the menu from your last visit. Stock may have changed.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

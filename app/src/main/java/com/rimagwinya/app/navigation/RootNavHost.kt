@@ -1,6 +1,7 @@
 package com.rimagwinya.app.navigation
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -11,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
@@ -26,6 +29,7 @@ import androidx.navigation.navigation
 import com.rimagwinya.app.R
 import com.rimagwinya.app.core.designsystem.component.RoleTabBar
 import com.rimagwinya.app.core.designsystem.theme.RmTheme
+import com.rimagwinya.app.core.designsystem.theme.Space
 import com.rimagwinya.app.core.money.Money
 import com.rimagwinya.app.data.repository.AuthState
 import com.rimagwinya.app.domain.model.UserRole
@@ -36,6 +40,7 @@ import com.rimagwinya.app.feature.auth.WelcomeScreen
 import com.rimagwinya.app.feature.cart.CartScreen
 import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
+import com.rimagwinya.app.feature.offline.SyncViewModel
 import com.rimagwinya.app.feature.orders.OrderDetailScreen
 import com.rimagwinya.app.feature.orders.OrdersScreen
 import com.rimagwinya.app.feature.profile.AppLockScreen
@@ -52,6 +57,7 @@ fun RootNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     sessionViewModel: SessionViewModel = hiltViewModel(),
+    syncViewModel: SyncViewModel = hiltViewModel(),
 ) {
     val session by sessionViewModel.state.collectAsStateWithLifecycle()
 
@@ -102,6 +108,8 @@ fun RootNavHost(
         return
     }
 
+    val sync by syncViewModel.state.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = RmTheme.colors.background,
@@ -121,7 +129,19 @@ fun RootNavHost(
             }
         },
     ) { insets ->
-        Box(Modifier.padding(insets)) {
+        Column(Modifier.padding(insets)) {
+            // Slim, and only while it is true.
+            if (!sync.online) {
+                Text(
+                    text = stringResource(R.string.offline_banner),
+                    style = RmTheme.type.caption,
+                    color = RmTheme.colors.text,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(RmTheme.colors.warning.copy(alpha = 0.16f))
+                        .padding(horizontal = Space.screen, vertical = Space.x8),
+                )
+            }
             NavHost(
                 navController = navController,
                 startDestination = Route.AuthGraph,
@@ -217,6 +237,9 @@ private fun NavGraphBuilder.studentGraph(
         composable<Route.Checkout> {
             CheckoutScreen(
                 onBack = { navController.popBackStack() },
+                onQueued = {
+                    navController.navigate(Route.Orders) { popUpTo(Route.Menu) }
+                },
                 onPlaced = { orderId ->
                     // Back from the new order goes to the menu, not to an
                     // empty checkout.

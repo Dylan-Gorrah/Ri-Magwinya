@@ -22,6 +22,7 @@ account and make a staff user)
 **Phase 7 — Student orders · DONE** (built and unit tested; needs a phone run)
 **Phase 8 — Staff · DONE** (built and unit tested; needs two phones to try properly)
 **Phase 9 — Profile and settings · DONE** (built and unit tested)
+**Phase 10 — Offline mode with sync · DONE** (built and unit tested)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -642,6 +643,36 @@ cannot. It is also what makes replaying a queued offline adjustment safe.
   phone with no fingerprint or PIN set up.
 
 **`ProfileRulesTest` — 5 tests.** 118 passing.
+
+---
+
+## Phase 10 — Offline mode with sync · DONE
+
+- **Room caches** the menu with its options, the day's slots, orders and
+  their lines, the cart, and (from Phase 14) the weather.
+- **Network first, cache second.** Every read tries the server, writes what
+  it gets to Room, and falls back to Room when the request fails. An empty
+  cache still shows the error — there is nothing to show instead.
+- **The cart lives in Room**, so it survives the app being killed mid-order.
+  A line stores the item id and the selection as JSON — choices, never
+  prices — and is priced again from the menu each time.
+- **Offline writes are queued:** placing an order (with its `client_ref`, so
+  a replay returns the same order rather than a second one) and staff stock
+  changes (as deltas, so a late replay still lands on the right number).
+- **`SyncWorker`** replays the queue oldest-first on a network constraint
+  with exponential backoff, and the app also nudges it the moment the phone
+  comes back online. A refusal (sold out, slot full) is **not** retried: it
+  is kept with its reason and shown on the Orders screen with a dismiss.
+- **"You're offline"** banner across the whole app, driven by whether the
+  connection is *validated* — campus wifi that connects but reaches nothing
+  counts as offline, which is the case that matters here.
+
+**A bug this phase created and its test caught:** a cart line's key includes
+its quantity, so bumping "2 Cokes" to "4 Cokes" left the old row behind.
+Fixed by removing the old key when the key changes.
+
+**`SyncRepositoryTest` — 7 tests**, `CartRepositoryTest` rewritten over a
+fake DAO (11). 127 passing.
 
 ---
 

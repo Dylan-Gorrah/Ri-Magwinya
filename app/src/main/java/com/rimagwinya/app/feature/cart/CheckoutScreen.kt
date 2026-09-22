@@ -40,6 +40,7 @@ import com.rimagwinya.app.domain.model.PaymentMethod
 fun CheckoutScreen(
     onBack: () -> Unit,
     onPlaced: (orderId: String) -> Unit,
+    onQueued: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CheckoutViewModel = hiltViewModel(),
 ) {
@@ -49,6 +50,7 @@ fun CheckoutScreen(
         viewModel.eventFlow.collect { event ->
             when (event) {
                 is CheckoutEvent.Placed -> onPlaced(event.orderId)
+                CheckoutEvent.Queued -> onQueued()
                 CheckoutEvent.PickAnotherSlot -> Unit // The banner explains; the cart is one tap back.
             }
         }

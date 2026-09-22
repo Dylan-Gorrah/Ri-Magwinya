@@ -30,6 +30,19 @@
             </intent-filter>
         </activity>
 
+        <!-- WorkManager is configured by RimagwinyaApp (Hilt builds the
+             workers), so its own startup initialiser is switched off. -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <!-- Hands the sales CSV to the share sheet without exposing app storage. -->
         <provider
             android:name="androidx.core.content.FileProvider"

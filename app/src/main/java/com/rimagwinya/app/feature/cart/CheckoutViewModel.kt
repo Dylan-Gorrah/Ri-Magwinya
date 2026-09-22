@@ -11,6 +11,7 @@ import com.rimagwinya.app.core.util.UiText
 import com.rimagwinya.app.data.repository.AuthRepository
 import com.rimagwinya.app.data.repository.CartRepository
 import com.rimagwinya.app.data.repository.OrderRepository
+import com.rimagwinya.app.data.repository.PlaceResult
 import com.rimagwinya.app.domain.model.Cart
 import com.rimagwinya.app.domain.model.PaymentMethod
 import com.rimagwinya.app.domain.model.Profile
@@ -66,6 +67,9 @@ data class CheckoutUiState(
 
 sealed interface CheckoutEvent {
     data class Placed(val orderId: String) : CheckoutEvent
+
+    /** No signal: it is in the queue and goes when the phone is back. */
+    data object Queued : CheckoutEvent
     /** The slot filled or closed: back to the cart to pick another. */
     data object PickAnotherSlot : CheckoutEvent
 }
@@ -131,13 +135,18 @@ class CheckoutViewModel @Inject constructor(
         local.update { it.copy(placing = true, error = null) }
         viewModelScope.launch {
             orders.place(current.cart, slot.id, current.method, clientRef)
-                .onSuccess { order ->
+                .onSuccess { result ->
                     clientRef = UUID.randomUUID().toString()
                     cartRepository.clear()
                     local.update { it.copy(placing = false) }
-                    // The wallet just changed; every balance on screen follows.
-                    auth.profile()
-                    events.send(CheckoutEvent.Placed(order.id))
+                    when (result) {
+                        is PlaceResult.Placed -> {
+                            // The wallet just changed; every balance follows.
+                            auth.profile()
+                            events.send(CheckoutEvent.Placed(result.order.id))
+                        }
+                        PlaceResult.Queued -> events.send(CheckoutEvent.Queued)
+                    }
                 }
                 .onFailure { e -> onFailure(e.asApiError()) }
         }

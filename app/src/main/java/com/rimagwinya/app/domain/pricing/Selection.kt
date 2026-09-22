@@ -10,6 +10,7 @@ import com.rimagwinya.app.domain.model.MenuItem
  * when the order is placed. Nothing here can be tampered with into a
  * discount, because there is no money in it.
  */
+@kotlinx.serialization.Serializable
 data class Selection(
     /** The count of the item itself. Only meaningful for base-step items. */
     val baseQty: Int = 0,
