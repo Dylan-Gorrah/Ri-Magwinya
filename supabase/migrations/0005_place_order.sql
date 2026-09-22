@@ -207,6 +207,10 @@ begin
         end if;
 
         v_label_parts := array[]::text[];
+        -- "replaces the price" only makes sense when the base IS the item
+        -- price. On a base-step item the base is price x count, so there is
+        -- nothing single to replace; no seeded item has both, and the guard
+        -- below keeps it that way if staff ever build one.
         v_replaced := false;
 
         if v_has_base then
@@ -255,7 +259,7 @@ begin
                 limit 1;
 
                 if found then
-                    if v_group.replaces_price then
+                    if v_group.replaces_price and not v_has_base then
                         -- Large chips is R40, not R28 + R40.
                         v_unit_price := v_unit_price - v_item.price + v_option.price;
                         v_replaced := true;

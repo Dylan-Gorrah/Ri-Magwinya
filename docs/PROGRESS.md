@@ -12,7 +12,8 @@ Start at `Ri-magwinya.md`.
 
 **Phase 0 — Project setup · DONE**
 **Phase 1 — Foundation · DONE**
-**Phase 2 — Backend · BLOCKED on Dylan** (everything written, nothing applied)
+**Phase 2 — Backend · BLOCKED on Dylan** (written and tested locally, not yet
+applied to the real project)
 **Next: Phase 3 — Authentication**
 
 Supabase MCP connector is configured in `.mcp.json` for project
@@ -223,13 +224,39 @@ Worth knowing about the schema:
 Phase 4 replaces the file. It shows a clear "Backend not configured" banner
 until the keys are in `local.properties`.
 
-### Verified
+### Verified against a real Postgres
+
+The migrations were applied to a **throwaway local Postgres 18** (the machine
+already had one) with a small shim standing in for the Supabase-specific
+pieces — `auth.users`, `auth.uid()`, the roles and the realtime publication.
+See `supabase/tests/`.
+
+- All ten migrations apply clean, in order
+- Seed lands 17 items, 8 option groups, 30 options, 3 slots
+- **`supabase/tests/run.sh` — 35 assertions, 0 failures**
+  - every check value from section 9.1, placed as a real order
+  - `units_consumed` is 0 for a fillings-only vetkoek, which is the rule most
+    likely to be got wrong
+  - option labels come out exactly as the prototype formats them
+    (`2 vetkoeks, 2 Polony, Cheese slice`, `No vetkoek, Snoek`)
+  - counter payment blocked with no top-up, allowed after one, blocked again
+    after two no-shows
+  - same `client_ref` twice gives one order and one charge
+  - out of stock, empty selection, full slot
+  - the whole transition table, including every move that must fail
+  - cancel restores stock, refunds the wallet, frees the slot
+  - the Google window: a profile with no student number can exist but cannot
+    order; a duplicate number is refused
+
+One latent bug found and fixed while testing: `replaces_price` subtracted the
+plain item price, which would be wrong on an item that also had a base step.
+No seeded item has both, but staff could create one from the stock screen.
 
 - `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
 - `./gradlew testDebugUnitTest` — **15 tests, 0 failures**
-  (`MoneyTest` 8, `MenuMapperTest` 7)
-- **Not verified against a live database.** No migration has been run and no
-  request has been made. That is the blocked part.
+
+Still **not** run against the real Supabase project, and no request has been
+made from the phone. That is the blocked part.
 
 ---
 
