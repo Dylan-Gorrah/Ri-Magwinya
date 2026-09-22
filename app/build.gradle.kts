@@ -181,10 +181,25 @@ dependencies {
 }
 
 /** Reads a key from local.properties, returning "" when it isn't set. */
+/**
+ * A build-time setting, from local.properties first, then the environment.
+ *
+ * The environment fallback is what lets CI build without local.properties:
+ * GitHub Actions puts the secrets in the environment instead. Missing
+ * everywhere, it is an empty string, so the project still builds for
+ * anyone who has neither.
+ *
+ * Reference: Google. 2026. Build your app from the command line. [Online].
+ * Available at: <https://developer.android.com/build/building-cmdline>
+ * [Accessed 22 September 2026].
+ */
 fun localProperty(key: String): String {
     val f = rootProject.file("local.properties")
-    if (!f.exists()) return ""
-    val props = Properties()
-    f.inputStream().use { props.load(it) }
-    return props.getProperty(key).orEmpty()
+    if (f.exists()) {
+        val props = Properties()
+        f.inputStream().use { props.load(it) }
+        val value = props.getProperty(key).orEmpty()
+        if (value.isNotBlank()) return value
+    }
+    return System.getenv(key).orEmpty()
 }
