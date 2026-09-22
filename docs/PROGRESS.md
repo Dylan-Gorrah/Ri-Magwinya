@@ -25,6 +25,7 @@ account and make a staff user)
 **Phase 10 — Offline mode with sync · DONE** (built and unit tested)
 **Phase 11 — Push notifications · BUILT, dormant** (waiting on Dylan's Firebase project)
 **Phase 12 — Google sign-in · BUILT, dormant** (waiting on Dylan's Google Cloud client id)
+**Phase 13 — Multi-language · DONE** (translations need a first-language review)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -737,6 +738,27 @@ Same shape as Phase 11: it is all written, and it hides itself until
 2. Supabase *Authentication → Providers → Google*: enable it, paste the Web
    client id and secret.
 3. `GOOGLE_WEB_CLIENT_ID=<the web client id>` in `local.properties`.
+
+---
+
+## Phase 13 — Multi-language · DONE
+
+- **`values-af` and `values-st`**, every one of the 323 strings and all four
+  plurals. Nothing falls back to English by accident — a script checks that
+  the three files carry the same keys.
+- **Per-app language**: `locales_config.xml`, `android:localeConfig`, and
+  `AppCompatDelegate.setApplicationLocales` so the switch is immediate.
+  Below Android 13, `AppLocalesMetadataHolderService` with `autoStoreLocales`
+  makes the choice survive a restart — which is why `MainActivity` has been
+  an `AppCompatActivity` since Phase 1.
+- The choice is written in **three places on purpose**: AppCompat (applies
+  it), DataStore (what the settings screen reads), and `profiles.language`
+  (what a push notification is written in).
+
+**HUMAN CHECKPOINT — the translations need a first-language speaker.** They
+are machine-assisted and will contain mistakes, the Sesotho more than the
+Afrikaans. Both files say so at the top. Tuckshop words were kept as people
+say them on campus ("snoepie", and "vetkoek" left alone in both).
 
 ---
 

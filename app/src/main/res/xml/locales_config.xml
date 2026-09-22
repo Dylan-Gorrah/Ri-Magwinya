@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The languages the app offers. Android 13+ reads this for the per-app
+     language setting; below that, AppCompat's own store handles it. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en" />
+    <locale android:name="af" />
+    <locale android:name="st" />
+</locale-config>

@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sesotho.
+
+    Machine-assisted and NOT yet checked by a first-language speaker — that
+    is a checkpoint in the brief, and this file needs it more than the
+    Afrikaans one does. "Vetkoek" is kept as it is said on campus.
+-->
+<resources>
+    <string name="app_name">Ri-magwinya</string>
+
+    <string name="tab_menu">Menu</string>
+    <string name="tab_cart">Sekotlolo</string>
+    <string name="tab_orders">Diodara</string>
+    <string name="tab_profile">Profaele</string>
+    <string name="tab_queue">Mola</string>
+    <string name="tab_stock">Setoko</string>
+    <string name="tab_sales">Thekiso</string>
+
+    <string name="welcome_tagline">Odara esale pele. Tlola mola.</string>
+    <string name="welcome_student">Ke moithuti</string>
+    <string name="welcome_student_body">Sheba menu, odara, mme o lathe ka khoutu.</string>
+    <string name="welcome_staff">Ke sebetsa lebenkeleng la sekolo</string>
+    <string name="welcome_staff_body">Sebetsa mola wa diodara, laola setoko mme o kenye chelete dipatjheng.</string>
+
+    <string name="auth_email">Imeile</string>
+    <string name="auth_email_hint">wena@mohlala.com</string>
+    <string name="auth_password">Phasewete</string>
+    <string name="auth_password_hint">Bonyane ditlhaku tse 8</string>
+    <string name="auth_name">Lebitso le felletseng</string>
+    <string name="auth_name_hint">Thabo Mokoena</string>
+    <string name="auth_student_number">Nomoro ya moithuti</string>
+    <string name="auth_student_number_hint">ST2024001</string>
+    <string name="auth_sign_in">Kena</string>
+    <string name="auth_signing_in">Ea kena…</string>
+    <string name="auth_create_account">Theha akhaonto</string>
+    <string name="auth_creating">Re theha akhaonto ya hao…</string>
+    <string name="auth_no_account">O motjha mona? Theha akhaonto</string>
+    <string name="auth_have_account">O se o na le akhaonto? Kena</string>
+    <string name="auth_sign_out">Tswa</string>
+
+    <string name="error_email_malformed">Hona ha ho shebahale joalo ka aterese ya imeile.</string>
+    <string name="error_password_short">Sebedisa bonyane ditlhaku tse 8.</string>
+    <string name="error_name_short">Ka kopo kenya lebitso la hao le felletseng.</string>
+    <string name="error_student_number">Sebedisa nomoro ya moithuti e karateng ya hao.</string>
+    <string name="error_credentials">Imeile kapa phasewete ha e nepahala.</string>
+    <string name="error_email_taken">Imeile eo e se e na le akhaonto. Kena ho ena le hoo.</string>
+    <string name="error_student_number_taken">Nomoro eo ya moithuti e se e ngodisitswe.</string>
+    <string name="error_network">Ha ho kgokahano. Sheba letshwao mme o leke hape.</string>
+    <string name="error_generic">Ho na le se sa tsamaeang hantle. Leka hape.</string>
+    <string name="error_signed_out">Ka kopo kena hape.</string>
+    <string name="error_forbidden">Ha o na tumello ya seo.</string>
+    <string name="error_not_found">Ha re a kgona ho fumana seo.</string>
+    <string name="error_conflict">Seo ha se a tsamaya. Ka kopo leka hape.</string>
+    <string name="error_server">Sistimi ya lebenkele e na le bothata hona jwale. Leka hape kamora nakwana.</string>
+
+    <plurals name="cart_item_count">
+        <item quantity="one">ntho e %d</item>
+        <item quantity="other">dintho tse %d</item>
+    </plurals>
+    <string name="cart_empty_title">Sekotlolo sa hao se se na letho</string>
+    <string name="cart_empty_body">Kenya ho hong ho tswa menung mme ho tla hlaha mona.</string>
+    <string name="cart_browse">Sheba menu</string>
+    <string name="cart_each">%1$s e nngwe</string>
+    <string name="cart_remove">Tlosa</string>
+    <string name="cart_slot_label">Nako ya ho lata</string>
+    <string name="cart_slot_taken">%1$s · %2$d ho tse %3$d di nkilwe</string>
+    <string name="cart_slot_full">%1$s · E tletse</string>
+    <string name="cart_slots_loading">Re kenya dinako tsa ho lata…</string>
+    <string name="cart_no_slots">Ha ho na dinako tse ding tsa ho lata kajeno. Lebenkele le tla amohela diodara hape hosane.</string>
+    <string name="cart_subtotal">Palohare</string>
+    <string name="cart_total">Palohang</string>
+    <string name="cart_continue">Tswela pele ho lefa</string>
+    <string name="cart_pick_slot">Kgetha nako ya ho lata</string>
+
+    <string name="checkout_summary">Kakaretso ya odara</string>
+    <string name="checkout_collection">Ho lata</string>
+    <string name="checkout_today_at">Kajeno · %1$s</string>
+    <string name="checkout_payment">Tefo</string>
+    <string name="checkout_wallet">Sepatjhe sa khamphase</string>
+    <string name="checkout_wallet_balance">Tjhelete e setseng %1$s</string>
+    <string name="checkout_wallet_after">%1$s e tla sala kamora odara ena.</string>
+    <string name="checkout_wallet_short">Tjhelete ha e lekane. O haellwa ke %1$s. Kenya tjhelete lebenkeleng.</string>
+    <string name="checkout_counter">Lefa lebenkeleng</string>
+    <string name="checkout_counter_body">Lefa ka mochini wa dikarata ha o lata.</string>
+    <string name="checkout_counter_no_topup">E fumaneha hang ha o se o kenyeditse tjhelete sepatjheng bonyane hang lebenkeleng.</string>
+    <string name="checkout_counter_no_shows">Ha e fumanehe. Diodara tse pedi ha di a latwa, kahoo ho lefa lebenkeleng ho timilwe akhaontong ena.</string>
+    <string name="checkout_counter_warning">Ha o sa late, ho balwa e le ho se hlahe. Kamora tse pedi, ho lefa lebenkeleng ho a tingwa.</string>
+    <string name="checkout_cancel_notice">O ka hlakola ntle le tefo ho fihlela lebenkele le qala ho lokisa odara ya hao.</string>
+    <string name="checkout_place">Romela odara · %1$s</string>
+    <string name="checkout_placing">Re romela odara ya hao…</string>
+    <string name="checkout_topup_note">Ho kenya tjhelete ho etsahala lebenkeleng: tobetsa karata ya hao mochining wa dikarata mme basebetsi ba e kenye sepatjheng sa hao. Mochini oo o arohane le app ena.</string>
+
+    <string name="order_error_out_of_stock">%1$s e sa tswa fela. E tlose sekotlolong mme o leke hape.</string>
+    <string name="order_error_out_of_stock_generic">Ho na le ntho sekotlolong sa hao e sa tswa fela. Sheba sekotlolo mme o leke hape.</string>
+    <string name="order_error_slot_full">Nako eo ya ho lata e sa tswa tlala. Kgetha e nngwe.</string>
+    <string name="order_error_slot_closed">Nako eo ya ho lata e kwetswe. Kgetha e nngwe.</string>
+    <string name="order_error_funds">Tjhelete ya sepatjhe sa hao ha e lekane odara ena. Kenya tjhelete lebenkeleng.</string>
+    <string name="order_error_counter_no_topup">Ho lefa lebenkeleng ho hloka hore o be o kile wa kenya tjhelete sepatjheng bonyane hang. Lefa ka sepatjhe ho ena le hoo.</string>
+    <string name="order_error_counter_no_shows">Ho lefa lebenkeleng ho tingwa kamora diodara tse pedi tse sa latwang. Lefa ka sepatjhe ho ena le hoo.</string>
+    <string name="order_error_empty">Ho ntho e nngwe ha ho a kgethwa letho. E lokise sekotlolong sa hao.</string>
+    <string name="order_error_student_number">Kenya nomoro ya hao ya moithuti pele o odara, hore basebetsi ba kgone ho fumana odara ya hao.</string>
+
+    <string name="order_title">Odara #%1$d</string>
+    <string name="order_show_code">Bontsha khoutu ena lebenkeleng</string>
+    <string name="order_slot_line">%1$s · %2$s</string>
+    <string name="order_ready_banner">Odara ya hao e lokile. Bontsha khoutu ya hao lebenkeleng.</string>
+    <string name="order_step_placed">Odara e rometswe</string>
+    <string name="order_step_paid">Tefo e netefaditswe</string>
+    <string name="order_step_pay_on_collection">Lefa ha o lata</string>
+    <string name="order_step_preparing">E ea lokiswa</string>
+    <string name="order_step_ready">E lokile ho latwa</string>
+    <string name="order_step_collected">E latilwe</string>
+    <string name="order_step_pending">E emetse</string>
+    <string name="order_step_notified">%1$s · o tsebisitswe</string>
+    <string name="order_items">Dintho</string>
+    <string name="order_total_paid">Palohang e lefilweng</string>
+    <string name="order_total_due">E lefshwa lebenkeleng</string>
+    <string name="order_cancel">Hlakola odara</string>
+    <string name="order_cancelling">Ea hlakola…</string>
+    <string name="order_cancel_confirm_title">Hlakola odara ena?</string>
+    <string name="order_cancel_confirm_body">Setoko le nako ya hao ya ho lata di ya lokollwa. Tjhelete e lefilweng ka sepatjhe e kgutlela sepatjheng hang-hang.</string>
+    <string name="order_cancel_keep">E tlohele</string>
+    <string name="order_cannot_cancel">Odara ena e ntse e lokiswa mme e ke ke ya hlola e hlakolwa.</string>
+    <string name="order_cancelled_banner">Odara ena e hlakotswe.</string>
+    <string name="order_cancelled_refund">Odara ena e hlakotswe mme %1$s e kgutletse sepatjheng sa hao.</string>
+    <string name="order_no_show_banner">Odara ena ha e a latwa pele nako ya phomolo e fela.</string>
+    <string name="order_collected_banner">E latilwe. O e natefelwe.</string>
+    <string name="order_error_transition">Odara eo e se e ile pele. Sena ke moo e leng teng hona jwale.</string>
+
+    <plurals name="orders_item_count">
+        <item quantity="one">ntho e %d</item>
+        <item quantity="other">dintho tse %d</item>
+    </plurals>
+    <string name="orders_in_progress">E ntse e tsamaya</string>
+    <string name="orders_past">Diodara tse fetileng</string>
+    <string name="orders_empty_title">Ha ho diodara hajwale</string>
+    <string name="orders_empty_body">Diodara le dikhoutu tsa ho lata di hlaha mona.</string>
+    <string name="orders_row_title">#%1$d · %2$s</string>
+    <string name="orders_row_subtitle">%1$s · %2$s</string>
+    <string name="active_order_title">Odara #%1$d · khoutu %2$s</string>
+    <string name="active_order_open">Bula</string>
+
+    <string name="queue_title">Mola wa diodara</string>
+    <string name="queue_new">Tse ntjha</string>
+    <string name="queue_preparing">Di lokiswa</string>
+    <string name="queue_ready">Di lokile</string>
+    <string name="queue_all">Tsohle</string>
+    <string name="queue_top_up">Kenya tjhelete</string>
+    <string name="queue_card_header">%1$s · %2$s</string>
+    <string name="queue_line">%1$d× %2$s</string>
+    <string name="queue_line_with_options">%1$d× %2$s (%3$s)</string>
+    <string name="queue_code">Khoutu %1$s · %2$s</string>
+    <string name="queue_counter_due">Amohela %1$s lebenkeleng</string>
+    <string name="queue_start">Qala ho lokisa</string>
+    <string name="queue_mark_ready">Tshwaya e lokile</string>
+    <string name="queue_mark_collected">Tshwaya e latilwe</string>
+    <string name="queue_no_show">Ha a hlaha</string>
+    <string name="queue_empty_title">Ha ho letho ho “%1$s”</string>
+    <string name="queue_empty_body">Mola o hlwekile bakeng sa sefe ena.</string>
+    <string name="queue_moved_on">Odara eo e ne e se e ile pele. Mola o ntlafaditswe hona jwale.</string>
+
+    <plurals name="stock_attention_count">
+        <item quantity="one">ntho e %d</item>
+        <item quantity="other">dintho tse %d</item>
+    </plurals>
+    <string name="stock_attention">%1$s e hloka tlhokomelo: %2$s.</string>
+    <string name="stock_all_good">Tsohle di ka hodimo ho boemo ba ho odara hape.</string>
+    <string name="stock_hidden">E fedile, e patilwe menung</string>
+    <string name="stock_below_reorder">Ka tlase ho boemo ba ho odara hape</string>
+    <string name="stock_price_category">%1$s · %2$s</string>
+    <string name="stock_footer">Diphetoho di fihla menung ya baithuti hang-hang.</string>
+    <string name="stock_add">Kenya ntho</string>
+    <string name="stock_edit">Lokisa %1$s</string>
+    <string name="stock_increase">Eketsa setoko sa %1$s</string>
+    <string name="stock_decrease">Fokotsa setoko sa %1$s</string>
+    <string name="stock_switched_off">E timilwe</string>
+
+    <string name="editor_new_title">Ntho e ntjha</string>
+    <string name="editor_edit_title">Lokisa ntho</string>
+    <string name="editor_name">Lebitso</string>
+    <string name="editor_description">Tlhaloso</string>
+    <string name="editor_price">Theko (R)</string>
+    <string name="editor_stock">Setoko sa ho qala</string>
+    <string name="editor_reorder">Boemo ba ho odara hape</string>
+    <string name="editor_category">Sehlopha</string>
+    <string name="editor_icon">Setshwantsho</string>
+    <string name="editor_temperature">E jewa</string>
+    <string name="editor_temp_none">Efe kapa efe</string>
+    <string name="editor_temp_hot">E tjhesang</string>
+    <string name="editor_temp_cold">E batang</string>
+    <string name="editor_available">E fumaneha menung</string>
+    <string name="editor_save">Boloka</string>
+    <string name="editor_saving">Ea boloka…</string>
+    <string name="editor_delete">Tlosa menung</string>
+    <string name="editor_delete_confirm">Tlosa %1$s? Diodara tse fetileng di ntse di boloka tlaleho ya yona.</string>
+    <string name="editor_options_note">Dikgetho (boholo, dintho tse kenngwang) di lokiswa Supabase hajwale.</string>
+    <string name="editor_error_name">Fa ntho ena lebitso.</string>
+    <string name="editor_error_price">Kenya theko, jwalo ka 16 kapa 16.50.</string>
+    <string name="editor_error_number">Kenya nomoro e feletseng.</string>
+
+    <plurals name="sales_paid_orders">
+        <item quantity="one">odara e %d e latilweng</item>
+        <item quantity="other">diodara tse %d tse latilweng</item>
+    </plurals>
+    <string name="sales_today">Kajeno</string>
+    <string name="sales_revenue">Tjhelete e kenneng</string>
+    <string name="sales_average">Odara ka kakaretso</string>
+    <string name="sales_all_slots">Dinako tsohle tsa phomolo</string>
+    <string name="sales_by_hour">Diodara ka hora</string>
+    <string name="sales_peak">Nako e phahameng %1$s</string>
+    <string name="sales_chart_description">Diodara ka hora kajeno. Hora e phathahaneng haholo ke %1$s ka diodara tse %2$d.</string>
+    <string name="sales_top">Tse rekwang haholo kajeno</string>
+    <string name="sales_sold">%1$d di rekisitswe</string>
+    <string name="sales_none">Ha ho thekiso e ngotsweng kajeno. Thekiso e balwa hang ha diodara di latilwe.</string>
+    <string name="sales_export">Ntsha tlaleho (CSV)</string>
+    <string name="sales_export_title">Arolelana tlaleho ya thekiso</string>
+
+    <string name="topup_title">Kenya tjhelete sepatjheng</string>
+    <string name="topup_explainer">Moithuti o lefa pele mochining wa dikarata wa lebenkele. Mochini oo ke sistimi e arohaneng: kenya tjhelete e tshwanang mona hore e kene sepatjheng sa hae.</string>
+    <string name="topup_student_number">Nomoro ya moithuti</string>
+    <string name="topup_find">Batla moithuti</string>
+    <string name="topup_finding">Ea batla…</string>
+    <string name="topup_not_found">Ha ho moithuti ya nang le nomoro eo. Sheba karata mme o leke hape.</string>
+    <string name="topup_current">Tjhelete e teng hajwale %1$s</string>
+    <string name="topup_amount">Tjhelete</string>
+    <string name="topup_custom">Tjhelete e kgethilweng (R)</string>
+    <string name="topup_range">Pakeng tsa %1$s le %2$s.</string>
+    <string name="topup_add">Kenya %1$s</string>
+    <string name="topup_confirm_title">Kenya %1$s ho %2$s?</string>
+    <string name="topup_confirm_body">Netefatsa feela ha mochini wa dikarata o bontsha hore tefo e tsamaile.</string>
+    <string name="topup_confirm">E, e kenye</string>
+    <string name="topup_not_yet">E seng hajwale</string>
+    <string name="topup_adding">Ea kenya…</string>
+    <string name="topup_done">E kentswe. %1$s jwale o na le %2$s.</string>
+    <string name="topup_another">Kenyetsa moithuti e mong</string>
+
+    <string name="profile_student">Moithuti</string>
+    <string name="profile_staff">Mosebetsi wa lebenkele</string>
+    <string name="profile_wallet">Sepatjhe sa khamphase</string>
+    <string name="profile_loyalty">Ditempe tsa botshepehi</string>
+    <string name="profile_loyalty_progress">%1$d ho tse %2$d</string>
+    <string name="profile_loyalty_note">Tempe e le nngwe ka odara e latilweng.</string>
+    <string name="profile_student_number">Nomoro ya moithuti %1$s</string>
+    <string name="profile_no_student_number">Ha ho nomoro ya moithuti hajwale</string>
+    <string name="profile_preferences">Dikgetho</string>
+    <string name="profile_account">Akhaonto</string>
+    <string name="profile_notifications">Ditsebiso tsa odara</string>
+    <string name="profile_notifications_body">Ntsebise ha odara ya ka e lokile.</string>
+    <string name="profile_theme">Ponahalo</string>
+    <string name="profile_theme_system">Sistimi</string>
+    <string name="profile_theme_light">E bobebe</string>
+    <string name="profile_theme_dark">E lefifi</string>
+    <string name="profile_language">Puo</string>
+    <string name="profile_biometric">Bula ka monwana</string>
+    <string name="profile_biometric_body">Botsa monwana wa hao ha app e buleha.</string>
+    <string name="profile_biometric_unavailable">Founu ena ha e na monwana kapa sefahleho se behilweng.</string>
+    <string name="profile_change_password">Fetola phasewete</string>
+    <string name="profile_privacy">Lekunutu le POPIA</string>
+    <string name="profile_sign_out">Tswa</string>
+
+    <string name="password_new">Phasewete e ntjha</string>
+    <string name="password_repeat">Pheta phasewete e ntjha</string>
+    <string name="password_mismatch">Diphasewete tse pedi ha di tshwane.</string>
+    <string name="password_save">Fetola phasewete</string>
+    <string name="password_saving">Ea fetola…</string>
+    <string name="password_changed">Phasewete e fetotswe.</string>
+
+    <string name="lock_title">Ri-magwinya e notletswe</string>
+    <string name="lock_body">Bula ka monwana wa hao hore o tswele pele.</string>
+    <string name="lock_unlock">Bula</string>
+    <string name="lock_prompt_title">Bula Ri-magwinya</string>
+    <string name="lock_prompt_subtitle">Sebedisa monwana wa hao kapa senotlolo sa skrine.</string>
+    <string name="lock_use_password">Kena ka phasewete ya ka ho ena le hoo</string>
+
+    <string name="privacy_title">Lekunutu le POPIA</string>
+    <string name="privacy_intro">Ri-magwinya ke app ya ho odara esale pele lebenkeleng la Rosebank College, Bloemfontein. Leqephe lena le hlalosa seo re se bolokang ka wena le hore hobaneng, jwalo ka ha Molao wa Tshireletso ya Tlhahisoleseding ya Motho o re kopa.</string>
+    <string name="privacy_h_what">Seo re se bolokang</string>
+    <string name="privacy_b_what">Lebitso la hao, aterese ya imeile le nomoro ya moithuti, hore basebetsi ba fumane odara ya hao lebenkeleng. Diodara tsa hao, seo se neng se le ho tsona, le hore o di latile neng. Tjhelete ya sepatjhe sa hao le tlaleho ya tjhelete e kentsweng le e lefilweng. Ha o bula ditsebiso, letshwao la sesebediswa hore re o tsebise ha odara ya hao e lokile.</string>
+    <string name="privacy_h_why">Hobaneng</string>
+    <string name="privacy_b_why">Ho amohela odara ya hao, ho o lefisa tjhelete e nepahetseng, ho fa motho ya nepahetseng dijo tse nepahetseng, le ho thusa lebenkele ho rera setoko. Ha ho se seng.</string>
+    <string name="privacy_h_cards">Tefo ka karata</string>
+    <string name="privacy_b_cards">Tjhelete e kenngwa mochining wa dikarata wa lebenkele, o leng wa banka mme o arohane. Ha ho nomoro ya karata e kileng ya fihla app ena.</string>
+    <string name="privacy_h_who">Ke mang ya e bonang</string>
+    <string name="privacy_b_who">Wena o bona akhaonto ya hao. Basebetsi ba lebenkele ba bona diodara, mabitso le dinomoro tsa baithuti hore ba o sebeletse, le tjhelete eo ba e kenyang dipatjheng. Ha ho motho e mong. Ha ho letho le rekiswang kapa le arolelanwang.</string>
+    <string name="privacy_h_long">Re e boloka nako e kae</string>
+    <string name="privacy_b_long">Akhaonto ya hao le nalane ya diodara di dula ha o ntse o sebedisa lebenkele. Kopa basebetsi ho tlosa akhaonto ya hao mme re e hlakola, hammoho le diodara tsa hao.</string>
+    <string name="privacy_h_rights">Ditokelo tsa hao</string>
+    <string name="privacy_b_rights">O ka botsa hore re boloka eng ka wena, wa re kopa hore re e lokise, kapa re e hlakole. Bua le lebenkele kapa o romele imeile atereseng e boting ba ditsebiso ba kholeche.</string>
+    <string name="privacy_h_security">Tshireletso</string>
+    <string name="privacy_b_security">Phasewete ya hao e patwa ke mofani wa rona wa ho kena mme ha e bolokwe ke app. Tlhahisoleseding yohle e kwahetswe. Database e hana ho bontsha moithuti e mong tlhahisoleseding ya moithuti e mong.</string>
+
+    <string name="offline_banner">Ha o inthaneteng. O ntse o ka sheba; diphetoho di tla tsamaya ha o kgutla.</string>
+    <string name="offline_queued_title">E emetse letshwao</string>
+    <string name="offline_queued_body">Re tla romela odara ena hang ha o kgutlela inthaneteng: %1$s</string>
+    <string name="offline_queued_order">Odara e emetse letshwao</string>
+    <string name="offline_queued_stock">Phetoho ya setoko e emetse letshwao</string>
+    <string name="offline_failed_title">Odara ena e ke ke ya romelwa</string>
+    <string name="offline_failed_dismiss">Ke utlwile</string>
+    <string name="offline_menu_cached">Re bontsha menu ya ketelo ya hao ya ho qetela. Setoko se ka be se fetohile.</string>
+
+    <string name="channel_orders">Dintlafatso tsa odara</string>
+    <string name="channel_wallet">Sepatjhe</string>
+    <string name="channel_stock">Ditemoso tsa setoko</string>
+    <string name="notif_permission_title">Bula ditsebiso?</string>
+    <string name="notif_permission_body">Hore re o tsebise hang ha odara ya hao e loketse ho latwa. O ka fetola sena hamorao ditlhophisong.</string>
+    <string name="notif_permission_allow">E, ntsebise</string>
+    <string name="notif_permission_skip">E seng hajwale</string>
+    <string name="notif_sheet_title">Ditsebiso</string>
+    <string name="notif_empty_title">Ha ho letho hajwale</string>
+    <string name="notif_empty_body">Dintlafatso tsa odara le tjhelete e kentsweng sepatjheng di hlaha mona.</string>
+    <string name="notif_mark_read">Tshwaya tsohle di badilwe</string>
+
+    <string name="google_continue">Tswela pele ka Google</string>
+    <string name="google_signing_in">Rea o kenya…</string>
+    <string name="google_failed">Ho kena ka Google ha ho a sebetsa. Sebedisa imeile le phasewete ya hao.</string>
+    <string name="google_or">kapa</string>
+    <string name="claim_title">Ntho e nngwe hape</string>
+    <string name="claim_body">Basebetsi ba hloka nomoro ya hao ya moithuti hore ba o fe odara ya hao lebenkeleng. E behwa hang mme e ke ke ya fetolwa hamorao.</string>
+    <string name="claim_save">Boloka mme o tswele pele</string>
+    <string name="claim_saving">Ea boloka…</string>
+    <string name="claim_taken">Nomoro eo ya moithuti e se e ngodisitswe akhaontong e nngwe. Sheba nomoro e karateng ya hao.</string>
+
+    <string name="popia_notice">Re boloka lebitso la hao, imeile, nomoro ya moithuti le nalane ya diodara hore basebetsi ba fumane odara ya hao lebenkeleng. Ha ho letho le arolelanwang le motho e mong.</string>
+
+    <string name="title_welcome">Kamohelo</string>
+    <string name="title_login">Kena</string>
+    <string name="title_register">Theha akhaonto ya hao</string>
+    <string name="title_menu">Menu ya kajeno</string>
+    <string name="title_cart">Sekotlolo sa hao</string>
+    <string name="title_checkout">Lefa</string>
+    <string name="title_order">Odara ya hao</string>
+    <string name="title_orders">Diodara</string>
+    <string name="title_profile">Profaele</string>
+    <string name="title_settings">Ditlhophiso</string>
+    <string name="title_queue">Mola wa diodara</string>
+    <string name="title_stock">Setoko</string>
+    <string name="title_sales">Thekiso</string>
+    <string name="title_top_up">Kenya tjhelete sepatjheng</string>
+
+    <string name="stock_in">E teng setokong</string>
+    <string name="stock_low">%1$d di setse</string>
+    <string name="stock_sold_out">E fedile</string>
+
+    <string name="status_placed">E rometswe</string>
+    <string name="status_preparing">E lokiswa</string>
+    <string name="status_ready">E lokile</string>
+    <string name="status_collected">E latilwe</string>
+    <string name="status_cancelled">E hlakotswe</string>
+    <string name="status_no_show">Ha e a latwa</string>
+
+    <string name="sheet_add_to_cart">Kenya sekotlolong · %1$s</string>
+    <string name="sheet_choose_something">Kgetha ho hong pele</string>
+    <string name="sheet_fillings_only">Dintho tse kenngwang feela, ha ho vetkoek.</string>
+    <string name="sheet_each">%1$s e nngwe</string>
+    <string name="sheet_quantity">Tse kae</string>
+    <string name="sheet_sold_out">E fedile kajeno</string>
+
+    <string name="menu_greeting">Dumela, %1$s</string>
+    <string name="menu_balance">Sepatjhe · %1$s</string>
+    <string name="menu_search">Batla menung</string>
+    <string name="menu_today">Menu ya kajeno</string>
+    <string name="menu_live">E phela</string>
+    <string name="menu_from_price">ho tloha %1$s</string>
+    <string name="menu_category_all">Tsohle</string>
+    <string name="menu_category_meals">Dijo</string>
+    <string name="menu_category_snacks">Dinyennyane</string>
+    <string name="menu_category_drinks">Dino</string>
+    <string name="menu_empty_title">Ha ho letho le tshwanang le seo</string>
+    <string name="menu_empty_body">Leka lentswe le leng, kapa o kgethe sehlopha se seng.</string>
+    <string name="menu_notifications">Ditsebiso</string>
+
+    <string name="action_retry">Leka hape</string>
+    <string name="action_back">Morao</string>
+    <string name="action_close">Kwala</string>
+    <string name="placeholder_coming">E tla tla mokgahlelong o latelang.</string>
+</resources>

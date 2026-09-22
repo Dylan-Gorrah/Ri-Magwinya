@@ -18,6 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.Rimagwinya">
         <activity
             android:name=".MainActivity"
@@ -31,6 +32,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Below Android 13 AppCompat stores the chosen language itself.
+             Without this service the choice would not survive a restart. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
 
         <!-- Pushes: the token, and messages arriving while the app is open. -->
         <service

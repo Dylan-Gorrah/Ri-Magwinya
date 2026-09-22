@@ -160,6 +160,19 @@ class AuthRepository @Inject constructor(
         }.recoverCatching { throw it.toAuthError() }
     }
 
+    /**
+     * Mirrors the chosen language to the profile, so a push is written in
+     * the language the student actually reads. Best effort: failing to save
+     * it must never stop the app changing language.
+     */
+    suspend fun updateLanguage(code: String): Result<Unit> = withContext(io) {
+        runCatching {
+            val id = currentUserId() ?: return@runCatching
+            api.patchProfile("eq.$id", com.rimagwinya.app.data.remote.ProfilePatch(language = code))
+            Unit
+        }
+    }
+
     /** Stamps earned, one per collected order. Display only — no redemption. */
     suspend fun loyaltyStamps(): Result<Int> = withContext(io) {
         runCatching { api.loyaltyStamps().size }.recoverCatching { throw it.asApiError() }

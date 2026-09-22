@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Afrikaans.
+
+    Machine-assisted and NOT yet checked by a first-language speaker — that
+    is a checkpoint in the brief. Tuckshop words are kept the way people on
+    campus actually say them: "snoepie" for the tuckshop, "vetkoek" as is.
+-->
+<resources>
+    <string name="app_name">Ri-magwinya</string>
+
+    <string name="tab_menu">Spyskaart</string>
+    <string name="tab_cart">Mandjie</string>
+    <string name="tab_orders">Bestellings</string>
+    <string name="tab_profile">Profiel</string>
+    <string name="tab_queue">Ry</string>
+    <string name="tab_stock">Voorraad</string>
+    <string name="tab_sales">Verkope</string>
+
+    <string name="welcome_tagline">Bestel vooruit. Spring die ry.</string>
+    <string name="welcome_student">Ek is \'n student</string>
+    <string name="welcome_student_body">Blaai deur die spyskaart, bestel, en haal af met \'n kode.</string>
+    <string name="welcome_staff">Ek werk by die snoepie</string>
+    <string name="welcome_staff_body">Werk die bestellingsry, bestuur voorraad en laai beursies.</string>
+
+    <string name="auth_email">E-pos</string>
+    <string name="auth_email_hint">jy@voorbeeld.com</string>
+    <string name="auth_password">Wagwoord</string>
+    <string name="auth_password_hint">Ten minste 8 karakters</string>
+    <string name="auth_name">Volle naam</string>
+    <string name="auth_name_hint">Thabo Mokoena</string>
+    <string name="auth_student_number">Studentenommer</string>
+    <string name="auth_student_number_hint">ST2024001</string>
+    <string name="auth_sign_in">Meld aan</string>
+    <string name="auth_signing_in">Meld aan…</string>
+    <string name="auth_create_account">Skep rekening</string>
+    <string name="auth_creating">Skep jou rekening…</string>
+    <string name="auth_no_account">Nuut hier? Skep \'n rekening</string>
+    <string name="auth_have_account">Het reeds \'n rekening? Meld aan</string>
+    <string name="auth_sign_out">Meld af</string>
+
+    <string name="error_email_malformed">Dit lyk nie soos \'n e-posadres nie.</string>
+    <string name="error_password_short">Gebruik ten minste 8 karakters.</string>
+    <string name="error_name_short">Voer asseblief jou volle naam in.</string>
+    <string name="error_student_number">Gebruik die studentenommer op jou kaart.</string>
+    <string name="error_credentials">E-pos of wagwoord is verkeerd.</string>
+    <string name="error_email_taken">Daardie e-pos het reeds \'n rekening. Meld eerder aan.</string>
+    <string name="error_student_number_taken">Daardie studentenommer is reeds geregistreer.</string>
+    <string name="error_network">Geen verbinding nie. Kontroleer jou sein en probeer weer.</string>
+    <string name="error_generic">Iets het verkeerd geloop. Probeer weer.</string>
+    <string name="error_signed_out">Meld asseblief weer aan.</string>
+    <string name="error_forbidden">Jy het nie toegang daartoe nie.</string>
+    <string name="error_not_found">Ons kon dit nie kry nie.</string>
+    <string name="error_conflict">Dit het nie deurgegaan nie. Probeer asseblief weer.</string>
+    <string name="error_server">Die snoepie se stelsel sukkel nou. Probeer netnou weer.</string>
+
+    <plurals name="cart_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="cart_empty_title">Jou mandjie is leeg</string>
+    <string name="cart_empty_body">Voeg iets van die spyskaart by en dit verskyn hier.</string>
+    <string name="cart_browse">Blaai deur die spyskaart</string>
+    <string name="cart_each">%1$s elk</string>
+    <string name="cart_remove">Verwyder</string>
+    <string name="cart_slot_label">Afhaaltyd</string>
+    <string name="cart_slot_taken">%1$s · %2$d van %3$d geneem</string>
+    <string name="cart_slot_full">%1$s · Vol</string>
+    <string name="cart_slots_loading">Laai afhaaltye…</string>
+    <string name="cart_no_slots">Geen afhaaltye meer vandag nie. Die snoepie neem môre weer bestellings.</string>
+    <string name="cart_subtotal">Subtotaal</string>
+    <string name="cart_total">Totaal</string>
+    <string name="cart_continue">Gaan voort na betaling</string>
+    <string name="cart_pick_slot">Kies \'n afhaaltyd</string>
+
+    <string name="checkout_summary">Bestellingsopsomming</string>
+    <string name="checkout_collection">Afhaal</string>
+    <string name="checkout_today_at">Vandag · %1$s</string>
+    <string name="checkout_payment">Betaling</string>
+    <string name="checkout_wallet">Kampusbeursie</string>
+    <string name="checkout_wallet_balance">Saldo %1$s</string>
+    <string name="checkout_wallet_after">%1$s oor na hierdie bestelling.</string>
+    <string name="checkout_wallet_short">Nie genoeg saldo nie. Jy kort %1$s. Laai by die snoepie se toonbank.</string>
+    <string name="checkout_counter">Betaal by die toonbank</string>
+    <string name="checkout_counter_body">Betaal met die speedpoint wanneer jy afhaal.</string>
+    <string name="checkout_counter_no_topup">Beskikbaar sodra jy jou beursie ten minste een keer by die snoepie gelaai het.</string>
+    <string name="checkout_counter_no_shows">Nie beskikbaar nie. Twee bestellings is nie afgehaal nie, so betaal-by-die-toonbank is vir hierdie rekening afgeskakel.</string>
+    <string name="checkout_counter_warning">As jy nie afhaal nie, tel dit as \'n nie-opdaag. Na twee word betaal-by-die-toonbank afgeskakel.</string>
+    <string name="checkout_cancel_notice">Jy kan gratis kanselleer totdat die snoepie jou bestelling begin voorberei.</string>
+    <string name="checkout_place">Plaas bestelling · %1$s</string>
+    <string name="checkout_placing">Plaas jou bestelling…</string>
+    <string name="checkout_topup_note">Laai gebeur by die snoepie: tik jou kaart op die speedpoint en personeel voeg dit by jou beursie. Die speedpoint is apart van hierdie app.</string>
+
+    <string name="order_error_out_of_stock">%1$s is pas uitverkoop. Verwyder dit uit jou mandjie en probeer weer.</string>
+    <string name="order_error_out_of_stock_generic">Iets in jou mandjie is pas uitverkoop. Kontroleer jou mandjie en probeer weer.</string>
+    <string name="order_error_slot_full">Daardie afhaaltyd is pas vol. Kies \'n ander een.</string>
+    <string name="order_error_slot_closed">Daardie afhaaltyd het gesluit. Kies \'n ander een.</string>
+    <string name="order_error_funds">Jou beursiesaldo is te laag vir hierdie bestelling. Laai by die snoepie se toonbank.</string>
+    <string name="order_error_counter_no_topup">Betaal-by-die-toonbank benodig eers ten minste een beursielaai. Betaal eerder uit jou beursie.</string>
+    <string name="order_error_counter_no_shows">Betaal-by-die-toonbank is afgeskakel na twee bestellings wat nie afgehaal is nie. Betaal eerder uit jou beursie.</string>
+    <string name="order_error_empty">By een van die items is niks gekies nie. Wysig dit in jou mandjie.</string>
+    <string name="order_error_student_number">Voeg jou studentenommer by voordat jy bestel, sodat personeel jou bestelling kan vind.</string>
+
+    <string name="order_title">Bestelling #%1$d</string>
+    <string name="order_show_code">Wys hierdie kode by die toonbank</string>
+    <string name="order_slot_line">%1$s · %2$s</string>
+    <string name="order_ready_banner">Jou bestelling is gereed. Wys jou kode by die toonbank.</string>
+    <string name="order_step_placed">Bestelling geplaas</string>
+    <string name="order_step_paid">Betaling bevestig</string>
+    <string name="order_step_pay_on_collection">Betaal by afhaal</string>
+    <string name="order_step_preparing">Word voorberei</string>
+    <string name="order_step_ready">Gereed vir afhaal</string>
+    <string name="order_step_collected">Afgehaal</string>
+    <string name="order_step_pending">Hangende</string>
+    <string name="order_step_notified">%1$s · jy is in kennis gestel</string>
+    <string name="order_items">Items</string>
+    <string name="order_total_paid">Totaal betaal</string>
+    <string name="order_total_due">Verskuldig by die toonbank</string>
+    <string name="order_cancel">Kanselleer bestelling</string>
+    <string name="order_cancelling">Kanselleer…</string>
+    <string name="order_cancel_confirm_title">Kanselleer hierdie bestelling?</string>
+    <string name="order_cancel_confirm_body">Jou voorraad en afhaaltyd word vrygestel. Beursiebetalings gaan dadelik terug na jou beursie.</string>
+    <string name="order_cancel_keep">Hou dit</string>
+    <string name="order_cannot_cancel">Hierdie bestelling word voorberei en kan nie meer gekanselleer word nie.</string>
+    <string name="order_cancelled_banner">Hierdie bestelling is gekanselleer.</string>
+    <string name="order_cancelled_refund">Hierdie bestelling is gekanselleer en %1$s is terug in jou beursie.</string>
+    <string name="order_no_show_banner">Hierdie bestelling is nie voor die einde van die pouse afgehaal nie.</string>
+    <string name="order_collected_banner">Afgehaal. Geniet dit.</string>
+    <string name="order_error_transition">Daardie bestelling het reeds aanbeweeg. Hier is waar dit nou is.</string>
+
+    <plurals name="orders_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="orders_in_progress">Aan die gang</string>
+    <string name="orders_past">Vorige bestellings</string>
+    <string name="orders_empty_title">Nog geen bestellings nie</string>
+    <string name="orders_empty_body">Jou bestellings en afhaalkodes verskyn hier.</string>
+    <string name="orders_row_title">#%1$d · %2$s</string>
+    <string name="orders_row_subtitle">%1$s · %2$s</string>
+    <string name="active_order_title">Bestelling #%1$d · kode %2$s</string>
+    <string name="active_order_open">Maak oop</string>
+
+    <string name="queue_title">Bestellingsry</string>
+    <string name="queue_new">Nuut</string>
+    <string name="queue_preparing">Voorberei</string>
+    <string name="queue_ready">Gereed</string>
+    <string name="queue_all">Alles</string>
+    <string name="queue_top_up">Laai beursie</string>
+    <string name="queue_card_header">%1$s · %2$s</string>
+    <string name="queue_line">%1$d× %2$s</string>
+    <string name="queue_line_with_options">%1$d× %2$s (%3$s)</string>
+    <string name="queue_code">Kode %1$s · %2$s</string>
+    <string name="queue_counter_due">Vorder %1$s by die toonbank in</string>
+    <string name="queue_start">Begin voorberei</string>
+    <string name="queue_mark_ready">Merk as gereed</string>
+    <string name="queue_mark_collected">Merk as afgehaal</string>
+    <string name="queue_no_show">Nie opgedaag</string>
+    <string name="queue_empty_title">Niks in “%1$s” nie</string>
+    <string name="queue_empty_body">Die ry is skoon vir hierdie filter.</string>
+    <string name="queue_moved_on">Daardie bestelling het reeds aanbeweeg. Die ry is nou op datum.</string>
+
+    <plurals name="stock_attention_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="stock_attention">%1$s kort aandag: %2$s.</string>
+    <string name="stock_all_good">Alles is bo sy herbestelvlak.</string>
+    <string name="stock_hidden">Uitverkoop, versteek op die spyskaart</string>
+    <string name="stock_below_reorder">Onder herbestelvlak</string>
+    <string name="stock_price_category">%1$s · %2$s</string>
+    <string name="stock_footer">Veranderinge bereik die studentespyskaart dadelik.</string>
+    <string name="stock_add">Voeg item by</string>
+    <string name="stock_edit">Wysig %1$s</string>
+    <string name="stock_increase">Verhoog voorraad van %1$s</string>
+    <string name="stock_decrease">Verlaag voorraad van %1$s</string>
+    <string name="stock_switched_off">Afgeskakel</string>
+
+    <string name="editor_new_title">Nuwe item</string>
+    <string name="editor_edit_title">Wysig item</string>
+    <string name="editor_name">Naam</string>
+    <string name="editor_description">Beskrywing</string>
+    <string name="editor_price">Prys (R)</string>
+    <string name="editor_stock">Aanvangsvoorraad</string>
+    <string name="editor_reorder">Herbestelvlak</string>
+    <string name="editor_category">Kategorie</string>
+    <string name="editor_icon">Ikoon</string>
+    <string name="editor_temperature">Bedien</string>
+    <string name="editor_temp_none">Enige</string>
+    <string name="editor_temp_hot">Warm</string>
+    <string name="editor_temp_cold">Koud</string>
+    <string name="editor_available">Beskikbaar op die spyskaart</string>
+    <string name="editor_save">Stoor</string>
+    <string name="editor_saving">Stoor…</string>
+    <string name="editor_delete">Verwyder van spyskaart</string>
+    <string name="editor_delete_confirm">Verwyder %1$s? Vorige bestellings behou hul rekord daarvan.</string>
+    <string name="editor_options_note">Opsies (groottes, vulsels) word vir eers in Supabase gewysig.</string>
+    <string name="editor_error_name">Gee die item \'n naam.</string>
+    <string name="editor_error_price">Voer \'n prys in, soos 16 of 16.50.</string>
+    <string name="editor_error_number">Voer \'n heelgetal in.</string>
+
+    <plurals name="sales_paid_orders">
+        <item quantity="one">%d afgehaalde bestelling</item>
+        <item quantity="other">%d afgehaalde bestellings</item>
+    </plurals>
+    <string name="sales_today">Vandag</string>
+    <string name="sales_revenue">Inkomste</string>
+    <string name="sales_average">Gemiddelde bestelling</string>
+    <string name="sales_all_slots">Alle pouses</string>
+    <string name="sales_by_hour">Bestellings per uur</string>
+    <string name="sales_peak">Spits %1$s</string>
+    <string name="sales_chart_description">Bestellings per uur vandag. Besigste uur %1$s met %2$d bestellings.</string>
+    <string name="sales_top">Topverkopers vandag</string>
+    <string name="sales_sold">%1$d verkoop</string>
+    <string name="sales_none">Nog geen verkope vandag aangeteken nie. Verkope tel sodra bestellings afgehaal is.</string>
+    <string name="sales_export">Voer verslag uit (CSV)</string>
+    <string name="sales_export_title">Deel verkoopsverslag</string>
+
+    <string name="topup_title">Laai \'n beursie</string>
+    <string name="topup_explainer">Die student betaal eers op die snoepie se speedpoint. Die speedpoint is \'n aparte stelsel: voer dieselfde bedrag hier in om dit by hul beursie te voeg.</string>
+    <string name="topup_student_number">Studentenommer</string>
+    <string name="topup_find">Vind student</string>
+    <string name="topup_finding">Soek…</string>
+    <string name="topup_not_found">Geen student met daardie nommer nie. Kontroleer die kaart en probeer weer.</string>
+    <string name="topup_current">Huidige saldo %1$s</string>
+    <string name="topup_amount">Bedrag</string>
+    <string name="topup_custom">Eie bedrag (R)</string>
+    <string name="topup_range">Tussen %1$s en %2$s.</string>
+    <string name="topup_add">Voeg %1$s by</string>
+    <string name="topup_confirm_title">Voeg %1$s by %2$s?</string>
+    <string name="topup_confirm_body">Bevestig eers wanneer die speedpoint wys die betaling het deurgegaan.</string>
+    <string name="topup_confirm">Ja, voeg dit by</string>
+    <string name="topup_not_yet">Nog nie</string>
+    <string name="topup_adding">Voeg by…</string>
+    <string name="topup_done">Bygevoeg. %1$s het nou %2$s.</string>
+    <string name="topup_another">Laai \'n ander student se beursie</string>
+
+    <string name="profile_student">Student</string>
+    <string name="profile_staff">Snoepiepersoneel</string>
+    <string name="profile_wallet">Kampusbeursie</string>
+    <string name="profile_loyalty">Lojaliteitstempels</string>
+    <string name="profile_loyalty_progress">%1$d van %2$d</string>
+    <string name="profile_loyalty_note">Een stempel per afgehaalde bestelling.</string>
+    <string name="profile_student_number">Studentenommer %1$s</string>
+    <string name="profile_no_student_number">Nog geen studentenommer nie</string>
+    <string name="profile_preferences">Voorkeure</string>
+    <string name="profile_account">Rekening</string>
+    <string name="profile_notifications">Bestellingkennisgewings</string>
+    <string name="profile_notifications_body">Laat my weet wanneer my bestelling gereed is.</string>
+    <string name="profile_theme">Voorkoms</string>
+    <string name="profile_theme_system">Stelsel</string>
+    <string name="profile_theme_light">Lig</string>
+    <string name="profile_theme_dark">Donker</string>
+    <string name="profile_language">Taal</string>
+    <string name="profile_biometric">Ontsluit met vingerafdruk</string>
+    <string name="profile_biometric_body">Vra vir jou vingerafdruk wanneer die app oopmaak.</string>
+    <string name="profile_biometric_unavailable">Hierdie foon het geen vingerafdruk- of gesigontsluiting opgestel nie.</string>
+    <string name="profile_change_password">Verander wagwoord</string>
+    <string name="profile_privacy">Privaatheid en POPIA</string>
+    <string name="profile_sign_out">Meld af</string>
+
+    <string name="password_new">Nuwe wagwoord</string>
+    <string name="password_repeat">Herhaal nuwe wagwoord</string>
+    <string name="password_mismatch">Die twee wagwoorde stem nie ooreen nie.</string>
+    <string name="password_save">Verander wagwoord</string>
+    <string name="password_saving">Verander…</string>
+    <string name="password_changed">Wagwoord verander.</string>
+
+    <string name="lock_title">Ri-magwinya is gesluit</string>
+    <string name="lock_body">Ontsluit met jou vingerafdruk om voort te gaan.</string>
+    <string name="lock_unlock">Ontsluit</string>
+    <string name="lock_prompt_title">Ontsluit Ri-magwinya</string>
+    <string name="lock_prompt_subtitle">Gebruik jou vingerafdruk of skermslot.</string>
+    <string name="lock_use_password">Meld eerder met my wagwoord aan</string>
+
+    <string name="privacy_title">Privaatheid en POPIA</string>
+    <string name="privacy_intro">Ri-magwinya is \'n snoepie-voorafbestel-app vir Rosebank College, Bloemfontein. Hierdie bladsy verduidelik wat dit oor jou hou en waarom, soos die Wet op die Beskerming van Persoonlike Inligting van ons vra.</string>
+    <string name="privacy_h_what">Wat ons hou</string>
+    <string name="privacy_b_what">Jou naam, e-posadres en studentenommer, sodat personeel jou bestelling by die toonbank kan vind. Jou bestellings, wat daarin was, en wanneer jy dit afgehaal het. Jou kampusbeursie se saldo en die rekord van laaiings en betalings. As jy kennisgewings aanskakel, \'n toesteltoken sodat ons jou kan laat weet wanneer jou bestelling gereed is.</string>
+    <string name="privacy_h_why">Waarom</string>
+    <string name="privacy_b_why">Om jou bestelling te neem, die regte bedrag te vra, die regte kos vir die regte persoon te gee, en die snoepie te laat voorraad beplan. Niks anders nie.</string>
+    <string name="privacy_h_cards">Kaartbetalings</string>
+    <string name="privacy_b_cards">Laaiings word op die snoepie se speedpoint betaal, wat aan die bank behoort en \'n aparte stelsel is. Geen kaartnommer bereik ooit hierdie app nie.</string>
+    <string name="privacy_h_who">Wie sien dit</string>
+    <string name="privacy_b_who">Jy sien jou eie rekening. Snoepiepersoneel sien bestellings, name en studentenommers sodat hulle jou kan help, en die beursielaaiings wat hulle aanteken. Niemand anders nie. Niks word verkoop of gedeel nie.</string>
+    <string name="privacy_h_long">Hoe lank ons dit hou</string>
+    <string name="privacy_b_long">Jou rekening en sy bestellingsgeskiedenis bly terwyl jy die snoepie gebruik. Vra personeel om jou rekening te verwyder en ons vee dit uit, saam met jou bestellings.</string>
+    <string name="privacy_h_rights">Jou regte</string>
+    <string name="privacy_b_rights">Jy mag vra wat ons oor jou hou, ons vra om dit reg te stel, of ons vra om dit uit te vee. Praat met die snoepie of stuur \'n e-pos na die adres op die kollege se kennisgewingbord.</string>
+    <string name="privacy_h_security">Sekuriteit</string>
+    <string name="privacy_b_security">Jou wagwoord word deur ons aanmeldverskaffer gehash en word nooit deur die app gestoor nie. Alle verkeer is geënkripteer. Die databasis weier om een student se inligting aan \'n ander te wys.</string>
+
+    <string name="offline_banner">Jy is vanlyn. Jy kan steeds rondkyk; veranderinge gaan deur wanneer jy terug is.</string>
+    <string name="offline_queued_title">Wag vir sein</string>
+    <string name="offline_queued_body">Ons stuur hierdie bestelling sodra jy weer aanlyn is: %1$s</string>
+    <string name="offline_queued_order">Bestelling wag vir sein</string>
+    <string name="offline_queued_stock">Voorraadverandering wag vir sein</string>
+    <string name="offline_failed_title">Hierdie bestelling kon nie gestuur word nie</string>
+    <string name="offline_failed_dismiss">Reg so</string>
+    <string name="offline_menu_cached">Wys die spyskaart van jou laaste besoek. Voorraad kon verander het.</string>
+
+    <string name="channel_orders">Bestellingopdaterings</string>
+    <string name="channel_wallet">Beursie</string>
+    <string name="channel_stock">Voorraadwaarskuwings</string>
+    <string name="notif_permission_title">Skakel kennisgewings aan?</string>
+    <string name="notif_permission_body">Sodat ons jou kan laat weet die oomblik wanneer jou bestelling gereed is. Jy kan dit later in instellings verander.</string>
+    <string name="notif_permission_allow">Ja, laat my weet</string>
+    <string name="notif_permission_skip">Nie nou nie</string>
+    <string name="notif_sheet_title">Kennisgewings</string>
+    <string name="notif_empty_title">Nog niks nie</string>
+    <string name="notif_empty_body">Bestellingopdaterings en beursielaaiings verskyn hier.</string>
+    <string name="notif_mark_read">Merk alles as gelees</string>
+
+    <string name="google_continue">Gaan voort met Google</string>
+    <string name="google_signing_in">Meld jou aan…</string>
+    <string name="google_failed">Google-aanmelding het nie gewerk nie. Gebruik eerder jou e-pos en wagwoord.</string>
+    <string name="google_or">of</string>
+    <string name="claim_title">Nog een ding</string>
+    <string name="claim_body">Personeel het jou studentenommer nodig om jou bestelling by die toonbank te oorhandig. Dit word een keer gestel en kan nie daarna verander word nie.</string>
+    <string name="claim_save">Stoor en gaan voort</string>
+    <string name="claim_saving">Stoor…</string>
+    <string name="claim_taken">Daardie studentenommer is reeds by \'n ander rekening geregistreer. Kontroleer die nommer op jou kaart.</string>
+
+    <string name="popia_notice">Ons stoor jou naam, e-pos, studentenommer en bestellingsgeskiedenis sodat personeel jou bestelling by die toonbank kan vind. Niks word met enigiemand anders gedeel nie.</string>
+
+    <string name="title_welcome">Welkom</string>
+    <string name="title_login">Meld aan</string>
+    <string name="title_register">Skep jou rekening</string>
+    <string name="title_menu">Vandag se spyskaart</string>
+    <string name="title_cart">Jou mandjie</string>
+    <string name="title_checkout">Betaal</string>
+    <string name="title_order">Jou bestelling</string>
+    <string name="title_orders">Bestellings</string>
+    <string name="title_profile">Profiel</string>
+    <string name="title_settings">Instellings</string>
+    <string name="title_queue">Bestellingsry</string>
+    <string name="title_stock">Voorraad</string>
+    <string name="title_sales">Verkope</string>
+    <string name="title_top_up">Laai \'n beursie</string>
+
+    <string name="stock_in">In voorraad</string>
+    <string name="stock_low">%1$d oor</string>
+    <string name="stock_sold_out">Uitverkoop</string>
+
+    <string name="status_placed">Geplaas</string>
+    <string name="status_preparing">Voorberei</string>
+    <string name="status_ready">Gereed</string>
+    <string name="status_collected">Afgehaal</string>
+    <string name="status_cancelled">Gekanselleer</string>
+    <string name="status_no_show">Nie afgehaal</string>
+
+    <string name="sheet_add_to_cart">Voeg by mandjie · %1$s</string>
+    <string name="sheet_choose_something">Kies eers iets</string>
+    <string name="sheet_fillings_only">Net vulsels, geen vetkoek.</string>
+    <string name="sheet_each">%1$s elk</string>
+    <string name="sheet_quantity">Hoeveel</string>
+    <string name="sheet_sold_out">Uitverkoop vir vandag</string>
+
+    <string name="menu_greeting">Hallo, %1$s</string>
+    <string name="menu_balance">Beursie · %1$s</string>
+    <string name="menu_search">Soek die spyskaart</string>
+    <string name="menu_today">Vandag se spyskaart</string>
+    <string name="menu_live">Lewendig</string>
+    <string name="menu_from_price">vanaf %1$s</string>
+    <string name="menu_category_all">Alles</string>
+    <string name="menu_category_meals">Etes</string>
+    <string name="menu_category_snacks">Versnaperinge</string>
+    <string name="menu_category_drinks">Drankies</string>
+    <string name="menu_empty_title">Niks pas daarby nie</string>
+    <string name="menu_empty_body">Probeer \'n ander woord, of kies \'n ander kategorie.</string>
+    <string name="menu_notifications">Kennisgewings</string>
+
+    <string name="action_retry">Probeer weer</string>
+    <string name="action_back">Terug</string>
+    <string name="action_close">Maak toe</string>
+    <string name="placeholder_coming">Kom in \'n latere fase.</string>
+</resources>

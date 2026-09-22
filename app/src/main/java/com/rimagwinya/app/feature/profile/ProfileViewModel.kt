@@ -1,5 +1,7 @@
 package com.rimagwinya.app.feature.profile
 
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.R
@@ -89,10 +91,17 @@ class ProfileViewModel @Inject constructor(
 
     fun setBiometric(on: Boolean) = viewModelScope.launch { settingsRepository.setBiometricUnlock(on) }
 
+    /**
+     * Switches the app's language immediately and remembers it.
+     *
+     * Three places, on purpose: AppCompat applies it now and restores it on
+     * the next launch, DataStore is what the settings screen reads, and
+     * `profiles.language` is what a push notification is written in.
+     */
     fun setLanguage(code: String) = viewModelScope.launch {
         settingsRepository.setLanguage(code)
-        // Phase 13 also mirrors it to profiles.language, so a push arrives
-        // in the language the student reads.
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(code))
+        auth.updateLanguage(code)
     }
 
     fun openPasswordSheet() = local.update { it.copy(passwordForm = PasswordForm()) }
