@@ -46,6 +46,15 @@ class SessionViewModel @Inject constructor(
                 }
             }
         }
+        viewModelScope.launch {
+            // A newer profile (after an order or a top-up) replaces the one
+            // on screen, but never signs anyone in by itself.
+            auth.currentProfile.collect { profile ->
+                if (profile != null && _state.value is AuthState.SignedIn) {
+                    _state.value = AuthState.SignedIn(profile)
+                }
+            }
+        }
     }
 
     private suspend fun loadProfile() {

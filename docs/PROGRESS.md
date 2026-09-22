@@ -18,6 +18,7 @@ on 2026-09-22; waiting on one run on the phone)
 account and make a staff user)
 **Phase 4 — Student menu · BUILT** (live stock updates in; waiting on a phone check)
 **Phase 5 — Edge Functions · DONE** (deployed and tested against the live project)
+**Phase 6 — Cart and checkout · DONE** (built and unit tested; needs a phone run)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -528,6 +529,35 @@ Supabase's email rate limit — **Confirm email was still on** at the time.
 
 - `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
 - `./gradlew testDebugUnitTest` — **76 tests, 0 failures**
+
+---
+
+## Phase 6 — Cart and checkout · DONE
+
+- **Cart** — lines with option labels; a stepper on plain items (zero
+  removes) and a Remove button on builds, whose count lives in their own
+  steppers. Collection-time chips with "11:00–11:20 · 12 of 40 taken",
+  kept live by a realtime watch on `collection_slots`. Totals card.
+- **Checkout** — summary, collection card (tap to change), wallet or
+  pay-at-counter, the no-show warning, the cancellation notice, and a Place
+  button carrying the total.
+- **Place order** keeps one `client_ref` per attempt, so a retry after a
+  timeout cannot charge twice; a new ref only after success or a definite
+  refusal. On success the cart clears, the balance refreshes everywhere, and
+  the app opens the new order.
+- A specific sentence for every refusal the server can give.
+- `AuthRepository.currentProfile` is now the one place the balance lives, so
+  the hero, checkout and profile all update after one fetch.
+- `TableWatcher` — a reusable "this table changed, fetch again" realtime
+  helper, used here for slots and in Phases 7–8 for orders.
+- The highlighted tab now follows the screen showing, rather than a variable
+  set on tap.
+
+**Decisions I made (Dylan did not pick, so the recommended options):**
+breaks that have ended are **hidden**; a break under way can be ordered for
+until **5 minutes before it ends** (`AppConfig.SLOT_CUTOFF_MINUTES`).
+
+**`CheckoutRulesTest` — 18 tests.** 94 passing in total.
 
 ---
 

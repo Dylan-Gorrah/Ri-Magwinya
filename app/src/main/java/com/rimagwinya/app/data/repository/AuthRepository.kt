@@ -15,6 +15,9 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.JsonObject
@@ -52,6 +55,15 @@ class AuthRepository @Inject constructor(
 
     val isSignedIn: Boolean
         get() = client.auth.currentSessionOrNull() != null
+
+    private val _currentProfile = MutableStateFlow<Profile?>(null)
+
+    /**
+     * The last profile fetched. Screens that show the balance watch this, so
+     * placing an order or a top-up updates the hero, the checkout and the
+     * profile together after one [profile] call.
+     */
+    val currentProfile: StateFlow<Profile?> = _currentProfile.asStateFlow()
 
     /**
      * Creates the account. The profile row is created by the
@@ -96,6 +108,7 @@ class AuthRepository @Inject constructor(
     suspend fun signOut(): Result<Unit> = withContext(io) {
         runCatching {
             client.auth.signOut()
+            _currentProfile.value = null
             Unit
         }.recoverCatching { throw it.asApiError() }
         // Phase 11 also clears profiles.fcm_token here. On a shared or
@@ -114,6 +127,7 @@ class AuthRepository @Inject constructor(
             api.profile("eq.$id").firstOrNull()?.toDomain()
                 ?: throw ApiError.NotFound
         }.recoverCatching { throw it.asApiError() }
+            .onSuccess { _currentProfile.value = it }
     }
 
     /** Sets the student number once, for accounts created by Google sign-in. */
@@ -126,9 +140,10 @@ class AuthRepository @Inject constructor(
                     )
                 ).toDomain()
             }.recoverCatching { throw it.asApiError() }
+                .onSuccess { _currentProfile.value = it }
         }
 
-    private fun currentUserId(): String? = client.auth.currentSessionOrNull()?.user?.id
+    fun currentUserId(): String? = client.auth.currentSessionOrNull()?.user?.id
 }
 
 /**

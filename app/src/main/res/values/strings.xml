@@ -67,6 +67,56 @@
     <!-- Developer-only: shown when local.properties has no Supabase keys -->
     <string name="dev_backend_not_configured" translatable="false">Add SUPABASE_URL and SUPABASE_ANON_KEY to local.properties, then rebuild.</string>
 
+    <!-- Cart -->
+    <plurals name="cart_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="cart_empty_title">Your cart is empty</string>
+    <string name="cart_empty_body">Add something from the menu and it shows up here.</string>
+    <string name="cart_browse">Browse the menu</string>
+    <string name="cart_each">%1$s each</string>
+    <string name="cart_remove">Remove</string>
+    <string name="cart_slot_label">Collection time</string>
+    <string name="cart_slot_taken">%1$s · %2$d of %3$d taken</string>
+    <string name="cart_slot_full">%1$s · Full</string>
+    <string name="cart_slots_loading">Loading collection times…</string>
+    <string name="cart_no_slots">No more collection times today. The tuckshop takes orders again tomorrow.</string>
+    <string name="cart_subtotal">Subtotal</string>
+    <string name="cart_total">Total</string>
+    <string name="cart_continue">Continue to checkout</string>
+    <string name="cart_pick_slot">Pick a collection time</string>
+
+    <!-- Checkout -->
+    <string name="checkout_summary">Order summary</string>
+    <string name="checkout_collection">Collection</string>
+    <string name="checkout_today_at">Today · %1$s</string>
+    <string name="checkout_payment">Payment</string>
+    <string name="checkout_wallet">Campus wallet</string>
+    <string name="checkout_wallet_balance">Balance %1$s</string>
+    <string name="checkout_wallet_after">%1$s left after this order.</string>
+    <string name="checkout_wallet_short">Not enough balance. You are short %1$s. Top up at the tuckshop counter.</string>
+    <string name="checkout_counter">Pay at the counter</string>
+    <string name="checkout_counter_body">Pay on the speed point when you collect.</string>
+    <string name="checkout_counter_no_topup">Available once you have topped up your wallet at the tuckshop at least once.</string>
+    <string name="checkout_counter_no_shows">Not available. Two orders were not collected, so pay-at-counter has been switched off for this account.</string>
+    <string name="checkout_counter_warning">If you do not collect, it counts as a no-show. After two, pay-at-counter is switched off.</string>
+    <string name="checkout_cancel_notice">You can cancel free of charge until the tuckshop starts preparing your order.</string>
+    <string name="checkout_place">Place order · %1$s</string>
+    <string name="checkout_placing">Placing your order…</string>
+    <string name="checkout_topup_note">Top-ups happen at the tuckshop: tap your card on the speed point and staff add it to your wallet. The speed point is separate from this app.</string>
+
+    <!-- Order failures, one per reason the server gives -->
+    <string name="order_error_out_of_stock">%1$s just sold out. Remove it from your cart and try again.</string>
+    <string name="order_error_out_of_stock_generic">Something in your cart just sold out. Check your cart and try again.</string>
+    <string name="order_error_slot_full">That collection time just filled up. Pick another one.</string>
+    <string name="order_error_slot_closed">That collection time has closed. Pick another one.</string>
+    <string name="order_error_funds">Your wallet balance is too low for this order. Top up at the tuckshop counter.</string>
+    <string name="order_error_counter_no_topup">Pay-at-counter needs at least one wallet top-up first. Pay from your wallet instead.</string>
+    <string name="order_error_counter_no_shows">Pay-at-counter is switched off after two uncollected orders. Pay from your wallet instead.</string>
+    <string name="order_error_empty">One of the items has nothing chosen. Edit it in your cart.</string>
+    <string name="order_error_student_number">Add your student number before ordering, so staff can find your order.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

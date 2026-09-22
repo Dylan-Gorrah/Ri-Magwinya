@@ -65,10 +65,45 @@ interface SupabaseApi {
     @POST("rest/v1/rpc/claim_student_number")
     suspend fun claimStudentNumber(@Body body: ClaimStudentNumberBody): ProfileDto
 
+    /**
+     * Orders with their lines, slot and (for staff) who they are for. RLS
+     * decides whose: a student gets their own, staff get everyone's.
+     */
+    @GET("rest/v1/orders")
+    suspend fun orders(
+        @Query("select") select: String = ORDER_SELECT,
+        @Query("order") order: String = "placed_at.desc",
+        @Query("status") status: String? = null,
+        @Query("placed_at") placedSince: String? = null,
+        @Query("limit") limit: Int? = null,
+    ): List<OrderDto>
+
+    @GET("rest/v1/orders")
+    suspend fun order(
+        @Query("id") id: String,
+        @Query("select") select: String = ORDER_SELECT,
+    ): List<OrderDto>
+
+    /**
+     * Whether the caller has ever been topped up. Pay-at-counter needs one:
+     * it means staff have seen this person at the speed point.
+     */
+    @GET("rest/v1/wallet_transactions")
+    suspend fun topUps(
+        @Query("type") type: String = "eq.topup",
+        @Query("select") select: String = "id",
+        @Query("limit") limit: Int = 1,
+    ): List<IdOnly>
+
     companion object {
         const val MENU_SELECT = "*,option_groups(*,options(*))"
+        const val ORDER_SELECT =
+            "*,order_items(*),collection_slots(name,starts_at,ends_at),profiles(full_name,student_number)"
     }
 }
+
+@Serializable
+data class IdOnly(val id: String)
 
 @Serializable
 data class EnsureSlotsBody(

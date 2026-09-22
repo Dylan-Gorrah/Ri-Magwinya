@@ -49,6 +49,15 @@ object AppConfig {
     /** Stamps needed for a full loyalty card. Display only, no redemption. */
     const val LOYALTY_TARGET = 10
 
+    /**
+     * Orders for a break close this many minutes before it ends, so the
+     * kitchen has time to make the food. Breaks that have closed are hidden.
+     */
+    const val SLOT_CUTOFF_MINUTES = 5L
+
+    /** The tuckshop's clock. "Today" and every time shown are in this zone. */
+    val zone: java.time.ZoneId = java.time.ZoneId.of(TIMEZONE)
+
     const val PASSWORD_MIN_LENGTH = 8
     const val COLLECTION_CODE_LENGTH = 4
 }

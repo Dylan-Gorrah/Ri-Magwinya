@@ -26,6 +26,14 @@ class CartRepository @Inject constructor() {
     private val _cart = MutableStateFlow(Cart())
     val cart: StateFlow<Cart> = _cart.asStateFlow()
 
+    /** The collection break chosen on the cart screen, carried to checkout. */
+    private val _slotId = MutableStateFlow<String?>(null)
+    val slotId: StateFlow<String?> = _slotId.asStateFlow()
+
+    fun selectSlot(id: String?) {
+        _slotId.value = id
+    }
+
     /**
      * Adds a configured item.
      *

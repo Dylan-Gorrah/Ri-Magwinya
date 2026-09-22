@@ -7,13 +7,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,6 +29,8 @@ import com.rimagwinya.app.feature.auth.LoginScreen
 import com.rimagwinya.app.feature.auth.RegisterScreen
 import com.rimagwinya.app.feature.auth.SessionViewModel
 import com.rimagwinya.app.feature.auth.WelcomeScreen
+import com.rimagwinya.app.feature.cart.CartScreen
+import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
 
 @Composable
@@ -47,9 +49,12 @@ fun RootNavHost(
     val signedIn = role != null
 
     val tabs = if (role == UserRole.Staff) staffTabs else studentTabs
-    var tab by remember(role) {
-        mutableStateOf(if (role == UserRole.Staff) TabKey.QUEUE else TabKey.MENU)
-    }
+    val roleGraph: Any = if (role == UserRole.Staff) Route.StaffGraph else Route.StudentGraph
+
+    // The highlighted tab follows the screen actually showing, so arriving
+    // at an order from checkout lights up Orders without anyone setting it.
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val tab = backStackEntry?.destination?.let(::tabFor)
 
     // Signing in or out swaps the whole graph underneath whatever is on
     // screen, so no individual screen has to know where to go afterwards.
@@ -78,9 +83,8 @@ fun RootNavHost(
                     tabs = tabs,
                     selectedRoute = tab,
                     onSelect = { selected ->
-                        tab = selected.route
                         navController.navigate(routeFor(selected.route)) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
+                            popUpTo(roleGraph) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -96,6 +100,7 @@ fun RootNavHost(
             ) {
                 authGraph(navController)
                 studentGraph(
+                    navController = navController,
                     firstName = profile?.fullName?.substringBefore(' ').orEmpty(),
                     balance = profile?.walletBalance ?: Money.ZERO,
                 )
@@ -109,6 +114,18 @@ fun RootNavHost(
             }
         }
     }
+}
+
+/** Which tab a destination belongs to. */
+private fun tabFor(destination: NavDestination): String? = when {
+    destination.hasRoute(Route.Menu::class) -> TabKey.MENU
+    destination.hasRoute(Route.Cart::class) || destination.hasRoute(Route.Checkout::class) -> TabKey.CART
+    destination.hasRoute(Route.Orders::class) || destination.hasRoute(Route.OrderDetail::class) -> TabKey.ORDERS
+    destination.hasRoute(Route.Queue::class) || destination.hasRoute(Route.TopUp::class) -> TabKey.QUEUE
+    destination.hasRoute(Route.Stock::class) -> TabKey.STOCK
+    destination.hasRoute(Route.Sales::class) -> TabKey.SALES
+    destination.hasRoute(Route.Profile::class) -> TabKey.PROFILE
+    else -> null
 }
 
 private fun routeFor(tabKey: String): Any = when (tabKey) {
@@ -140,12 +157,38 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     }
 }
 
-/** Menu, cart, checkout, orders. Phases 6 and 7 fill in the rest. */
-private fun NavGraphBuilder.studentGraph(firstName: String, balance: Money) {
+/** Menu, cart, checkout, orders. */
+private fun NavGraphBuilder.studentGraph(
+    navController: NavHostController,
+    firstName: String,
+    balance: Money,
+) {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
         composable<Route.Menu> { MenuScreen(fullName = firstName, balance = balance) }
-        composable<Route.Cart> { PlaceholderScreen(R.string.title_cart, icon = R.drawable.ic_cart) }
-        composable<Route.Checkout> { PlaceholderScreen(R.string.title_checkout, icon = R.drawable.ic_wallet) }
+        composable<Route.Cart> {
+            CartScreen(
+                onBrowseMenu = {
+                    navController.navigate(Route.Menu) {
+                        popUpTo(Route.StudentGraph) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onCheckout = { navController.navigate(Route.Checkout) },
+            )
+        }
+        composable<Route.Checkout> {
+            CheckoutScreen(
+                onBack = { navController.popBackStack() },
+                onPlaced = { orderId ->
+                    // Back from the new order goes to the menu, not to an
+                    // empty checkout.
+                    navController.navigate(Route.OrderDetail(orderId)) {
+                        popUpTo(Route.Menu)
+                    }
+                },
+            )
+        }
         composable<Route.Orders> { PlaceholderScreen(R.string.title_orders, icon = R.drawable.ic_clock) }
         composable<Route.OrderDetail> { PlaceholderScreen(R.string.title_order, icon = R.drawable.ic_check) }
     }

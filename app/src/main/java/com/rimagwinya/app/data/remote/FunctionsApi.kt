@@ -110,6 +110,22 @@ data class OrderDto(
     @SerialName("cancelled_at") val cancelledAt: String? = null,
     /** Present on place-order and on PostgREST reads with the embed. */
     @SerialName("order_items") val orderItems: List<OrderItemDto> = emptyList(),
+    /** PostgREST embeds, when the select asks for them. */
+    @SerialName("collection_slots") val slot: SlotEmbedDto? = null,
+    @SerialName("profiles") val student: StudentEmbedDto? = null,
+)
+
+@Serializable
+data class SlotEmbedDto(
+    val name: String,
+    @SerialName("starts_at") val startsAt: String,
+    @SerialName("ends_at") val endsAt: String,
+)
+
+@Serializable
+data class StudentEmbedDto(
+    @SerialName("full_name") val fullName: String,
+    @SerialName("student_number") val studentNumber: String? = null,
 )
 
 @Serializable

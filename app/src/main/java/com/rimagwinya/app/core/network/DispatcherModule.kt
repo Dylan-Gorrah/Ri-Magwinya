@@ -25,4 +25,11 @@ object DispatcherModule {
     @Provides
     @IoDispatcher
     fun ioDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    /**
+     * Injected for the same reason: "is this break still open?" and "is the
+     * weather cache stale?" are only testable if a test can set the time.
+     */
+    @Provides
+    fun clock(): java.time.Clock = java.time.Clock.systemUTC()
 }
