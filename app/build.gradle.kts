@@ -39,6 +39,9 @@ android {
         // Push only works once Firebase is set up; the app checks this
         // rather than crashing on a missing FirebaseApp.
         buildConfigField("boolean", "PUSH_ENABLED", hasFirebaseConfig.toString())
+        // The Google **Web** client id (not the Android one). Empty until
+        // Phase 12 is set up, and the button hides itself when it is empty.
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperty("GOOGLE_WEB_CLIENT_ID")}\"")
     }
 
     buildTypes {
@@ -103,6 +106,11 @@ dependencies {
     implementation(libs.supabase.realtime)
     // supabase-kt runs on Ktor and needs an engine on the classpath.
     implementation(libs.ktor.client.okhttp)
+
+    // --- Google sign-in (Phase 12) ---
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services)
+    implementation(libs.googleid)
 
     // --- Push notifications (Phase 11) ---
     implementation(platform(libs.firebase.bom))

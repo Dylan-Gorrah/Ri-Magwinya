@@ -17,6 +17,12 @@ object AppConfig {
     val supabaseUrl: String = BuildConfig.SUPABASE_URL
     val supabaseAnonKey: String = BuildConfig.SUPABASE_ANON_KEY
 
+    /** The Google Web client id. Empty until Phase 12 is set up. */
+    val googleWebClientId: String = BuildConfig.GOOGLE_WEB_CLIENT_ID
+
+    val isGoogleSignInConfigured: Boolean
+        get() = googleWebClientId.isNotBlank()
+
     val isBackendConfigured: Boolean
         get() = supabaseUrl.isNotBlank() && supabaseAnonKey.isNotBlank()
 

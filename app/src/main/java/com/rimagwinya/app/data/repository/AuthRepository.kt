@@ -10,7 +10,9 @@ import com.rimagwinya.app.data.remote.toDomain
 import com.rimagwinya.app.domain.model.Profile
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.providers.builtin.IDToken
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -104,6 +106,23 @@ class AuthRepository @Inject constructor(
                 Unit
             }.recoverCatching { throw it.toAuthError() }
         }
+
+    /**
+     * Signs in with a Google ID token from Credential Manager.
+     *
+     * Supabase verifies the token with Google, so nothing here has to. A
+     * first sign-in creates the account with no student number, which the
+     * app then asks for — see [claimStudentNumber].
+     */
+    suspend fun signInWithGoogle(idToken: String): Result<Unit> = withContext(io) {
+        runCatching {
+            client.auth.signInWith(IDToken) {
+                this.idToken = idToken
+                provider = Google
+            }
+            Unit
+        }.recoverCatching { throw it.toAuthError() }
+    }
 
     suspend fun signOut(): Result<Unit> = withContext(io) {
         runCatching {

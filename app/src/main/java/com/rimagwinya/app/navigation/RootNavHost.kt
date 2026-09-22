@@ -1,8 +1,8 @@
 package com.rimagwinya.app.navigation
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -33,6 +33,7 @@ import com.rimagwinya.app.core.designsystem.theme.Space
 import com.rimagwinya.app.core.money.Money
 import com.rimagwinya.app.data.repository.AuthState
 import com.rimagwinya.app.domain.model.UserRole
+import com.rimagwinya.app.feature.auth.ClaimStudentNumberScreen
 import com.rimagwinya.app.feature.auth.LoginScreen
 import com.rimagwinya.app.feature.auth.RegisterScreen
 import com.rimagwinya.app.feature.auth.SessionViewModel
@@ -95,6 +96,13 @@ fun RootNavHost(
 
             else -> Unit // Loading: the splash is still up.
         }
+    }
+
+    // A Google account with no student number yet can browse nothing until
+    // it has one: staff need something to call out at the counter.
+    if (signedIn && profile?.studentNumber == null) {
+        ClaimStudentNumberScreen(modifier = modifier.fillMaxSize().background(RmTheme.colors.background))
+        return
     }
 
     // The lock sits over everything once, per launch, and only when

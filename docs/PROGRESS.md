@@ -24,6 +24,7 @@ account and make a staff user)
 **Phase 9 — Profile and settings · DONE** (built and unit tested)
 **Phase 10 — Offline mode with sync · DONE** (built and unit tested)
 **Phase 11 — Push notifications · BUILT, dormant** (waiting on Dylan's Firebase project)
+**Phase 12 — Google sign-in · BUILT, dormant** (waiting on Dylan's Google Cloud client id)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -709,6 +710,33 @@ Edge Function secrets exist.
 2. *Project settings → Service accounts → Generate new private key*, then
    set Edge Function secrets `FCM_SERVICE_ACCOUNT` (the whole JSON) and
    `FCM_PROJECT_ID`.
+
+---
+
+## Phase 12 — Google sign-in · BUILT, waiting on a client id
+
+Same shape as Phase 11: it is all written, and it hides itself until
+`GOOGLE_WEB_CLIENT_ID` is in `local.properties`.
+
+- **Credential Manager → Google ID token → Supabase ID-token sign-in.** Any
+  Google account is accepted; there is no college domain (section 12).
+- **"Continue with Google"** on both sign-in and create-account, and nothing
+  at all when the client id is empty.
+- **The student-number screen.** A Google account arrives with no student
+  number, so the app shows a one-field screen before letting it into the
+  app — staff need something to call out at the counter. It goes through
+  `claim_student_number`, which sets the value only while it is still null,
+  and a number already taken says so plainly.
+- Dismissing the Google sheet is treated as a cancellation, not an error:
+  no red banner for changing your mind.
+
+### What Dylan owes for this phase
+
+1. Google Cloud Console: OAuth consent screen, a **Web** client id, and an
+   **Android** client id using the SHA-1 from `./gradlew signingReport`.
+2. Supabase *Authentication → Providers → Google*: enable it, paste the Web
+   client id and secret.
+3. `GOOGLE_WEB_CLIENT_ID=<the web client id>` in `local.properties`.
 
 ---
 

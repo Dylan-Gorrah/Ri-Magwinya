@@ -342,6 +342,17 @@
     <string name="notif_empty_body">Order updates and wallet top-ups appear here.</string>
     <string name="notif_mark_read">Mark all as read</string>
 
+    <!-- Google sign-in -->
+    <string name="google_continue">Continue with Google</string>
+    <string name="google_signing_in">Signing you in…</string>
+    <string name="google_failed">Google sign-in did not work. Use your email and password instead.</string>
+    <string name="google_or">or</string>
+    <string name="claim_title">One more thing</string>
+    <string name="claim_body">Staff need your student number to hand you your order at the counter. It is set once and cannot be changed afterwards.</string>
+    <string name="claim_save">Save and carry on</string>
+    <string name="claim_saving">Saving…</string>
+    <string name="claim_taken">That student number is already registered to another account. Check the number on your card.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

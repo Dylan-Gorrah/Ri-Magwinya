@@ -85,6 +85,8 @@ fun LoginScreen(
             enabled = state.canSubmit,
         )
 
+        GoogleSignInButton()
+
         RmButton(
             text = stringResource(R.string.auth_no_account),
             onClick = onRegister,
@@ -187,6 +189,8 @@ fun RegisterScreen(
             onClick = viewModel::submit,
             enabled = state.canSubmit,
         )
+
+        GoogleSignInButton()
 
         RmButton(
             text = stringResource(R.string.auth_have_account),
