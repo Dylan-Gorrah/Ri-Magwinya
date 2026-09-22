@@ -13,7 +13,7 @@ Built for **OPSC6312 Part 2** by **Dylan Gorrah (ST10398445)**.
 |---|---|
 | **Try it in a browser** | https://dylan-gorrah.github.io/Ri-Magwinya/ |
 | **Download the APK** | [Releases](https://github.com/Dylan-Gorrah/Ri-Magwinya/releases) → the `.apk` under Assets |
-| **Demo video** | _(paste the unlisted YouTube link here)_ |
+| **Demo video** | _ https://youtu.be/Z6qdyHUlznk _ |
 | **Test accounts** | Student `user123@gmail.com` / `FrogybyD1` · Staff `admin@gmail.com` / `Admin1234!` |
 
 ---
