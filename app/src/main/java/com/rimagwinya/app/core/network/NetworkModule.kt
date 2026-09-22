@@ -2,6 +2,7 @@ package com.rimagwinya.app.core.network
 
 import com.rimagwinya.app.BuildConfig
 import com.rimagwinya.app.core.config.AppConfig
+import com.rimagwinya.app.data.remote.FunctionsApi
 import com.rimagwinya.app.data.remote.SupabaseApi
 import dagger.Binds
 import dagger.Module
@@ -96,6 +97,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun supabaseApi(retrofit: Retrofit): SupabaseApi = retrofit.create(SupabaseApi::class.java)
+
+    @Provides
+    @Singleton
+    fun functionsApi(retrofit: Retrofit): FunctionsApi = retrofit.create(FunctionsApi::class.java)
 }
 
 @Module

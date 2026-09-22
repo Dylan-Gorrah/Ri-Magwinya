@@ -31,20 +31,17 @@ class ErrorMappingInterceptor @Inject constructor(
 
         response.close()
 
-        throw when (response.code) {
-            401 -> ApiError.Unauthorised
-            403 -> ApiError.Forbidden
-            404 -> ApiError.NotFound
-            409, 400, 422 -> {
-                val code = ConflictCode.from(
-                    parsed?.code ?: parsed?.error ?: parsed?.message
-                )
-                if (code == ConflictCode.UNKNOWN && response.code != 409) {
-                    ApiError.Server(response.code, raw)
-                } else {
-                    ApiError.Conflict(code, parsed?.detail ?: parsed?.hint)
-                }
-            }
+        val code = ConflictCode.from(parsed?.code ?: parsed?.error ?: parsed?.message)
+        val detail = parsed?.detail ?: parsed?.hint
+
+        throw when {
+            response.code == 401 -> ApiError.Unauthorised
+            response.code == 403 -> ApiError.Forbidden
+            // A known reason wins over the status: STUDENT_NOT_FOUND is a 404
+            // and AMOUNT_OUT_OF_RANGE a 400, and the screen needs the reason.
+            code != ConflictCode.UNKNOWN -> ApiError.Conflict(code, detail)
+            response.code == 409 -> ApiError.Conflict(ConflictCode.UNKNOWN, detail)
+            response.code == 404 -> ApiError.NotFound
             else -> ApiError.Server(response.code, raw)
         }
     }

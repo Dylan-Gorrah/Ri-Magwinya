@@ -19,6 +19,8 @@ functions reference tables, policies reference functions.
 | 0008 | `rls.sql` | Row Level Security and column grants |
 | 0009 | `realtime.sql` | Live updates on orders, menu items and slots |
 | 0010 | `seed_menu.sql` | The opening menu and today's slots |
+| 0011 | `claim_student_number.sql` | Set a student number once, for Google sign-in |
+| 0012 | `hardening.sql` | Function privileges, Johannesburg time zone, student-number casing |
 
 ### Through the SQL Editor
 
@@ -42,11 +44,11 @@ sign in.
 
 ```properties
 SUPABASE_URL=https://jykswltsegssjmvnqqbi.supabase.co
-SUPABASE_ANON_KEY=<the anon public key>
+SUPABASE_ANON_KEY=<the publishable key, sb_publishable_…>
 ```
 
-*Project Settings → API keys* → the **anon / public** key. Not the service
-role key — that one never goes anywhere near the app.
+*Project Settings → API keys* → the **publishable** key. Not the secret key —
+that one never goes anywhere near the app.
 
 Then rebuild. `AppConfig.isBackendConfigured` flips to true and the menu
 screen starts fetching.
@@ -95,6 +97,69 @@ update profiles
 set role = 'staff', student_number = coalesce(student_number, 'STAFF001')
 where email = 'the-address-you-used@example.com';
 ```
+
+## Edge Functions
+
+Three thin wrappers in `functions/`, each calling one SQL function:
+`place-order`, `order-status`, `load-wallet`. Shared code is in
+`functions/_shared/` (request handling, caller verification, the FCM sender).
+
+**They are deployed with `verify_jwt = false`, on purpose.** This project
+uses the new `sb_publishable_…` / `sb_secret_…` keys, and the platform's
+built-in JWT check only understands the legacy keys. Each function verifies
+the user's token itself in `_shared/auth.ts`. `config.toml` records the
+setting so a CLI deploy keeps it.
+
+Deploy through the MCP connector, or with the CLI:
+
+```
+supabase functions deploy place-order  --project-ref jykswltsegssjmvnqqbi
+supabase functions deploy order-status --project-ref jykswltsegssjmvnqqbi
+supabase functions deploy load-wallet  --project-ref jykswltsegssjmvnqqbi
+```
+
+### Trying them with curl
+
+Get a user token first (student or staff):
+
+```bash
+K=<publishable key>; U=https://jykswltsegssjmvnqqbi.supabase.co
+T=$(curl -s -X POST "$U/auth/v1/token?grant_type=password" -H "apikey: $K"   -H "Content-Type: application/json"   -d '{"email":"user123@gmail.com","password":"..."}' | jq -r .access_token)
+```
+
+Place an order — 2 vetkoeks with 2 polony and a cheese slice (R17):
+
+```bash
+curl -X POST "$U/functions/v1/place-order" -H "apikey: $K" -H "Authorization: Bearer $T"   -H "Content-Type: application/json" -d '{
+    "slot_id": "<today's slot id>", "payment_method": "wallet",
+    "client_ref": "'$(uuidgen)'",
+    "lines": [{ "item_id": "<vetkoek id>", "base_qty": 2,
+                "options": [{ "option_id": "<polony id>", "count": 2 },
+                            { "option_id": "<cheese id>", "count": 1 }] }] }'
+# 409 {"code":"INSUFFICIENT_FUNDS","detail":"15.00"}   detail = rands short
+# 409 {"code":"OUT_OF_STOCK","detail":"Score Energy 500ml"}
+# 409 {"code":"COUNTER_BLOCKED","detail":"NO_TOPUP_YET" | "TOO_MANY_NO_SHOWS"}
+```
+
+Move an order along (staff token), or cancel your own while placed (student):
+
+```bash
+curl -X PATCH "$U/functions/v1/order-status" -H "apikey: $K" -H "Authorization: Bearer $T"   -H "Content-Type: application/json" -d '{"order_id":"<id>","status":"preparing"}'
+# 409 {"code":"INVALID_TRANSITION","detail":"placed -> ready"}
+# 403 {"code":"FORBIDDEN"}   a student trying a staff move
+```
+
+Top up a wallet (staff token):
+
+```bash
+curl -X POST "$U/functions/v1/load-wallet" -H "apikey: $K" -H "Authorization: Bearer $T"   -H "Content-Type: application/json" -d '{"student_number":"TEST001","amount":100}'
+# 200 {"full_name":"Test Student","student_number":"TEST001","wallet_balance":100}
+# 404 {"code":"STUDENT_NOT_FOUND"} · 400 {"code":"AMOUNT_OUT_OF_RANGE"} · 403 not staff
+```
+
+Pushes are sent only once `FCM_SERVICE_ACCOUNT` and `FCM_PROJECT_ID` are set
+as Edge Function secrets (Phase 11). Until then the sender does nothing and
+never fails a request.
 
 ## Things worth knowing
 

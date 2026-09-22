@@ -9,9 +9,15 @@ import java.io.IOException
  *
  * The point of mapping these here is that screens never parse an HTTP status
  * or match on a message. They match on a case and pick a sentence.
+ *
+ * An [IOException] because it is thrown from an OkHttp interceptor. OkHttp
+ * passes an IOException from an interceptor through to the caller as-is, but
+ * wraps anything else in "IOException: canceled due to …" — which the
+ * repositories would then read as [Offline], showing "No connection" for
+ * every refusal. FunctionsApiTest guards this.
  */
 sealed class ApiError(message: String, cause: Throwable? = null) :
-    Exception(message, cause) {
+    IOException(message, cause) {
 
     /** No signal, DNS failure, timeout. The one the cache answers. */
     class Offline(cause: Throwable? = null) : ApiError("No connection", cause)
@@ -24,7 +30,12 @@ sealed class ApiError(message: String, cause: Throwable? = null) :
 
     data object NotFound : ApiError("Not found")
 
-    /** A 409 from an Edge Function, carrying one of the codes below. */
+    /**
+     * The server refused for a known business reason, carrying one of the
+     * codes below. Usually a 409, but a 404 STUDENT_NOT_FOUND or a 400
+     * AMOUNT_OUT_OF_RANGE from an Edge Function arrive here too, because
+     * the code is what the screen needs, not the status.
+     */
     class Conflict(val code: ConflictCode, val detail: String? = null) :
         ApiError("Conflict: $code")
 
@@ -35,7 +46,7 @@ sealed class ApiError(message: String, cause: Throwable? = null) :
 }
 
 /**
- * The reason codes the server sends with a 409. Each one becomes a specific,
+ * The reason codes the server sends with a refusal. Each one becomes a specific,
  * actionable sentence on the screen rather than "something went wrong".
  */
 enum class ConflictCode {
@@ -52,6 +63,8 @@ enum class ConflictCode {
     BAD_CREDENTIALS,
     AMOUNT_OUT_OF_RANGE,
     EMPTY_SELECTION,
+    SLOT_NOT_TODAY,
+    OPTION_REQUIRED,
     UNKNOWN;
 
     companion object {

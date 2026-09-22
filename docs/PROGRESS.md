@@ -17,6 +17,7 @@ on 2026-09-22; waiting on one run on the phone)
 **Phase 3 — Authentication · READY TO TRY** (needs Dylan to register an
 account and make a staff user)
 **Phase 4 — Student menu · BUILT** (live stock updates in; waiting on a phone check)
+**Phase 5 — Edge Functions · DONE** (deployed and tested against the live project)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -459,6 +460,77 @@ resources; `ApiError.messageRes()` in `core/network` is the shared mapping.
 
 ---
 
+## Phase 5 — Edge Functions · DONE
+
+### Deployed — 2026-09-22
+
+`place-order`, `order-status`, `load-wallet` in `supabase/functions/`, with
+shared code in `_shared/`. Each verifies the caller, validates the body,
+calls its SQL function **as the caller** (so the SQL's own role checks
+decide, never the function), and maps the SQL's exceptions to
+`{ code, detail }` with the right status.
+
+**`verify_jwt = false`, deliberately.** The project uses the new
+publishable/secret keys and asymmetric JWTs; the platform's built-in check
+only understands the legacy keys. `_shared/auth.ts` verifies the token with
+`getClaims` instead. Recorded in `supabase/config.toml`.
+
+**FCM sender** (`_shared/fcm.ts`): full HTTP v1 flow, signed with the
+service account via WebCrypto. Does nothing until the Phase 11 secrets
+exist, and never fails or delays a request — pushes run after the response.
+
+### Tested live, with real accounts
+
+| Case | Result |
+|---|---|
+| Order: 2 vetkoeks + 2 polony + cheese, large chips, snoek-only vetkoek | 200, R67 = 17 + 40 + 10, snoek line consumes 0 vetkoeks |
+| Same `client_ref` again | same order, charged once |
+| R48 of Coke with R33 left | 409 `INSUFFICIENT_FUNDS`, detail `15.00` |
+| 5 Score with 4 in stock | 409 `OUT_OF_STOCK` |
+| Vetkoek with nothing on it | 409 `EMPTY_SELECTION` |
+| Counter payment, never topped up | 409 `COUNTER_BLOCKED` / `NO_TOPUP_YET` |
+| Student moves an order | 403 |
+| placed → ready, preparing → cancelled, collected → ready | 409 `INVALID_TRANSITION` |
+| placed → preparing → ready → collected | 200 each, timestamps set, one loyalty stamp |
+| Student cancels while placed | wallet refunded, stock restored, slot freed |
+| Top-up: no login / student / R5 / R12.345 / unknown number | 401 / 403 / 400 / 400 / 404 |
+| Top-up R100 typing `test001` | 200, found as `TEST001` |
+
+Test data left in the database: order #1 (collected), order #2
+(cancelled), user123 on R33, vetkoek stock 38, chips 29.
+
+### App side
+
+- `FunctionsApi` — the three functions as a Retrofit interface, with DTOs
+- `ErrorMappingInterceptor` — a known reason code now wins over the HTTP
+  status, so 404 `STUDENT_NOT_FOUND` and 400 `AMOUNT_OUT_OF_RANGE` reach the
+  screen as codes rather than as a generic "not found"
+- **Bug fixed from Phase 2:** `ApiError` extended `Exception`. OkHttp wraps a
+  non-IOException thrown from an interceptor in "IOException: canceled", so
+  every refusal would have reached the screen as **Offline** — "No
+  connection" instead of "Sold out". It now extends `IOException`.
+- **`FunctionsApiTest` — 11 tests** with MockWebServer, using the real
+  response bodies. They are what caught the bug.
+
+### Accounts
+
+| | Email | Role | Student no. |
+|---|---|---|---|
+| Student | user123@gmail.com | student | TEST001 |
+| Staff | admin@gmail.com | staff | STAFF001 |
+
+Passwords are with Dylan. The staff password was changed from the one
+requested because Supabase requires 6+ characters and the app's login 8+.
+The staff account was created directly in the database because sign-up hit
+Supabase's email rate limit — **Confirm email was still on** at the time.
+
+### Verified
+
+- `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
+- `./gradlew testDebugUnitTest` — **76 tests, 0 failures**
+
+---
+
 ## Decisions settled
 
 See `magwinya Notes/04 Build phases/Open decisions.md` for the reasoning.
@@ -491,6 +563,8 @@ the speed point. `CLAUDE.md` section 12.1.
 - **Now:** launcher icon via *File → New → Image Asset*.
 - **Now:** rotate the `sb_secret_…` key (it was pasted into a chat).
 - **Now:** open the app on the phone and confirm the real menu loads.
+- **Now:** check *Confirm email* is really off — sign-ups on 2026-09-22 still
+  tried to send confirmation emails.
 - **Phase 2:** turn off Confirm email under *Authentication → Sign In /
   Providers → Email*.
 - **Phase 3:** make a staff account and promote it (SQL in

@@ -1,0 +1,15 @@
+# Only the settings this project relies on. Everything else is the CLI default.
+project_id = "jykswltsegssjmvnqqbi"
+
+# The project uses the new publishable/secret keys, which the platform's
+# built-in JWT check does not understand. Each function verifies the user's
+# token itself (supabase/functions/_shared/auth.ts), so the gateway check is
+# off. Deploying without these lines would reject every request.
+[functions.place-order]
+verify_jwt = false
+
+[functions.order-status]
+verify_jwt = false
+
+[functions.load-wallet]
+verify_jwt = false
