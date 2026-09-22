@@ -31,3 +31,16 @@ supabase/tests/err.txt
 # committing one would bloat the repo and go stale immediately.
 *.apk
 *.aab
+
+# Working notes kept on this PC only (not part of the submission)
+/CLAUDE.md
+/CONTINUE.md
+/VIDEO_PLAN.md
+/.mcp.json
+/docs/PROGRESS.md
+/docs/qa-checklist.md
+/docs/privacy-policy.md
+/docs/store-listing.md
+/supabase/README.md
+/PART2_APP_CHECKLIST.md
+/VIDEO_CHECKLIST.md
