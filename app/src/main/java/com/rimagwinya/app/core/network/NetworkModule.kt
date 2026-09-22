@@ -38,16 +38,18 @@ object NetworkModule {
      * `apikey` is the anon key, which is public and does nothing on its own —
      * Row Level Security decides what it can see. `Authorization` carries the
      * signed-in user's token, and that is what the policies actually read.
+     *
+     * Signed out, `Authorization` is left off. The key is a publishable key
+     * (`sb_publishable_…`), not a JWT, so it must not be sent as a bearer
+     * token; the gateway treats a request with only `apikey` as `anon`.
      */
     @Provides
     @Singleton
     fun authInterceptor(tokens: TokenProvider): Interceptor = Interceptor { chain ->
-        val token = tokens.accessToken() ?: AppConfig.supabaseAnonKey
-        val request = chain.request().newBuilder()
+        val builder = chain.request().newBuilder()
             .header("apikey", AppConfig.supabaseAnonKey)
-            .header("Authorization", "Bearer $token")
-            .build()
-        chain.proceed(request)
+        tokens.accessToken()?.let { builder.header("Authorization", "Bearer $it") }
+        chain.proceed(builder.build())
     }
 
     @Provides

@@ -12,19 +12,15 @@ Start at `Ri-magwinya.md`.
 
 **Phase 0 — Project setup · DONE**
 **Phase 1 — Foundation · DONE**
-**Phase 2 — Backend · BLOCKED on Dylan** (written and tested locally, not yet
-applied to the real project)
-**Phase 3 — Authentication · BLOCKED on Phase 2** (built and compiling, cannot
-be exercised until the database exists)
-**Phase 4 — Student menu · BUILT, unverified** (everything written; needs a
-live database to be tried)
+**Phase 2 — Backend · DONE** (all 12 migrations applied to the real project
+on 2026-09-22; waiting on one run on the phone)
+**Phase 3 — Authentication · READY TO TRY** (needs Dylan to register an
+account and make a staff user)
+**Phase 4 — Student menu · BUILT** (realtime stock updates still to add)
 
-Both blockers are the same two things: approve the Supabase MCP connector,
-and put the anon key in `local.properties`.
-
-Supabase MCP connector is configured in `.mcp.json` for project
-`jykswltsegssjmvnqqbi`. It needs a Claude Code restart and an OAuth sign-in
-before it can be used.
+The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
+`jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
+`local.properties`.
 
 ---
 
@@ -178,14 +174,46 @@ server.
 
 ---
 
-## Phase 2 — Backend · BLOCKED
+## Phase 2 — Backend · DONE
 
-All the code is written. What is missing is the anon key and a way to run
-the migrations — see "Dylan still owes".
+### Applied to the real project — 2026-09-22
+
+All migrations applied through the MCP connector, in order. Checked live:
+
+- 17 items, 8 option groups, 30 options, today's 3 slots
+- Signed out: the menu reads (200); `orders` returns nothing; `profiles`
+  is refused; every `/rpc/*` function is refused
+- Sign-up trigger creates the profile with role `student` and the student
+  number normalised (tested inside a rolled-back transaction)
+- Security advisor: the only warnings left are the seven functions signed-in
+  users are meant to call. Each checks the caller itself
+
+### 0012_hardening — found on the real project
+
+1. **Function privileges.** Postgres and Supabase grant EXECUTE on new
+   functions to everyone, including signed-out callers. Nothing leaked —
+   each function refused without a user — but they are now unreachable
+   signed out, and trigger/internal functions are unreachable entirely.
+2. **Time zone.** The database is UTC, the tuckshop is UTC+2. "Today" was
+   wrong between midnight and 02:00, and the sales chart would have shifted
+   every hour by two. `place_order`, `ensure_slots` and `sales_summary` are
+   pinned to `Africa/Johannesburg`.
+3. **Student numbers** are upper-cased and trimmed everywhere, not only in
+   `claim_student_number`, so "ab123" and "AB123" cannot both register and
+   staff typing lowercase on the top-up screen still find the student.
+4. `touch_updated_at` got a fixed `search_path`.
+
+### New-style API key
+
+Supabase now issues `sb_publishable_…` keys instead of the JWT anon key.
+It goes in `SUPABASE_ANON_KEY`. It is not a JWT, so the interceptor no longer
+sends it as `Authorization: Bearer` when signed out — only `apikey`. The
+`sb_secret_…` key is **not** stored anywhere in the project; it belongs in
+Edge Function secrets only.
 
 ### Migrations — `supabase/migrations/`
 
-Ten numbered files, run in order. `supabase/README.md` has the full guide,
+Twelve numbered files, run in order. `supabase/README.md` has the full guide,
 the verification queries and the curl checks.
 
 0001 enums · 0002 tables · 0003 indexes · 0004 helpers · 0005 place_order ·
@@ -266,7 +294,7 @@ made from the phone. That is the blocked part.
 
 ---
 
-## Phase 3 — Authentication · BLOCKED
+## Phase 3 — Authentication · READY TO TRY
 
 Written and compiling. It cannot be tried until there is a database to
 register against.
@@ -447,13 +475,8 @@ the speed point. `CLAUDE.md` section 12.1.
 - **Now:** create the GitHub repo `ri-magwinya` and add the remote. The local
   repo is committed and ready.
 - **Now:** launcher icon via *File → New → Image Asset*.
-- **Now:** restart Claude Code and sign in to the Supabase MCP connector.
-- **Phase 2, blocking:** the **anon key**. URL is
-  `https://jykswltsegssjmvnqqbi.supabase.co`; the key must be pasted into
-  `local.properties`. Claude will not guess a secret.
-- **Phase 2, blocking:** run the ten migrations — either restart Claude Code
-  and sign in to the MCP connector, or paste them into the SQL Editor in
-  order. `supabase/README.md` has the steps.
+- **Now:** rotate the `sb_secret_…` key (it was pasted into a chat).
+- **Now:** open the app on the phone and confirm the real menu loads.
 - **Phase 2:** turn off Confirm email under *Authentication → Sign In /
   Providers → Email*.
 - **Phase 3:** make a staff account and promote it (SQL in
