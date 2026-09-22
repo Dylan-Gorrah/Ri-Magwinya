@@ -3,6 +3,7 @@ package com.rimagwinya.app.feature.auth
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rimagwinya.app.R
 import com.rimagwinya.app.core.network.ApiError
 import com.rimagwinya.app.core.network.asApiError
 import com.rimagwinya.app.core.util.FieldResult
@@ -21,15 +22,25 @@ data class RegisterUiState(
     val email: String = "",
     val studentNumber: String = "",
     val password: String = "",
+    val confirmPassword: String = "",
     val touched: Set<RegisterField> = emptySet(),
     val isSubmitting: Boolean = false,
     @StringRes val formError: Int? = null,
     val registered: Boolean = false,
+    /**
+     * The account was made but Supabase is holding it until the email is
+     * confirmed, so there is no session and nothing to navigate to. The
+     * screen says so instead of looking like it failed.
+     */
+    val awaitingEmailConfirmation: Boolean = false,
 ) {
     val nameResult: FieldResult get() = Validation.fullName(fullName)
     val emailResult: FieldResult get() = Validation.email(email)
     val numberResult: FieldResult get() = Validation.studentNumber(studentNumber)
     val passwordResult: FieldResult get() = Validation.password(password)
+
+    /** Typed twice, to catch the typo before the account exists. */
+    val passwordsMatch: Boolean get() = password == confirmPassword
 
     @StringRes
     fun errorFor(field: RegisterField): Int? {
@@ -39,15 +50,18 @@ data class RegisterUiState(
             RegisterField.Email -> emailResult
             RegisterField.StudentNumber -> numberResult
             RegisterField.Password -> passwordResult
+            RegisterField.ConfirmPassword ->
+                return if (passwordsMatch) null else R.string.password_mismatch
         }.problemOrNull?.messageRes()
     }
 
     val canSubmit: Boolean
         get() = nameResult.isValid && emailResult.isValid &&
-            numberResult.isValid && passwordResult.isValid && !isSubmitting
+            numberResult.isValid && passwordResult.isValid &&
+            passwordsMatch && !isSubmitting
 }
 
-enum class RegisterField { Name, Email, StudentNumber, Password }
+enum class RegisterField { Name, Email, StudentNumber, Password, ConfirmPassword }
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -63,6 +77,7 @@ class RegisterViewModel @Inject constructor(
             RegisterField.Email -> it.copy(email = value, formError = null)
             RegisterField.StudentNumber -> it.copy(studentNumber = value, formError = null)
             RegisterField.Password -> it.copy(password = value, formError = null)
+            RegisterField.ConfirmPassword -> it.copy(confirmPassword = value, formError = null)
         }
     }
 
@@ -82,11 +97,21 @@ class RegisterViewModel @Inject constructor(
                 fullName = current.fullName,
                 studentNumber = current.studentNumber,
             )
-                .onSuccess {
+                .onSuccess { signedIn ->
                     // Everyone who registers is a student. A staff account is
                     // made by hand in Supabase and promoted with SQL, because
                     // "sign up as staff" would be the first thing anyone tried.
-                    _state.update { it.copy(isSubmitting = false, registered = true) }
+                    //
+                    // signedIn is false when "Confirm email" is on in the
+                    // Supabase dashboard: the account exists, but there is no
+                    // session until the link is clicked.
+                    _state.update {
+                        it.copy(
+                            isSubmitting = false,
+                            registered = signedIn,
+                            awaitingEmailConfirmation = !signedIn,
+                        )
+                    }
                 }
                 .onFailure { throwable ->
                     val error = (throwable as? ApiError) ?: throwable.asApiError()

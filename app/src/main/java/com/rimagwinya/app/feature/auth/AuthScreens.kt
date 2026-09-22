@@ -174,8 +174,31 @@ fun RegisterScreen(
             },
         )
 
+        RmTextField(
+            value = state.confirmPassword,
+            onValueChange = { viewModel.onChange(RegisterField.ConfirmPassword, it) },
+            label = stringResource(R.string.auth_confirm_password),
+            error = state.errorFor(RegisterField.ConfirmPassword)?.let { stringResource(it) },
+            isPassword = true,
+            keyboardType = KeyboardType.Password,
+            leadingIcon = R.drawable.ic_lock,
+            modifier = Modifier.onFocusChanged {
+                if (!it.isFocused) viewModel.onBlur(RegisterField.ConfirmPassword)
+            },
+        )
+
         if (state.formError != null) {
             Banner(tone = BannerTone.Error, text = stringResource(state.formError!!))
+        }
+
+        // The account exists but Supabase is holding it. Without this the
+        // screen would just sit there looking broken.
+        if (state.awaitingEmailConfirmation) {
+            Banner(
+                tone = BannerTone.Success,
+                title = stringResource(R.string.auth_check_email_title),
+                text = stringResource(R.string.auth_check_email_body),
+            )
         }
 
         // Consent belongs before the account is made, not in a settings

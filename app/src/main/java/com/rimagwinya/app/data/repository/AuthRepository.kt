@@ -78,7 +78,7 @@ class AuthRepository @Inject constructor(
         password: String,
         fullName: String,
         studentNumber: String,
-    ): Result<Unit> = withContext(io) {
+    ): Result<Boolean> = withContext(io) {
         runCatching {
             client.auth.signUpWith(Email) {
                 this.email = Validation.normaliseEmail(email)
@@ -92,7 +92,9 @@ class AuthRepository @Inject constructor(
                     )
                 )
             }
-            Unit
+            // False when "Confirm email" is on in Supabase: the account was
+            // created, but there is no session until the link is clicked.
+            client.auth.currentSessionOrNull() != null
         }.recoverCatching { throw it.toAuthError() }
     }
 

@@ -394,4 +394,8 @@
     <string name="weather_hint_hot">Ho tla tjhesa hosane. Sheba setoko sa dino tse batang.</string>
     <string name="weather_hint_rain">Pula hosane. Lebella diodara tse ngata esale pele.</string>
     <string name="weather_hint_none">Letsatsi le tlwaelehileng hosane. Setoko jwalo ka tlwaelo.</string>
+    <string name="auth_confirm_password">Netefatsa phasewete</string>
+    <string name="auth_check_email_title">Sheba imeile ya hao</string>
+    <string name="auth_check_email_body">Akhaonto ya hao e entswe. Tobetsa sehokelo seo re o rometseng sona, mme o kene.</string>
+
 </resources>

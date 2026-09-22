@@ -44,6 +44,10 @@
     <string name="auth_have_account">Already have an account? Sign in</string>
     <string name="auth_sign_out">Sign out</string>
 
+    <string name="auth_confirm_password">Confirm password</string>
+    <string name="auth_check_email_title">Check your email</string>
+    <string name="auth_check_email_body">Your account is made. Click the link we sent you, then sign in.</string>
+
     <!-- Field problems, shown under the field they belong to -->
     <string name="error_email_malformed">That does not look like an email address.</string>
     <string name="error_password_short">Use at least 8 characters.</string>

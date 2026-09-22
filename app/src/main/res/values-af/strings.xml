@@ -394,4 +394,8 @@
     <string name="weather_hint_hot">Warm môre. Kontroleer koue drankies se voorraad.</string>
     <string name="weather_hint_rain">Reën môre. Verwag meer voorafbestellings en minder instappers.</string>
     <string name="weather_hint_none">\'n Gewone dag môre. Voorraad soos gewoonlik.</string>
+    <string name="auth_confirm_password">Bevestig wagwoord</string>
+    <string name="auth_check_email_title">Kyk in jou e-pos</string>
+    <string name="auth_check_email_body">Jou rekening is geskep. Klik op die skakel wat ons gestuur het, en meld dan aan.</string>
+
 </resources>
