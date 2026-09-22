@@ -85,6 +85,13 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.serialization.json)
 
+    // --- Auth + realtime (Phase 3) ---
+    implementation(platform(libs.supabase.bom))
+    implementation(libs.supabase.auth)
+    implementation(libs.supabase.realtime)
+    // supabase-kt runs on Ktor and needs an engine on the classpath.
+    implementation(libs.ktor.client.okhttp)
+
     // --- Java 8+ APIs on API 24 ---
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 

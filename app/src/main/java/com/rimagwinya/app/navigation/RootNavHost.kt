@@ -1,15 +1,19 @@
 package com.rimagwinya.app.navigation
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,35 +22,56 @@ import androidx.navigation.navigation
 import com.rimagwinya.app.R
 import com.rimagwinya.app.core.designsystem.component.RoleTabBar
 import com.rimagwinya.app.core.designsystem.theme.RmTheme
+import com.rimagwinya.app.data.repository.AuthState
+import com.rimagwinya.app.domain.model.UserRole
+import com.rimagwinya.app.feature.auth.LoginScreen
+import com.rimagwinya.app.feature.auth.RegisterScreen
+import com.rimagwinya.app.feature.auth.SessionViewModel
+import com.rimagwinya.app.feature.auth.WelcomeScreen
 import com.rimagwinya.app.feature.menu.MenuSmokeScreen
-
-/**
- * Which side of the app is loaded.
- *
- * From Phase 3 this comes from the signed-in profile's role column on the
- * server. Until then it is local state so the graphs can be walked.
- */
-enum class AppRole { SignedOut, Student, Staff }
 
 @Composable
 fun RootNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    sessionViewModel: SessionViewModel = hiltViewModel(),
 ) {
-    // Phase 3 replaces this with the profile from Supabase.
-    var role by remember { mutableStateOf(AppRole.SignedOut) }
-    var tab by remember { mutableStateOf(TabKey.MENU) }
+    val session by sessionViewModel.state.collectAsStateWithLifecycle()
 
-    val tabs = when (role) {
-        AppRole.Staff -> staffTabs
-        else -> studentTabs
+    // The role comes from the profile on the server, every time. Nothing the
+    // phone chose is trusted — which is why the welcome screen's two cards
+    // only pick which sign-in copy you see.
+    val role = (session as? AuthState.SignedIn)?.profile?.role
+    val signedIn = role != null
+
+    val tabs = if (role == UserRole.Staff) staffTabs else studentTabs
+    var tab by remember(role) {
+        mutableStateOf(if (role == UserRole.Staff) TabKey.QUEUE else TabKey.MENU)
+    }
+
+    // Signing in or out swaps the whole graph underneath whatever is on
+    // screen, so no individual screen has to know where to go afterwards.
+    LaunchedEffect(session) {
+        when {
+            signedIn -> navController.navigate(
+                if (role == UserRole.Staff) Route.StaffGraph else Route.StudentGraph
+            ) {
+                popUpTo(navController.graph.id) { inclusive = true }
+            }
+
+            session is AuthState.SignedOut -> navController.navigate(Route.AuthGraph) {
+                popUpTo(navController.graph.id) { inclusive = true }
+            }
+
+            else -> Unit // Loading: the splash is still up.
+        }
     }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = RmTheme.colors.background,
         bottomBar = {
-            if (role != AppRole.SignedOut) {
+            if (signedIn) {
                 RoleTabBar(
                     tabs = tabs,
                     selectedRoute = tab,
@@ -62,28 +87,20 @@ fun RootNavHost(
             }
         },
     ) { insets ->
-        NavHost(
-            navController = navController,
-            startDestination = Route.AuthGraph,
-            modifier = Modifier.padding(insets),
-        ) {
-            authGraph(
-                onSignedIn = { signedInRole ->
-                    role = signedInRole
-                    tab = if (signedInRole == AppRole.Staff) TabKey.QUEUE else TabKey.MENU
-                    navController.navigate(
-                        if (signedInRole == AppRole.Staff) Route.StaffGraph else Route.StudentGraph
-                    ) {
-                        popUpTo(Route.AuthGraph) { inclusive = true }
-                    }
-                },
-            )
-            studentGraph()
-            staffGraph()
-            // Profile is shared by both roles, so it lives at the root rather
-            // than being declared twice — two graphs cannot both own a route.
-            composable<Route.Profile> {
-                PlaceholderScreen(R.string.title_profile, icon = R.drawable.ic_user)
+        Box(Modifier.padding(insets)) {
+            NavHost(
+                navController = navController,
+                startDestination = Route.AuthGraph,
+            ) {
+                authGraph(navController)
+                studentGraph()
+                staffGraph()
+                // Profile is shared by both roles, so it lives at the root
+                // rather than being declared twice — two graphs cannot own
+                // the same route.
+                composable<Route.Profile> {
+                    PlaceholderScreen(R.string.title_profile, icon = R.drawable.ic_user)
+                }
             }
         }
     }
@@ -99,27 +116,28 @@ private fun routeFor(tabKey: String): Any = when (tabKey) {
     else -> Route.Profile
 }
 
-/** Welcome, login, register. Phase 3 fills these in. */
-private fun androidx.navigation.NavGraphBuilder.authGraph(
-    onSignedIn: (AppRole) -> Unit,
-) {
+/** Welcome, login, register. */
+private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation<Route.AuthGraph>(startDestination = Route.Welcome) {
         composable<Route.Welcome> {
-            WelcomePlaceholder(onSignedIn = onSignedIn)
+            WelcomeScreen(
+                onContinue = { staffHint ->
+                    navController.navigate(Route.Login(staffHint = staffHint))
+                }
+            )
         }
         composable<Route.Login> {
-            PlaceholderScreen(R.string.title_login, icon = R.drawable.ic_lock)
+            LoginScreen(onRegister = { navController.navigate(Route.Register) })
         }
         composable<Route.Register> {
-            PlaceholderScreen(R.string.title_register, icon = R.drawable.ic_user)
+            RegisterScreen(onSignIn = { navController.popBackStack() })
         }
     }
 }
 
-/** Menu, cart, checkout, orders, profile. Phases 4, 6, 7 and 9. */
-private fun androidx.navigation.NavGraphBuilder.studentGraph() {
+/** Menu, cart, checkout, orders. Phases 4, 6 and 7. */
+private fun NavGraphBuilder.studentGraph() {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
-        // Phase 4 replaces this with the real menu screen.
         composable<Route.Menu> { MenuSmokeScreen() }
         composable<Route.Cart> { PlaceholderScreen(R.string.title_cart, icon = R.drawable.ic_cart) }
         composable<Route.Checkout> { PlaceholderScreen(R.string.title_checkout, icon = R.drawable.ic_wallet) }
@@ -129,7 +147,7 @@ private fun androidx.navigation.NavGraphBuilder.studentGraph() {
 }
 
 /** Queue, stock, sales, top-up. Phase 8. */
-private fun androidx.navigation.NavGraphBuilder.staffGraph() {
+private fun NavGraphBuilder.staffGraph() {
     navigation<Route.StaffGraph>(startDestination = Route.Queue) {
         composable<Route.Queue> { PlaceholderScreen(R.string.title_queue, icon = R.drawable.ic_clock) }
         composable<Route.Stock> { PlaceholderScreen(R.string.title_stock, icon = R.drawable.ic_box) }

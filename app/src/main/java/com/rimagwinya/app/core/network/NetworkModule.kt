@@ -99,8 +99,12 @@ object NetworkModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class TokenModule {
-    /** Phase 3 rebinds this to the supabase-kt session. */
+    /**
+     * Bound to the live supabase-kt session as of Phase 3. Before that it
+     * was AnonTokenProvider, and nothing else in the networking layer had to
+     * change when it was swapped.
+     */
     @Binds
     @Singleton
-    abstract fun tokenProvider(impl: AnonTokenProvider): TokenProvider
+    abstract fun tokenProvider(impl: SupabaseTokenProvider): TokenProvider
 }

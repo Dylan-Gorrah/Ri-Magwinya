@@ -1,24 +1,18 @@
 package com.rimagwinya.app.core.network
 
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Supplies the bearer token for outgoing requests.
  *
- * Phase 3 replaces the implementation with one that reads the live session
- * from supabase-kt. Until then it returns null and the interceptor falls
- * back to the anon key, which is enough to read the menu and nothing else —
- * exactly what Phase 2 needs to prove.
+ * Returning null means "nobody is signed in", and the interceptor falls back
+ * to the anon key — which Row Level Security allows to read the menu and
+ * nothing else.
  *
- * It exists as an interface now so that swap is a binding change rather than
- * an edit to the networking layer.
+ * It is an interface so the networking layer never has to know where a token
+ * comes from. Phase 2 bound it to a stub that always returned null; Phase 3
+ * rebound it to the live supabase-kt session, and no code in core/network
+ * changed.
  */
 interface TokenProvider {
     fun accessToken(): String?
-}
-
-@Singleton
-class AnonTokenProvider @Inject constructor() : TokenProvider {
-    override fun accessToken(): String? = null
 }

@@ -14,7 +14,12 @@ Start at `Ri-magwinya.md`.
 **Phase 1 — Foundation · DONE**
 **Phase 2 — Backend · BLOCKED on Dylan** (written and tested locally, not yet
 applied to the real project)
-**Next: Phase 3 — Authentication**
+**Phase 3 — Authentication · BLOCKED on Phase 2** (built and compiling, cannot
+be exercised until the database exists)
+**Next: Phase 4 — Student menu**
+
+Both blockers are the same two things: approve the Supabase MCP connector,
+and put the anon key in `local.properties`.
 
 Supabase MCP connector is configured in `.mcp.json` for project
 `jykswltsegssjmvnqqbi`. It needs a Claude Code restart and an OAuth sign-in
@@ -257,6 +262,70 @@ No seeded item has both, but staff could create one from the stock screen.
 
 Still **not** run against the real Supabase project, and no request has been
 made from the phone. That is the blocked part.
+
+---
+
+## Phase 3 — Authentication · BLOCKED
+
+Written and compiling. It cannot be tried until there is a database to
+register against.
+
+### Screens
+
+- **Welcome** — brand mark, tagline, two role cards. The cards choose which
+  sign-in copy you see **and nothing else**. The Phase 1 version signed you
+  straight in so the graphs could be walked; that shortcut is gone, along
+  with `WelcomePlaceholder.kt`.
+- **Login** — email, password, one deliberately vague error.
+- **Register** — name, email, student number, password, POPIA notice above
+  the button.
+
+Validation runs as you type but errors only appear once a field has been
+left, so nothing nags mid-typing. The submit button stays disabled until the
+form could actually succeed.
+
+### Auth
+
+- supabase-kt `Auth` for sign-up, sign-in, sign-out, session storage and
+  background refresh. Passwords are bcrypt-hashed by Supabase; the app never
+  hashes or stores one.
+- `TokenProvider` rebound from the Phase 2 stub to the live session.
+  **Nothing in `core/network` changed** — that was the point of the seam.
+- `SessionViewModel` is the single place that decides which half of the app
+  loads, and it decides from `profiles.role` on the server.
+- Signing in or out swaps the whole navigation graph underneath whatever is
+  on screen, so no screen has to know where to go afterwards.
+
+### Two things the brief did not cover
+
+**`claim_student_number` (migration 0011).** Google sign-in creates a profile
+with no student number, so the app has to be able to set one. A column grant
+would have let anyone rewrite theirs at any time and take a number belonging
+to someone else. It is a `security definer` function that sets the value only
+when it is still null.
+
+**Error mapping.** Supabase returns 400 for a wrong password, which is not
+what 400 usually means. `AuthRepository` translates it, and every failure
+becomes a string resource rather than a sentence, so Phase 13 stays a
+translation job.
+
+A wrong password and an unknown email give the **same** message on purpose —
+"no account with that email" tells anyone who asks which addresses have
+accounts here.
+
+### Verified
+
+- `./gradlew assembleDebug` — **BUILD SUCCESSFUL**
+- `./gradlew testDebugUnitTest` — **27 tests, 0 failures**
+  (`MoneyTest` 8, `MenuMapperTest` 7, `ValidationTest` 12)
+
+Not yet exercised against a server: no account has been registered and no
+sign-in has happened.
+
+### Still owed
+
+- **Checkpoint:** register a student in the app, create a staff user in
+  *Authentication → Users*, and promote it. SQL is in `supabase/README.md`.
 
 ---
 

@@ -27,6 +27,39 @@
     <string name="welcome_staff">I work at the tuckshop</string>
     <string name="welcome_staff_body">Work the order queue, manage stock and top up wallets.</string>
 
+    <!-- Sign in and sign up -->
+    <string name="auth_email">Email</string>
+    <string name="auth_email_hint">you@example.com</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_password_hint">At least 8 characters</string>
+    <string name="auth_name">Full name</string>
+    <string name="auth_name_hint">Thabo Mokoena</string>
+    <string name="auth_student_number">Student number</string>
+    <string name="auth_student_number_hint">ST2024001</string>
+    <string name="auth_sign_in">Sign in</string>
+    <string name="auth_signing_in">Signing in…</string>
+    <string name="auth_create_account">Create account</string>
+    <string name="auth_creating">Creating your account…</string>
+    <string name="auth_no_account">New here? Create an account</string>
+    <string name="auth_have_account">Already have an account? Sign in</string>
+    <string name="auth_sign_out">Sign out</string>
+
+    <!-- Field problems, shown under the field they belong to -->
+    <string name="error_email_malformed">That does not look like an email address.</string>
+    <string name="error_password_short">Use at least 8 characters.</string>
+    <string name="error_name_short">Please enter your full name.</string>
+    <string name="error_student_number">Use the student number on your card.</string>
+
+    <!-- Sign-in failures -->
+    <string name="error_credentials">Email or password is incorrect.</string>
+    <string name="error_email_taken">That email already has an account. Sign in instead.</string>
+    <string name="error_student_number_taken">That student number is already registered.</string>
+    <string name="error_network">No connection. Check your signal and try again.</string>
+    <string name="error_generic">Something went wrong. Try again.</string>
+
+    <!-- POPIA, shown before the account is created rather than buried in settings -->
+    <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
+
     <!-- Screen titles -->
     <string name="title_welcome">Welcome</string>
     <string name="title_login">Sign in</string>
