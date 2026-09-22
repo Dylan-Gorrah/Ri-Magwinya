@@ -16,3 +16,10 @@ local.properties
 
 # Obsidian workspace state (per-machine, not worth versioning)
 magwinya Notes/.obsidian/workspace.json
+
+# Secrets and signing — never committed
+google-services.json
+app/google-services.json
+*.jks
+*.keystore
+*service-account*.json

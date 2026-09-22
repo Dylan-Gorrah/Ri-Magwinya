@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the prototype's <symbol id="f-triangle">. Do not hand-edit. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M20 6l15 27H5z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.32" />
+    <path
+        android:pathData="M20 15l9.5 17h-19z"
+        android:fillColor="#FF000000" />
+</vector>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the prototype's <symbol id="f-wors">. Do not hand-edit. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M8.5,21H31.5A4.5,4.5 0 0,1 36,25.5V25.5A4.5,4.5 0 0,1 31.5,30H8.5A4.5,4.5 0 0,1 4,25.5V25.5A4.5,4.5 0 0,1 8.5,21Z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.3" />
+    <path
+        android:pathData="M8.5 21.5c3-4 6-5.5 11.5-5.5s8.5 1.5 11.5 5.5"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="4.6"
+        android:strokeLineCap="round" />
+</vector>

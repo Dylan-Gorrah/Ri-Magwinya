@@ -1,47 +1,34 @@
 package com.rimagwinya.app
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.rimagwinya.app.ui.theme.RimagwinyaTheme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.rimagwinya.app.core.designsystem.theme.RimagwinyaTheme
+import com.rimagwinya.app.navigation.RootNavHost
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+/**
+ * The single activity.
+ *
+ * It extends AppCompatActivity rather than ComponentActivity, in an app that
+ * is otherwise entirely Compose, for one reason: per-app language in Phase 13
+ * needs AppCompat to back-port it below Android 13, and minSdk here is 24.
+ *
+ * That also means the manifest theme must be an AppCompat DayNight theme.
+ * AppCompatActivity crashes at startup without one.
+ */
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             RimagwinyaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                RootNavHost()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RimagwinyaTheme {
-        Greeting("Android")
     }
 }

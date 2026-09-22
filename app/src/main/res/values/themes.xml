@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.Rimagwinya" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+        An AppCompat DayNight theme, not a Material3 one.
+
+        MainActivity extends AppCompatActivity so that per-app language works
+        below Android 13 (Phase 13). AppCompatActivity throws at startup if
+        its theme does not descend from Theme.AppCompat, so this is load
+        bearing rather than a leftover. The actual look of the app comes from
+        the Compose theme; this exists to paint the window before Compose
+        takes over.
+    -->
+    <style name="Theme.Rimagwinya" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/rm_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    </style>
+
+    <!-- Shown for the moment before the first frame. Brand mark on the app background. -->
+    <style name="Theme.Rimagwinya.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/rm_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_brand_mark</item>
+        <item name="postSplashScreenTheme">@style/Theme.Rimagwinya</item>
+    </style>
+
 </resources>

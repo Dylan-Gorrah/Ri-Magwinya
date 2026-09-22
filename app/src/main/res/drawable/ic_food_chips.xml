@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the prototype's <symbol id="f-chips">. Do not hand-edit. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M11 18h18l-2 15a2 2 0 0 1-2 1.7H15a2 2 0 0 1-2-1.7z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.34" />
+    <path
+        android:pathData="M14 18l1.5-11M19 18V6M24 18l2-10.5M28.5 18l3-8.5"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M12.2,16H27.8A2.2,2.2 0 0,1 30,18.2V18.8A2.2,2.2 0 0,1 27.8,21H12.2A2.2,2.2 0 0,1 10,18.8V18.2A2.2,2.2 0 0,1 12.2,16Z"
+        android:fillColor="#FF000000" />
+</vector>

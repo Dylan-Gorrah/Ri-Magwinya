@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the prototype's <symbol id="f-cup">. Do not hand-edit. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M8 14h20v11a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.32" />
+    <path
+        android:pathData="M8 19h20v6a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8z"
+        android:fillColor="#FF000000" />
+    <path
+        android:pathData="M28 17.5h2.6a3.6 3.6 0 0 1 0 7.2H28"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.2" />
+    <path
+        android:pathData="M15 10.5c0-1.6 1.6-1.6 1.6-3.2M20 10.5c0-1.6 1.6-1.6 1.6-3.2"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.6" />
+</vector>

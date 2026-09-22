@@ -1,3 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Every user-facing string in the app lives here, from Phase 1.
+
+    This is what turns Phase 13 into a translation job rather than a refactor:
+    add values-af and values-st beside this file and nothing in the Kotlin
+    has to change.
+-->
 <resources>
     <string name="app_name">Ri-magwinya</string>
+
+    <!-- Bottom tabs, student -->
+    <string name="tab_menu">Menu</string>
+    <string name="tab_cart">Cart</string>
+    <string name="tab_orders">Orders</string>
+    <string name="tab_profile">Profile</string>
+
+    <!-- Bottom tabs, staff -->
+    <string name="tab_queue">Queue</string>
+    <string name="tab_stock">Stock</string>
+    <string name="tab_sales">Sales</string>
+
+    <!-- Welcome -->
+    <string name="welcome_tagline">Order ahead. Skip the queue.</string>
+    <string name="welcome_student">I am a student</string>
+    <string name="welcome_student_body">Browse the menu, order, and collect with a code.</string>
+    <string name="welcome_staff">I work at the tuckshop</string>
+    <string name="welcome_staff_body">Work the order queue, manage stock and top up wallets.</string>
+
+    <!-- Screen titles -->
+    <string name="title_welcome">Welcome</string>
+    <string name="title_login">Sign in</string>
+    <string name="title_register">Create your account</string>
+    <string name="title_menu">Today\'s menu</string>
+    <string name="title_cart">Your cart</string>
+    <string name="title_checkout">Checkout</string>
+    <string name="title_order">Your order</string>
+    <string name="title_orders">Orders</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_queue">Order queue</string>
+    <string name="title_stock">Stock</string>
+    <string name="title_sales">Sales</string>
+    <string name="title_top_up">Top up a wallet</string>
+
+    <!-- Stock pills -->
+    <string name="stock_in">In stock</string>
+    <string name="stock_low">%1$d left</string>
+    <string name="stock_sold_out">Sold out</string>
+
+    <!-- Order statuses -->
+    <string name="status_placed">Placed</string>
+    <string name="status_preparing">Preparing</string>
+    <string name="status_ready">Ready</string>
+    <string name="status_collected">Collected</string>
+    <string name="status_cancelled">Cancelled</string>
+    <string name="status_no_show">Not collected</string>
+
+    <!-- Shared actions -->
+    <string name="action_retry">Try again</string>
+    <string name="action_back">Back</string>
+    <string name="action_close">Close</string>
+
+    <!-- Placeholder copy, replaced as each phase builds its screen -->
+    <string name="placeholder_coming">Coming in a later phase.</string>
 </resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from the prototype's <symbol id="f-sweet">. Do not hand-edit. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M9,20A11,8.5 0 1,0 31,20A11,8.5 0 1,0 9,20Z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.34" />
+    <path
+        android:pathData="M14,20A6,4.5 0 1,0 26,20A6,4.5 0 1,0 14,20Z"
+        android:fillColor="#FF000000" />
+    <path
+        android:pathData="M9 20L2 14v12zM31 20l7-6v12z"
+        android:fillColor="#FF000000"
+        android:fillAlpha="0.5" />
+</vector>
