@@ -74,6 +74,7 @@ jobs:
             export RELEASE_STORE_FILE="$RUNNER_TEMP/release.jks"
             ./gradlew assembleRelease --no-daemon
             echo "path=app/build/outputs/apk/release/app-release.apk" >> "$GITHUB_OUTPUT"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
           else
             echo "::warning::No release key in secrets, building a debug APK instead"
             ./gradlew assembleDebug --no-daemon
@@ -103,7 +104,9 @@ jobs:
       # anyone can download it without a GitHub account. Uses the token
       # GitHub provides to every run, so there is no secret to set up.
       - name: Publish to Releases
-        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        # Only a release-signed APK is published: a debug one gets blocked on
+        # other people's phones.
+        if: ${{ startsWith(github.ref, 'refs/tags/v') && steps.build.outputs.signed == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ steps.apk.outputs.name }}
