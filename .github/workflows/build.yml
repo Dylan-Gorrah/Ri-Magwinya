@@ -56,18 +56,39 @@ jobs:
       - name: Unit tests
         run: ./gradlew testDebugUnitTest --no-daemon
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon
+      # The release key comes from secrets. build.gradle.kts reads the
+      # RELEASE_* values from the environment when local.properties is
+      # absent. Phones and Play Protect refuse debug-signed APKs, so this is
+      # what makes the download installable. Without the secrets (a fork, or
+      # before they are added) the run falls back to a debug build.
+      - name: Build APK
+        id: build
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          if [ -n "$RELEASE_KEYSTORE_BASE64" ]; then
+            echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.jks"
+            export RELEASE_STORE_FILE="$RUNNER_TEMP/release.jks"
+            ./gradlew assembleRelease --no-daemon
+            echo "path=app/build/outputs/apk/release/app-release.apk" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No release key in secrets, building a debug APK instead"
+            ./gradlew assembleDebug --no-daemon
+            echo "path=app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_OUTPUT"
+          fi
 
       # A name a person can recognise in their Downloads folder, rather than
-      # app-debug.apk. The version comes from build.gradle.kts, so it cannot
+      # app-release.apk. The version comes from build.gradle.kts, so it cannot
       # drift from what the app reports about itself.
       - name: Name the APK
         id: apk
         run: |
           VERSION=$(grep -oP 'versionName = "\K[^"]+' app/build.gradle.kts)
           NAME="Ri-magwinya-v${VERSION}.apk"
-          cp app/build/outputs/apk/debug/app-debug.apk "$NAME"
+          cp "${{ steps.build.outputs.path }}" "$NAME"
           echo "name=$NAME" >> "$GITHUB_OUTPUT"
           echo "Built $NAME"
 
@@ -92,8 +113,8 @@ jobs:
 
             **Installing it:** download the .apk on an Android phone, open
             it, and allow installing from this source when asked. Android 7
-            (2016) and newer. It is signed with the standard debug key, so
-            it installs by sideloading rather than through the Play Store.
+            (2016) and newer. It installs by sideloading rather than through
+            the Play Store.
 
       - name: Upload test reports
         # Uploaded even when the tests fail — that is when they are wanted.
