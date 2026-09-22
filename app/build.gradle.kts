@@ -92,6 +92,9 @@ dependencies {
     // supabase-kt runs on Ktor and needs an engine on the classpath.
     implementation(libs.ktor.client.okhttp)
 
+    // --- Charts (Phase 8) ---
+    implementation(libs.vico.compose.m3)
+
     // --- Java 8+ APIs on API 24 ---
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 

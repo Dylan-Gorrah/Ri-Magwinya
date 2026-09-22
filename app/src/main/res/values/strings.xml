@@ -161,6 +161,105 @@
     <string name="active_order_title">Order #%1$d · code %2$s</string>
     <string name="active_order_open">Open</string>
 
+    <!-- Staff: queue -->
+    <string name="queue_title">Order queue</string>
+    <string name="queue_new">New</string>
+    <string name="queue_preparing">Preparing</string>
+    <string name="queue_ready">Ready</string>
+    <string name="queue_all">All</string>
+    <string name="queue_top_up">Top up</string>
+    <string name="queue_card_header">%1$s · %2$s</string>
+    <string name="queue_line">%1$d× %2$s</string>
+    <string name="queue_line_with_options">%1$d× %2$s (%3$s)</string>
+    <string name="queue_code">Code %1$s · %2$s</string>
+    <string name="queue_counter_due">Collect %1$s at the counter</string>
+    <string name="queue_start">Start preparing</string>
+    <string name="queue_mark_ready">Mark ready</string>
+    <string name="queue_mark_collected">Mark collected</string>
+    <string name="queue_no_show">No-show</string>
+    <string name="queue_empty_title">Nothing in “%1$s”</string>
+    <string name="queue_empty_body">The queue is clear for this filter.</string>
+    <string name="queue_moved_on">That order had already moved on. The queue is up to date now.</string>
+
+    <!-- Staff: stock -->
+    <string name="stock_attention">%1$s need attention: %2$s.</string>
+    <plurals name="stock_attention_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="stock_all_good">Everything is above its reorder level.</string>
+    <string name="stock_hidden">Sold out, hidden from menu</string>
+    <string name="stock_below_reorder">Below reorder level</string>
+    <string name="stock_price_category">%1$s · %2$s</string>
+    <string name="stock_footer">Changes reach the student menu immediately.</string>
+    <string name="stock_add">Add item</string>
+    <string name="stock_edit">Edit %1$s</string>
+    <string name="stock_increase">Increase stock of %1$s</string>
+    <string name="stock_decrease">Decrease stock of %1$s</string>
+    <string name="stock_switched_off">Switched off</string>
+
+    <!-- Staff: item editor -->
+    <string name="editor_new_title">New item</string>
+    <string name="editor_edit_title">Edit item</string>
+    <string name="editor_name">Name</string>
+    <string name="editor_description">Description</string>
+    <string name="editor_price">Price (R)</string>
+    <string name="editor_stock">Opening stock</string>
+    <string name="editor_reorder">Reorder level</string>
+    <string name="editor_category">Category</string>
+    <string name="editor_icon">Icon</string>
+    <string name="editor_temperature">Serve</string>
+    <string name="editor_temp_none">Either</string>
+    <string name="editor_temp_hot">Hot</string>
+    <string name="editor_temp_cold">Cold</string>
+    <string name="editor_available">Available on the menu</string>
+    <string name="editor_save">Save</string>
+    <string name="editor_saving">Saving…</string>
+    <string name="editor_delete">Remove from menu</string>
+    <string name="editor_delete_confirm">Remove %1$s? Past orders keep their record of it.</string>
+    <string name="editor_options_note">Options (sizes, fillings) are edited in Supabase for now.</string>
+    <string name="editor_error_name">Give the item a name.</string>
+    <string name="editor_error_price">Enter a price, like 16 or 16.50.</string>
+    <string name="editor_error_number">Enter a whole number.</string>
+
+    <!-- Staff: sales -->
+    <string name="sales_today">Today</string>
+    <string name="sales_revenue">Revenue</string>
+    <plurals name="sales_paid_orders">
+        <item quantity="one">%d collected order</item>
+        <item quantity="other">%d collected orders</item>
+    </plurals>
+    <string name="sales_average">Average order</string>
+    <string name="sales_all_slots">All breaks</string>
+    <string name="sales_by_hour">Orders by hour</string>
+    <string name="sales_peak">Peak %1$s</string>
+    <string name="sales_chart_description">Orders by hour today. Busiest hour %1$s with %2$d orders.</string>
+    <string name="sales_top">Top sellers today</string>
+    <string name="sales_sold">%1$d sold</string>
+    <string name="sales_none">No sales recorded yet today. Sales count once orders are collected.</string>
+    <string name="sales_export">Export report (CSV)</string>
+    <string name="sales_export_title">Share sales report</string>
+
+    <!-- Staff: wallet top-up -->
+    <string name="topup_title">Top up a wallet</string>
+    <string name="topup_explainer">The student pays on the tuckshop speed point first. The speed point is a separate system: enter the same amount here to add it to their wallet.</string>
+    <string name="topup_student_number">Student number</string>
+    <string name="topup_find">Find student</string>
+    <string name="topup_finding">Finding…</string>
+    <string name="topup_not_found">No student with that number. Check the card and try again.</string>
+    <string name="topup_current">Current balance %1$s</string>
+    <string name="topup_amount">Amount</string>
+    <string name="topup_custom">Custom amount (R)</string>
+    <string name="topup_range">Between %1$s and %2$s.</string>
+    <string name="topup_add">Add %1$s</string>
+    <string name="topup_confirm_title">Add %1$s to %2$s?</string>
+    <string name="topup_confirm_body">Only confirm once the speed point shows the payment went through.</string>
+    <string name="topup_confirm">Yes, add it</string>
+    <string name="topup_not_yet">Not yet</string>
+    <string name="topup_adding">Adding…</string>
+    <string name="topup_done">Added. %1$s now has %2$s.</string>
+    <string name="topup_another">Top up another student</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

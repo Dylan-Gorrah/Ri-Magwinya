@@ -20,6 +20,7 @@ account and make a staff user)
 **Phase 5 — Edge Functions · DONE** (deployed and tested against the live project)
 **Phase 6 — Cart and checkout · DONE** (built and unit tested; needs a phone run)
 **Phase 7 — Student orders · DONE** (built and unit tested; needs a phone run)
+**Phase 8 — Staff · DONE** (built and unit tested; needs two phones to try properly)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -582,6 +583,42 @@ Order numbers skip (#1, then #5): Postgres identity values are used up by
 orders that were refused and rolled back. Harmless, and normal.
 
 **`OrderProgressTest` — 8 tests.** 102 passing.
+
+---
+
+## Phase 8 — Staff · DONE
+
+- **Queue** — New/Preparing/Ready counters, filter chips, one next-step
+  button per card, the full option label the kitchen makes, the code and the
+  student's name, an amount due for counter orders, and a no-show button
+  that appears only on a ready order whose break has ended. Realtime, so a
+  student's order lands without refreshing. Top-up button in the bar.
+- **Stock** — steppers, a low-stock banner naming the items, sold-out and
+  switched-off states in words, and an add/edit/remove sheet. Option groups
+  (sizes, fillings) are still edited in Supabase — noted on the sheet.
+- **Sales** — revenue, collected orders, average, a Vico column chart of
+  orders by hour with the peak named in text, top sellers with gold on the
+  first, and a CSV export through the share sheet.
+- **Wallet top-up** — find by student number, presets plus a custom amount,
+  a confirmation sheet ("only confirm once the speed point shows it went
+  through"), then the new balance.
+
+**Two bugs found by testing against the real database:**
+
+1. **`log_stock_change` never worked** (migration 0014). Its CASE produced
+   `text` where the column is the `stock_reason` enum, so *every* manual
+   stock change by staff failed with 42804. Orders never hit it because they
+   log their own movements.
+2. **The app had no `INTERNET` permission.** Every request would have failed
+   on the phone and shown "No connection". Added, with
+   `ACCESS_NETWORK_STATE` for Phase 10.
+
+**Disagreed with the brief, on purpose (migration 0013):** the stock stepper
+sends a **change**, not a total. "PATCH stock_quantity = 12" loses a sale
+made between reading the number and tapping; `adjust_stock(item, delta)`
+cannot. It is also what makes replaying a queued offline adjustment safe.
+
+**`StaffRulesTest` — 13 tests.** 115 passing.
 
 ---
 

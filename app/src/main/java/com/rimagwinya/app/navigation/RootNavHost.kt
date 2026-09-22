@@ -34,6 +34,10 @@ import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
 import com.rimagwinya.app.feature.orders.OrderDetailScreen
 import com.rimagwinya.app.feature.orders.OrdersScreen
+import com.rimagwinya.app.feature.staff.QueueScreen
+import com.rimagwinya.app.feature.staff.SalesScreen
+import com.rimagwinya.app.feature.staff.StockScreen
+import com.rimagwinya.app.feature.staff.TopUpScreen
 
 @Composable
 fun RootNavHost(
@@ -106,7 +110,7 @@ fun RootNavHost(
                     firstName = profile?.fullName?.substringBefore(' ').orEmpty(),
                     balance = profile?.walletBalance ?: Money.ZERO,
                 )
-                staffGraph()
+                staffGraph(navController)
                 // Profile is shared by both roles, so it lives at the root
                 // rather than being declared twice — two graphs cannot own
                 // the same route.
@@ -206,12 +210,12 @@ private fun NavGraphBuilder.studentGraph(
     }
 }
 
-/** Queue, stock, sales, top-up. Phase 8. */
-private fun NavGraphBuilder.staffGraph() {
+/** Queue, stock, sales, top-up. */
+private fun NavGraphBuilder.staffGraph(navController: NavHostController) {
     navigation<Route.StaffGraph>(startDestination = Route.Queue) {
-        composable<Route.Queue> { PlaceholderScreen(R.string.title_queue, icon = R.drawable.ic_clock) }
-        composable<Route.Stock> { PlaceholderScreen(R.string.title_stock, icon = R.drawable.ic_box) }
-        composable<Route.Sales> { PlaceholderScreen(R.string.title_sales, icon = R.drawable.ic_chart) }
-        composable<Route.TopUp> { PlaceholderScreen(R.string.title_top_up, icon = R.drawable.ic_wallet) }
+        composable<Route.Queue> { QueueScreen(onTopUp = { navController.navigate(Route.TopUp) }) }
+        composable<Route.Stock> { StockScreen() }
+        composable<Route.Sales> { SalesScreen() }
+        composable<Route.TopUp> { TopUpScreen(onBack = { navController.popBackStack() }) }
     }
 }

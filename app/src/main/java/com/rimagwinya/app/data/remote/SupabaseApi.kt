@@ -95,6 +95,34 @@ interface SupabaseApi {
         @Query("limit") limit: Int = 1,
     ): List<IdOnly>
 
+    // --- Staff -----------------------------------------------------------------
+
+    /** Adds or removes stock as a change, never a total. Staff only. */
+    @POST("rest/v1/rpc/adjust_stock")
+    suspend fun adjustStock(@Body body: AdjustStockBody): MenuItemDto
+
+    /** Revenue, counts, orders by hour and top items, aggregated in SQL. */
+    @POST("rest/v1/rpc/sales_summary")
+    suspend fun salesSummary(@Body body: SalesRangeBody): SalesSummaryDto
+
+    @POST("rest/v1/menu_items")
+    @Headers("Prefer: return=representation")
+    suspend fun createItem(@Body item: kotlinx.serialization.json.JsonObject): List<MenuItemDto>
+
+    @PATCH("rest/v1/menu_items")
+    @Headers("Prefer: return=representation")
+    suspend fun updateItem(@Query("id") id: String, @Body item: kotlinx.serialization.json.JsonObject): List<MenuItemDto>
+
+    @retrofit2.http.DELETE("rest/v1/menu_items")
+    suspend fun deleteItem(@Query("id") id: String)
+
+    /** Staff looking a student up for a top-up. RLS lets only staff see others. */
+    @GET("rest/v1/profiles")
+    suspend fun profileByStudentNumber(
+        @Query("student_number") studentNumber: String,
+        @Query("select") select: String = "*",
+    ): List<ProfileDto>
+
     companion object {
         const val MENU_SELECT = "*,option_groups(*,options(*))"
         const val ORDER_SELECT =
@@ -104,6 +132,31 @@ interface SupabaseApi {
 
 @Serializable
 data class IdOnly(val id: String)
+
+@Serializable
+data class AdjustStockBody(val p_item_id: String, val p_delta: Int)
+
+@Serializable
+data class SalesRangeBody(val p_from: String, val p_to: String)
+
+@Serializable
+data class SalesSummaryDto(
+    val revenue: Double = 0.0,
+    @kotlinx.serialization.SerialName("order_count") val orderCount: Int = 0,
+    @kotlinx.serialization.SerialName("average_order") val averageOrder: Double = 0.0,
+    @kotlinx.serialization.SerialName("orders_by_hour") val ordersByHour: List<HourCountDto> = emptyList(),
+    @kotlinx.serialization.SerialName("top_items") val topItems: List<TopItemDto> = emptyList(),
+)
+
+@Serializable
+data class HourCountDto(val hour: Int, val orders: Int)
+
+@Serializable
+data class TopItemDto(
+    @kotlinx.serialization.SerialName("item_name") val itemName: String,
+    val quantity: Int,
+    val revenue: Double,
+)
 
 @Serializable
 data class EnsureSlotsBody(
