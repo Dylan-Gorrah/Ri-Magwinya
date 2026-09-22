@@ -42,6 +42,24 @@ object Validation {
         else -> FieldResult.Valid
     }
 
+    /**
+     * A South African mobile or landline, however people write it:
+     * 082 123 4567, 0821234567, +27 82 123 4567, (021) 555-1234.
+     *
+     * Ten digits, or eleven starting with 27, once the punctuation is
+     * stripped. Empty is fine — a phone number is optional.
+     */
+    fun phone(value: String): FieldResult {
+        val trimmed = value.trim()
+        if (trimmed.isEmpty()) return FieldResult.Empty
+        val digits = trimmed.filter { it.isDigit() }
+        val looksRight = when {
+            trimmed.startsWith("+27") || digits.startsWith("27") -> digits.length == 11
+            else -> digits.length == 10 && digits.startsWith("0")
+        }
+        return if (looksRight) FieldResult.Valid else FieldResult.Invalid(Problem.PhoneMalformed)
+    }
+
     fun fullName(value: String): FieldResult = when {
         value.trim().isEmpty() -> FieldResult.Empty
         value.trim().length < 2 -> FieldResult.Invalid(Problem.NameTooShort)
@@ -85,4 +103,5 @@ enum class Problem {
     PasswordTooShort,
     NameTooShort,
     StudentNumberMalformed,
+    PhoneMalformed,
 }

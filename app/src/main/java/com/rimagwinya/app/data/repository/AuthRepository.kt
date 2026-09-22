@@ -163,6 +163,29 @@ class AuthRepository @Inject constructor(
     }
 
     /**
+     * Saves the two things a student may change about themselves.
+     *
+     * The column grants in migration 0008/0015 are what make this safe:
+     * the same PATCH with a role or a wallet balance in it is refused by
+     * the database, not by this function.
+     */
+    suspend fun updateProfile(fullName: String, phone: String?): Result<Profile> =
+        withContext(io) {
+            runCatching {
+                val id = currentUserId() ?: throw ApiError.Unauthorised
+                api.patchProfile(
+                    "eq.$id",
+                    com.rimagwinya.app.data.remote.ProfilePatch(
+                        fullName = fullName.trim(),
+                        // Empty means "remove it", which is a real choice.
+                        phone = phone?.trim().orEmpty(),
+                    ),
+                ).firstOrNull()?.toDomain() ?: throw ApiError.NotFound
+            }.recoverCatching { throw it.asApiError() }
+                .onSuccess { _currentProfile.value = it }
+        }
+
+    /**
      * Mirrors the chosen language to the profile, so a push is written in
      * the language the student actually reads. Best effort: failing to save
      * it must never stop the app changing language.

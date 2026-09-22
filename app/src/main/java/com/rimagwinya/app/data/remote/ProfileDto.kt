@@ -12,6 +12,7 @@ data class ProfileDto(
     @SerialName("full_name") val fullName: String,
     val email: String,
     @SerialName("student_number") val studentNumber: String? = null,
+    val phone: String? = null,
     val role: String,
     @SerialName("wallet_balance") val walletBalance: Double = 0.0,
     @SerialName("no_show_count") val noShowCount: Int = 0,
@@ -23,6 +24,7 @@ fun ProfileDto.toDomain(): Profile = Profile(
     fullName = fullName,
     email = email,
     studentNumber = studentNumber,
+    phone = phone,
     role = UserRole.from(role),
     walletBalance = Money.fromDecimal(walletBalance),
     noShowCount = noShowCount,
@@ -41,6 +43,7 @@ fun ProfileDto.toDomain(): Profile = Profile(
 @Serializable
 data class ProfilePatch(
     @SerialName("full_name") val fullName: String? = null,
+    val phone: String? = null,
     val language: String? = null,
     @SerialName("fcm_token") val fcmToken: String? = null,
 )

@@ -67,7 +67,7 @@ class CheckoutRulesTest {
     // --- Payment ------------------------------------------------------------
 
     private fun profile(balanceRands: Int, noShows: Int = 0) = Profile(
-        id = "p", fullName = "Test Student", email = "t@x.co", studentNumber = "TEST001",
+        id = "p", fullName = "Test Student", email = "t@x.co", studentNumber = "TEST001", phone = null,
         role = UserRole.Student, walletBalance = Money.ofRands(balanceRands),
         noShowCount = noShows, language = "en",
     )

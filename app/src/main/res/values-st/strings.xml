@@ -398,4 +398,15 @@
     <string name="auth_check_email_title">Sheba imeile ya hao</string>
     <string name="auth_check_email_body">Akhaonto ya hao e entswe. Tobetsa sehokelo seo re o rometseng sona, mme o kene.</string>
 
+
+    <!-- Lokisa profaele -->
+    <string name="error_phone">Kenya nomoro e kang 082 123 4567.</string>
+    <string name="profile_edit">Lokisa profaele</string>
+    <string name="profile_edit_body">Lebitso la hao ke seo basebetsi ba se bonang odareng. Nomoro ya mohala ha e tlameha, mme e sebediswa feela ha ho na le bothata ka odara ya hao.</string>
+    <string name="profile_phone">Nomoro ya mohala</string>
+    <string name="profile_phone_hint">082 123 4567</string>
+    <string name="profile_phone_none">Ha ho nomoro ya mohala</string>
+    <string name="profile_edit_save">Boloka diphetoho</string>
+    <string name="profile_edit_saving">Ea boloka…</string>
+    <string name="profile_edit_saved">Profaele e ntlafaditswe.</string>
 </resources>

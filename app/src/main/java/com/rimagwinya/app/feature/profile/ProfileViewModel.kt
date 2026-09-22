@@ -11,6 +11,7 @@ import com.rimagwinya.app.core.datastore.SettingsRepository
 import com.rimagwinya.app.core.designsystem.theme.ThemeChoice
 import com.rimagwinya.app.core.network.asApiError
 import com.rimagwinya.app.core.network.messageRes
+import com.rimagwinya.app.core.util.FieldResult
 import com.rimagwinya.app.core.util.UiText
 import com.rimagwinya.app.core.util.Validation
 import com.rimagwinya.app.data.repository.AuthRepository
@@ -35,8 +36,23 @@ data class PasswordForm(
 ) {
     val canSave: Boolean
         get() = !saving &&
-            Validation.password(password) is com.rimagwinya.app.core.util.FieldResult.Valid &&
+            Validation.password(password) is FieldResult.Valid &&
             password == repeat
+}
+
+/** The edit-profile sheet, when it is open. */
+data class EditProfileForm(
+    val fullName: String = "",
+    val phone: String = "",
+    val saving: Boolean = false,
+    val error: UiText? = null,
+) {
+    val nameError: Boolean get() = Validation.fullName(fullName) is FieldResult.Invalid
+
+    /** A blank phone number is fine; a malformed one is not. */
+    val phoneError: Boolean get() = Validation.phone(phone) is FieldResult.Invalid
+
+    val canSave: Boolean get() = !saving && !nameError && !phoneError && fullName.isNotBlank()
 }
 
 data class ProfileUiState(
@@ -44,6 +60,7 @@ data class ProfileUiState(
     val settings: Settings = Settings(),
     val stamps: Int = 0,
     val passwordForm: PasswordForm? = null,
+    val editForm: EditProfileForm? = null,
     val message: UiText? = null,
 ) {
     val isStaff: Boolean get() = profile?.role == UserRole.Staff
@@ -70,6 +87,7 @@ class ProfileViewModel @Inject constructor(
             settings = settings,
             stamps = l.stamps,
             passwordForm = l.passwordForm,
+            editForm = l.editForm,
             message = l.message,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileUiState())
@@ -102,6 +120,35 @@ class ProfileViewModel @Inject constructor(
         settingsRepository.setLanguage(code)
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(code))
         auth.updateLanguage(code)
+    }
+
+    fun openEditSheet() {
+        val profile = state.value.profile ?: return
+        local.update {
+            it.copy(editForm = EditProfileForm(fullName = profile.fullName, phone = profile.phone.orEmpty()))
+        }
+    }
+
+    fun closeEditSheet() = local.update { it.copy(editForm = null) }
+
+    fun editProfile(change: (EditProfileForm) -> EditProfileForm) =
+        local.update { l -> l.copy(editForm = l.editForm?.let { change(it).copy(error = null) }) }
+
+    fun saveProfile() {
+        val form = local.value.editForm ?: return
+        if (!form.canSave) return
+        local.update { it.copy(editForm = form.copy(saving = true)) }
+        viewModelScope.launch {
+            auth.updateProfile(form.fullName, form.phone)
+                .onSuccess {
+                    local.update { it.copy(editForm = null, message = UiText(R.string.profile_edit_saved)) }
+                }
+                .onFailure { e ->
+                    local.update {
+                        it.copy(editForm = form.copy(saving = false, error = UiText(e.asApiError().messageRes())))
+                    }
+                }
+        }
     }
 
     fun openPasswordSheet() = local.update { it.copy(passwordForm = PasswordForm()) }
@@ -138,6 +185,7 @@ class ProfileViewModel @Inject constructor(
     private data class Local(
         val stamps: Int = 0,
         val passwordForm: PasswordForm? = null,
+        val editForm: EditProfileForm? = null,
         val message: UiText? = null,
     )
 }

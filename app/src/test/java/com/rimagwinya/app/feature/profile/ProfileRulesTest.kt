@@ -15,7 +15,7 @@ class ProfileRulesTest {
 
     private fun state(stamps: Int = 0, role: UserRole = UserRole.Student) = ProfileUiState(
         profile = Profile(
-            id = "p", fullName = "Test Student", email = "t@x.co", studentNumber = "TEST001",
+            id = "p", fullName = "Test Student", email = "t@x.co", studentNumber = "TEST001", phone = null,
             role = role, walletBalance = Money.ofRands(33), noShowCount = 0, language = "en",
         ),
         stamps = stamps,

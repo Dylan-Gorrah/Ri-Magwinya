@@ -439,4 +439,15 @@
 
     <!-- Placeholder copy, replaced as each phase builds its screen -->
     <string name="placeholder_coming">Coming in a later phase.</string>
+
+    <!-- Edit profile -->
+    <string name="error_phone">Enter a number like 082 123 4567.</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_edit_body">Your name is what staff see on the order. The phone number is optional, and only used if something goes wrong with your order.</string>
+    <string name="profile_phone">Phone number</string>
+    <string name="profile_phone_hint">082 123 4567</string>
+    <string name="profile_phone_none">No phone number</string>
+    <string name="profile_edit_save">Save changes</string>
+    <string name="profile_edit_saving">Saving…</string>
+    <string name="profile_edit_saved">Profile updated.</string>
 </resources>

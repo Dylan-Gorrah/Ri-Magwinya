@@ -398,4 +398,15 @@
     <string name="auth_check_email_title">Kyk in jou e-pos</string>
     <string name="auth_check_email_body">Jou rekening is geskep. Klik op die skakel wat ons gestuur het, en meld dan aan.</string>
 
+
+    <!-- Wysig profiel -->
+    <string name="error_phone">Voer \'n nommer in soos 082 123 4567.</string>
+    <string name="profile_edit">Wysig profiel</string>
+    <string name="profile_edit_body">Jou naam is wat personeel op die bestelling sien. Die foonnommer is opsioneel en word net gebruik as iets met jou bestelling verkeerd loop.</string>
+    <string name="profile_phone">Foonnommer</string>
+    <string name="profile_phone_hint">082 123 4567</string>
+    <string name="profile_phone_none">Geen foonnommer nie</string>
+    <string name="profile_edit_save">Stoor veranderinge</string>
+    <string name="profile_edit_saving">Stoor…</string>
+    <string name="profile_edit_saved">Profiel opgedateer.</string>
 </resources>

@@ -84,6 +84,12 @@ fun ProfileScreen(
                             style = RmTheme.type.caption,
                             color = RmTheme.colors.text2,
                         )
+                        Text(
+                            state.profile?.phone?.takeIf { it.isNotBlank() }
+                                ?: stringResource(R.string.profile_phone_none),
+                            style = RmTheme.type.caption,
+                            color = RmTheme.colors.text2,
+                        )
                     }
                     Text(
                         stringResource(if (state.isStaff) R.string.profile_staff else R.string.profile_student),
@@ -180,6 +186,12 @@ fun ProfileScreen(
                 SectionLabel(stringResource(R.string.profile_account))
                 GroupedList {
                     ListRow(
+                        title = stringResource(R.string.profile_edit),
+                        subtitle = stringResource(R.string.profile_phone),
+                        onClick = viewModel::openEditSheet,
+                    )
+                    ListDivider()
+                    ListRow(
                         title = stringResource(R.string.profile_change_password),
                         onClick = viewModel::openPasswordSheet,
                     )
@@ -189,6 +201,39 @@ fun ProfileScreen(
             }
 
             RmButton(stringResource(R.string.profile_sign_out), { viewModel.signOut() }, style = RmButtonStyle.Danger)
+        }
+    }
+
+    state.editForm?.let { form ->
+        RmBottomSheet(onDismiss = viewModel::closeEditSheet) {
+            Column(Modifier.padding(Space.screen), verticalArrangement = Arrangement.spacedBy(Space.x16)) {
+                Text(stringResource(R.string.profile_edit), style = RmTheme.type.screenTitle, color = RmTheme.colors.text)
+                Text(stringResource(R.string.profile_edit_body), style = RmTheme.type.secondary, color = RmTheme.colors.text2)
+                RmTextField(
+                    value = form.fullName,
+                    onValueChange = { v -> viewModel.editProfile { it.copy(fullName = v) } },
+                    label = stringResource(R.string.auth_name),
+                    placeholder = stringResource(R.string.auth_name_hint),
+                    error = if (form.nameError) stringResource(R.string.error_name_short) else null,
+                    leadingIcon = R.drawable.ic_user,
+                )
+                RmTextField(
+                    value = form.phone,
+                    onValueChange = { v -> viewModel.editProfile { it.copy(phone = v) } },
+                    label = stringResource(R.string.profile_phone),
+                    placeholder = stringResource(R.string.profile_phone_hint),
+                    error = if (form.phoneError) stringResource(R.string.error_phone) else null,
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Phone,
+                )
+                form.error?.let { Banner(text = it.resolve(), tone = BannerTone.Error) }
+                RmButton(
+                    text = stringResource(
+                        if (form.saving) R.string.profile_edit_saving else R.string.profile_edit_save
+                    ),
+                    onClick = viewModel::saveProfile,
+                    enabled = form.canSave,
+                )
+            }
         }
     }
 

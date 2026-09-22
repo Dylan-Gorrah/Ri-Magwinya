@@ -18,6 +18,7 @@ fun Problem.messageRes(): Int = when (this) {
     Problem.PasswordTooShort -> R.string.error_password_short
     Problem.NameTooShort -> R.string.error_name_short
     Problem.StudentNumberMalformed -> R.string.error_student_number
+    Problem.PhoneMalformed -> R.string.error_phone
 }
 
 @StringRes

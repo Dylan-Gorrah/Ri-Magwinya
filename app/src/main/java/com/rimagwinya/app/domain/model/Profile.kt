@@ -18,6 +18,8 @@ data class Profile(
      * and nothing else until the number is supplied.
      */
     val studentNumber: String?,
+    /** Optional: staff ring it when food is going cold on the counter. */
+    val phone: String?,
     val role: UserRole,
     val walletBalance: Money,
     val noShowCount: Int,
