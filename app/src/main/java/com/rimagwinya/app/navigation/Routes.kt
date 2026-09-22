@@ -45,6 +45,9 @@ object Route {
     @Serializable
     data object Profile
 
+    @Serializable
+    data object Privacy
+
     // --- Staff graph ---
     @Serializable
     data object StaffGraph

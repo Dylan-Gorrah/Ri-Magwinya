@@ -21,6 +21,7 @@ account and make a staff user)
 **Phase 6 — Cart and checkout · DONE** (built and unit tested; needs a phone run)
 **Phase 7 — Student orders · DONE** (built and unit tested; needs a phone run)
 **Phase 8 — Staff · DONE** (built and unit tested; needs two phones to try properly)
+**Phase 9 — Profile and settings · DONE** (built and unit tested)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -618,7 +619,29 @@ sends a **change**, not a total. "PATCH stock_quantity = 12" loses a sale
 made between reading the number and tapping; `adjust_stock(item, delta)`
 cannot. It is also what makes replaying a queued offline adjustment safe.
 
-**`StaffRulesTest` — 13 tests.** 115 passing.
+**`StaffRulesTest` — 13 tests.** 114 passing.
+
+---
+
+## Phase 9 — Profile and settings · DONE
+
+- **Profile** — identity card with the student number and a role pill,
+  wallet balance, and loyalty progress ("7 of 10", display only, one stamp
+  per collected order, rolling over at ten). Staff see neither wallet nor
+  stamps.
+- **Settings in DataStore** — order notifications, fingerprint unlock,
+  appearance (System/Light/Dark, applied instantly), language (English,
+  Afrikaans, Sesotho; Phase 13 makes the switch take effect).
+- **Change password** in a sheet: new password twice, 8+ characters.
+  Supabase checks the session rather than the old password.
+- **Privacy and POPIA** as its own page, in `strings.xml` so Phase 16 can
+  reuse the same words for the store listing.
+- **Fingerprint unlock** gates the app on open when it is on and someone is
+  signed in, with "Sign in with my password instead" as the way past a
+  reader that will not read. The toggle is disabled, and says why, on a
+  phone with no fingerprint or PIN set up.
+
+**`ProfileRulesTest` — 5 tests.** 118 passing.
 
 ---
 

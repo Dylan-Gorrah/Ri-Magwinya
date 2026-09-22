@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +38,9 @@ import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
 import com.rimagwinya.app.feature.orders.OrderDetailScreen
 import com.rimagwinya.app.feature.orders.OrdersScreen
+import com.rimagwinya.app.feature.profile.AppLockScreen
+import com.rimagwinya.app.feature.profile.PrivacyScreen
+import com.rimagwinya.app.feature.profile.ProfileScreen
 import com.rimagwinya.app.feature.staff.QueueScreen
 import com.rimagwinya.app.feature.staff.SalesScreen
 import com.rimagwinya.app.feature.staff.StockScreen
@@ -41,6 +48,7 @@ import com.rimagwinya.app.feature.staff.TopUpScreen
 
 @Composable
 fun RootNavHost(
+    biometricUnlock: Boolean = false,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     sessionViewModel: SessionViewModel = hiltViewModel(),
@@ -80,6 +88,20 @@ fun RootNavHost(
         }
     }
 
+    // The lock sits over everything once, per launch, and only when
+    // somebody is signed in — there is nothing to protect otherwise.
+    var unlocked by rememberSaveable { mutableStateOf(false) }
+    if (signedIn && biometricUnlock && !unlocked) {
+        AppLockScreen(
+            onUnlocked = { unlocked = true },
+            onUsePassword = { sessionViewModel.signOut() },
+            modifier = modifier
+                .fillMaxSize()
+                .background(RmTheme.colors.background),
+        )
+        return
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = RmTheme.colors.background,
@@ -115,7 +137,10 @@ fun RootNavHost(
                 // rather than being declared twice — two graphs cannot own
                 // the same route.
                 composable<Route.Profile> {
-                    PlaceholderScreen(R.string.title_profile, icon = R.drawable.ic_user)
+                    ProfileScreen(onOpenPrivacy = { navController.navigate(Route.Privacy) })
+                }
+                composable<Route.Privacy> {
+                    PrivacyScreen(onBack = { navController.popBackStack() })
                 }
             }
         }

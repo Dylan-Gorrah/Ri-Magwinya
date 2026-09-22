@@ -5,7 +5,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rimagwinya.app.core.datastore.Settings
+import com.rimagwinya.app.core.datastore.SettingsRepository
 import com.rimagwinya.app.core.designsystem.theme.RimagwinyaTheme
+import javax.inject.Inject
 import com.rimagwinya.app.navigation.RootNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,13 +26,19 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Inject lateinit var settingsRepository: SettingsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            RimagwinyaTheme {
-                RootNavHost()
+            // The chosen theme, from DataStore. System until it has loaded,
+            // which is also what someone who never changed it wants.
+            val settings by settingsRepository.settings.collectAsStateWithLifecycle(Settings())
+            RimagwinyaTheme(choice = settings.theme) {
+                RootNavHost(biometricUnlock = settings.biometricUnlock)
             }
         }
     }

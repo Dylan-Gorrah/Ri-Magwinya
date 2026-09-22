@@ -95,6 +95,13 @@ interface SupabaseApi {
         @Query("limit") limit: Int = 1,
     ): List<IdOnly>
 
+    /** The caller's loyalty stamps. RLS scopes it to them. */
+    @GET("rest/v1/loyalty_stamps")
+    suspend fun loyaltyStamps(
+        @Query("select") select: String = "id",
+        @Query("limit") limit: Int = 200,
+    ): List<IdOnly>
+
     // --- Staff -----------------------------------------------------------------
 
     /** Adds or removes stock as a change, never a total. Staff only. */

@@ -130,6 +130,22 @@ class AuthRepository @Inject constructor(
             .onSuccess { _currentProfile.value = it }
     }
 
+    /**
+     * Changes the password of the signed-in account. Supabase checks the
+     * session, not the old password, so the screen asks for the new one only.
+     */
+    suspend fun changePassword(newPassword: String): Result<Unit> = withContext(io) {
+        runCatching {
+            client.auth.updateUser { password = newPassword }
+            Unit
+        }.recoverCatching { throw it.toAuthError() }
+    }
+
+    /** Stamps earned, one per collected order. Display only — no redemption. */
+    suspend fun loyaltyStamps(): Result<Int> = withContext(io) {
+        runCatching { api.loyaltyStamps().size }.recoverCatching { throw it.asApiError() }
+    }
+
     /** Sets the student number once, for accounts created by Google sign-in. */
     suspend fun claimStudentNumber(number: String): Result<Profile> =
         withContext(io) {

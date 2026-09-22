@@ -92,6 +92,10 @@ dependencies {
     // supabase-kt runs on Ktor and needs an engine on the classpath.
     implementation(libs.ktor.client.okhttp)
 
+    // --- Settings storage and biometrics (Phase 9) ---
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.biometric)
+
     // --- Charts (Phase 8) ---
     implementation(libs.vico.compose.m3)
 

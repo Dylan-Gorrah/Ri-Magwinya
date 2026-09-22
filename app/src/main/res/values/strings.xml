@@ -260,6 +260,65 @@
     <string name="topup_done">Added. %1$s now has %2$s.</string>
     <string name="topup_another">Top up another student</string>
 
+    <!-- Profile -->
+    <string name="profile_student">Student</string>
+    <string name="profile_staff">Tuckshop staff</string>
+    <string name="profile_wallet">Campus wallet</string>
+    <string name="profile_loyalty">Loyalty stamps</string>
+    <string name="profile_loyalty_progress">%1$d of %2$d</string>
+    <string name="profile_loyalty_note">One stamp per collected order.</string>
+    <string name="profile_student_number">Student number %1$s</string>
+    <string name="profile_no_student_number">No student number yet</string>
+    <string name="profile_preferences">Preferences</string>
+    <string name="profile_account">Account</string>
+    <string name="profile_notifications">Order notifications</string>
+    <string name="profile_notifications_body">Tell me when my order is ready.</string>
+    <string name="profile_theme">Appearance</string>
+    <string name="profile_theme_system">System</string>
+    <string name="profile_theme_light">Light</string>
+    <string name="profile_theme_dark">Dark</string>
+    <string name="profile_language">Language</string>
+    <string name="profile_biometric">Unlock with fingerprint</string>
+    <string name="profile_biometric_body">Ask for your fingerprint when the app opens.</string>
+    <string name="profile_biometric_unavailable">This phone has no fingerprint or face unlock set up.</string>
+    <string name="profile_change_password">Change password</string>
+    <string name="profile_privacy">Privacy and POPIA</string>
+    <string name="profile_sign_out">Sign out</string>
+
+    <!-- Change password -->
+    <string name="password_new">New password</string>
+    <string name="password_repeat">Repeat new password</string>
+    <string name="password_mismatch">The two passwords do not match.</string>
+    <string name="password_save">Change password</string>
+    <string name="password_saving">Changing…</string>
+    <string name="password_changed">Password changed.</string>
+
+    <!-- App lock -->
+    <string name="lock_title">Ri-magwinya is locked</string>
+    <string name="lock_body">Unlock with your fingerprint to carry on.</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_prompt_title">Unlock Ri-magwinya</string>
+    <string name="lock_prompt_subtitle">Use your fingerprint or screen lock.</string>
+    <string name="lock_use_password">Sign in with my password instead</string>
+
+    <!-- Privacy / POPIA -->
+    <string name="privacy_title">Privacy and POPIA</string>
+    <string name="privacy_intro">Ri-magwinya is a tuckshop pre-ordering app for Rosebank College, Bloemfontein. This page explains what it keeps about you and why, as the Protection of Personal Information Act asks us to.</string>
+    <string name="privacy_h_what">What we keep</string>
+    <string name="privacy_b_what">Your name, email address and student number, so staff can find your order at the counter. Your orders, what was in them, and when you collected them. Your campus wallet balance and the record of top-ups and payments. If you turn notifications on, a device token so we can tell you when your order is ready.</string>
+    <string name="privacy_h_why">Why</string>
+    <string name="privacy_b_why">To take your order, to charge the right amount, to hand the right food to the right person, and to let the tuckshop plan stock. Nothing else.</string>
+    <string name="privacy_h_cards">Card payments</string>
+    <string name="privacy_b_cards">Top-ups are paid on the tuckshop speed point, which belongs to the bank and is a separate system. No card number ever reaches this app.</string>
+    <string name="privacy_h_who">Who sees it</string>
+    <string name="privacy_b_who">You see your own account. Tuckshop staff see orders, names and student numbers so they can serve you, and the wallet top-ups they record. Nobody else. Nothing is sold or shared.</string>
+    <string name="privacy_h_long">How long we keep it</string>
+    <string name="privacy_b_long">Your account and its order history stay while you use the tuckshop. Ask staff to remove your account and we delete it, along with your orders.</string>
+    <string name="privacy_h_rights">Your rights</string>
+    <string name="privacy_b_rights">You may ask what we hold about you, ask us to correct it, or ask us to delete it. Speak to the tuckshop or email the address on the college notice board.</string>
+    <string name="privacy_h_security">Security</string>
+    <string name="privacy_b_security">Your password is hashed by our sign-in provider and is never stored by the app. All traffic is encrypted. The database refuses to show one student another student\'s information.</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 
