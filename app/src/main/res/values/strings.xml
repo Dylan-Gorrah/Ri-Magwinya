@@ -117,6 +117,50 @@
     <string name="order_error_empty">One of the items has nothing chosen. Edit it in your cart.</string>
     <string name="order_error_student_number">Add your student number before ordering, so staff can find your order.</string>
 
+    <!-- Order status -->
+    <string name="order_title">Order #%1$d</string>
+    <string name="order_show_code">Show this code at the counter</string>
+    <string name="order_slot_line">%1$s · %2$s</string>
+    <string name="order_ready_banner">Your order is ready. Show your code at the counter.</string>
+    <string name="order_step_placed">Order placed</string>
+    <string name="order_step_paid">Payment confirmed</string>
+    <string name="order_step_pay_on_collection">Pay on collection</string>
+    <string name="order_step_preparing">Preparing</string>
+    <string name="order_step_ready">Ready for collection</string>
+    <string name="order_step_collected">Collected</string>
+    <string name="order_step_pending">Pending</string>
+    <string name="order_step_notified">%1$s · you were notified</string>
+    <string name="order_items">Items</string>
+    <string name="order_total_paid">Total paid</string>
+    <string name="order_total_due">Due at the counter</string>
+    <string name="order_cancel">Cancel order</string>
+    <string name="order_cancelling">Cancelling…</string>
+    <string name="order_cancel_confirm_title">Cancel this order?</string>
+    <string name="order_cancel_confirm_body">Your stock and collection time are released. Wallet payments go straight back to your wallet.</string>
+    <string name="order_cancel_keep">Keep it</string>
+    <string name="order_cannot_cancel">This order is being prepared and can no longer be cancelled.</string>
+    <string name="order_cancelled_banner">This order was cancelled.</string>
+    <string name="order_cancelled_refund">This order was cancelled and %1$s went back to your wallet.</string>
+    <string name="order_no_show_banner">This order was not collected before the break ended.</string>
+    <string name="order_collected_banner">Collected. Enjoy.</string>
+    <string name="order_error_transition">That order has already moved on. Here is where it is now.</string>
+
+    <!-- Order history -->
+    <string name="orders_in_progress">In progress</string>
+    <string name="orders_past">Past orders</string>
+    <string name="orders_empty_title">No orders yet</string>
+    <string name="orders_empty_body">Your orders and collection codes appear here.</string>
+    <string name="orders_row_title">#%1$d · %2$s</string>
+    <plurals name="orders_item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="orders_row_subtitle">%1$s · %2$s</string>
+
+    <!-- Active order card on the menu -->
+    <string name="active_order_title">Order #%1$d · code %2$s</string>
+    <string name="active_order_open">Open</string>
+
     <!-- POPIA, shown before the account is created rather than buried in settings -->
     <string name="popia_notice">We store your name, email, student number and order history so staff can find your order at the counter. Nothing is shared with anyone else.</string>
 

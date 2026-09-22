@@ -32,6 +32,8 @@ import com.rimagwinya.app.feature.auth.WelcomeScreen
 import com.rimagwinya.app.feature.cart.CartScreen
 import com.rimagwinya.app.feature.cart.CheckoutScreen
 import com.rimagwinya.app.feature.menu.MenuScreen
+import com.rimagwinya.app.feature.orders.OrderDetailScreen
+import com.rimagwinya.app.feature.orders.OrdersScreen
 
 @Composable
 fun RootNavHost(
@@ -164,7 +166,13 @@ private fun NavGraphBuilder.studentGraph(
     balance: Money,
 ) {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
-        composable<Route.Menu> { MenuScreen(fullName = firstName, balance = balance) }
+        composable<Route.Menu> {
+            MenuScreen(
+                fullName = firstName,
+                balance = balance,
+                onOpenOrder = { navController.navigate(Route.OrderDetail(it)) },
+            )
+        }
         composable<Route.Cart> {
             CartScreen(
                 onBrowseMenu = {
@@ -189,8 +197,12 @@ private fun NavGraphBuilder.studentGraph(
                 },
             )
         }
-        composable<Route.Orders> { PlaceholderScreen(R.string.title_orders, icon = R.drawable.ic_clock) }
-        composable<Route.OrderDetail> { PlaceholderScreen(R.string.title_order, icon = R.drawable.ic_check) }
+        composable<Route.Orders> {
+            OrdersScreen(onOpen = { navController.navigate(Route.OrderDetail(it)) })
+        }
+        composable<Route.OrderDetail> {
+            OrderDetailScreen(onBack = { navController.popBackStack() })
+        }
     }
 }
 

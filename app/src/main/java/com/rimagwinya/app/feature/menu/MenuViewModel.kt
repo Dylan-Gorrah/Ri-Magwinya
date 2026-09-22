@@ -9,6 +9,8 @@ import com.rimagwinya.app.core.network.asApiError
 import com.rimagwinya.app.core.network.messageRes
 import com.rimagwinya.app.data.repository.CartRepository
 import com.rimagwinya.app.data.repository.MenuRepository
+import com.rimagwinya.app.data.repository.OrderRepository
+import com.rimagwinya.app.domain.model.Order
 import com.rimagwinya.app.domain.model.Cart
 import com.rimagwinya.app.domain.model.MenuCategory
 import com.rimagwinya.app.domain.model.MenuChange
@@ -41,6 +43,8 @@ data class MenuUiState(
     val notConfigured: Boolean = false,
     /** The item whose sheet is open, if any. */
     val openItem: MenuItem? = null,
+    /** The student's live order, shown as a card above the menu. */
+    val activeOrder: Order? = null,
 ) {
     /** Search and category applied. Sold-out items stay, dimmed. */
     val visible: List<MenuItem>
@@ -67,6 +71,7 @@ data class MenuUiState(
 class MenuViewModel @Inject constructor(
     private val repository: MenuRepository,
     private val cartRepository: CartRepository,
+    private val orders: OrderRepository,
 ) : ViewModel() {
 
     private val local = MutableStateFlow(MenuUiState())
@@ -78,6 +83,18 @@ class MenuViewModel @Inject constructor(
     init {
         load()
         watchLive()
+        if (AppConfig.isBackendConfigured) {
+            viewModelScope.launch { orders.orderChanges().collect { loadActiveOrder() } }
+        }
+    }
+
+    /** The oldest order still on its way — the one to collect next. */
+    fun loadActiveOrder() {
+        viewModelScope.launch {
+            orders.orders(limit = 10).onSuccess { list ->
+                local.update { it.copy(activeOrder = list.lastOrNull { o -> o.status.isActive }) }
+            }
+        }
     }
 
     fun load() {

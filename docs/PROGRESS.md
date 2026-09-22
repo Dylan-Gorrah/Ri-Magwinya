@@ -19,6 +19,7 @@ account and make a staff user)
 **Phase 4 — Student menu · BUILT** (live stock updates in; waiting on a phone check)
 **Phase 5 — Edge Functions · DONE** (deployed and tested against the live project)
 **Phase 6 — Cart and checkout · DONE** (built and unit tested; needs a phone run)
+**Phase 7 — Student orders · DONE** (built and unit tested; needs a phone run)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -558,6 +559,29 @@ breaks that have ended are **hidden**; a break under way can be ordered for
 until **5 minutes before it ends** (`AppConfig.SLOT_CUTOFF_MINUTES`).
 
 **`CheckoutRulesTest` — 18 tests.** 94 passing in total.
+
+---
+
+## Phase 7 — Student orders · DONE
+
+- **Order status** — animated code tiles, the slot and time, a progress rail
+  with the real Bloemfontein time on each step, the items, and the total
+  ("Due at the counter" for counter orders). Banners for ready, collected,
+  cancelled (with the refund amount) and no-show.
+- **Cancel** only while placed, behind a confirmation sheet. If the kitchen
+  started in the meantime the server's `INVALID_TRANSITION` becomes "That
+  order has already moved on" and the screen refreshes. **No "I have
+  collected it" button** — collected is set by staff only, per 3.1.
+- **Realtime** on the one order (`id=eq.<id>`), so every staff tap appears
+  without a refresh.
+- **History** split into In progress and Past, skeleton loading, empty
+  state, live.
+- **Active order card** at the top of the menu, opening the order.
+
+Order numbers skip (#1, then #5): Postgres identity values are used up by
+orders that were refused and rolled back. Harmless, and normal.
+
+**`OrderProgressTest` — 8 tests.** 102 passing.
 
 ---
 

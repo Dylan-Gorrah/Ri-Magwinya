@@ -50,6 +50,8 @@ import com.rimagwinya.app.core.designsystem.theme.RmTheme
 import com.rimagwinya.app.core.designsystem.theme.Space
 import com.rimagwinya.app.core.money.Money
 import com.rimagwinya.app.domain.model.MenuItem
+import com.rimagwinya.app.domain.model.Order
+import com.rimagwinya.app.feature.orders.pill
 import com.rimagwinya.app.domain.pricing.PriceCalculator
 
 /**
@@ -63,10 +65,12 @@ import com.rimagwinya.app.domain.pricing.PriceCalculator
 fun MenuScreen(
     fullName: String,
     balance: Money,
+    onOpenOrder: (orderId: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    androidx.compose.runtime.LaunchedEffect(Unit) { viewModel.loadActiveOrder() }
 
     Column(modifier = modifier.fillMaxSize()) {
         MenuHero(fullName = fullName, balance = balance)
@@ -78,6 +82,14 @@ fun MenuScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(Space.x16),
         ) {
+            state.activeOrder?.let { order ->
+                item {
+                    Box(Modifier.padding(horizontal = Space.screen).padding(top = Space.x16)) {
+                        ActiveOrderCard(order = order, onClick = { onOpenOrder(order.id) })
+                    }
+                }
+            }
+
             item {
                 Box(Modifier.padding(horizontal = Space.screen, vertical = Space.x16)) {
                     RmTextField(
@@ -113,7 +125,6 @@ fun MenuScreen(
                     Box(Modifier.padding(horizontal = Space.screen)) {
                         Banner(
                             tone = BannerTone.Warning,
-                            title = "Backend not configured",
                             text = stringResource(R.string.dev_backend_not_configured),
                         )
                     }
@@ -240,6 +251,27 @@ private fun MenuHero(fullName: String, balance: Money) {
                     modifier = Modifier.size(20.dp),
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ActiveOrderCard(order: Order, onClick: () -> Unit) {
+    com.rimagwinya.app.core.designsystem.component.RmCard(highlighted = true, onClick = onClick) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(Space.x4)) {
+                Text(
+                    stringResource(R.string.active_order_title, order.number.toInt(), order.code),
+                    style = RmTheme.type.bodyStrong,
+                    color = RmTheme.colors.text,
+                )
+                Text(
+                    stringResource(R.string.order_slot_line, order.slotName.orEmpty(), order.slotTimeRange.orEmpty()),
+                    style = RmTheme.type.caption,
+                    color = RmTheme.colors.text2,
+                )
+            }
+            com.rimagwinya.app.core.designsystem.component.StatusPill(order.status.pill())
         }
     }
 }
