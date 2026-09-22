@@ -16,7 +16,8 @@ Start at `Ri-magwinya.md`.
 applied to the real project)
 **Phase 3 — Authentication · BLOCKED on Phase 2** (built and compiling, cannot
 be exercised until the database exists)
-**Next: Phase 4 — Student menu**
+**Phase 4 — Student menu · STARTED** (`PriceCalculator` done and tested; the
+menu screen and item sheet still to build)
 
 Both blockers are the same two things: approve the Supabase MCP connector,
 and put the anon key in `local.properties`.
@@ -326,6 +327,65 @@ sign-in has happened.
 
 - **Checkpoint:** register a student in the app, create a staff user in
   *Authentication → Users*, and promote it. SQL is in `supabase/README.md`.
+
+---
+
+## Phase 4 — Student menu · IN PROGRESS
+
+### Done: the pricing engine
+
+`domain/pricing/PriceCalculator.kt` and `Selection.kt`. This is the hardest
+logic in the app, so it was built and tested first, before anything depends
+on it.
+
+`Selection` holds **choices, not prices** — there is no money in it to
+tamper with. The price is derived from it here, and derived again from the
+same choices by `place_order` when the order is placed.
+
+**`PriceCalculatorTest` — 21 tests**, covering every check value from section
+9.1, plus: build items ignoring the outer stepper, an untouched sweets sheet
+being unaddable, how each sheet opens, the "from R…" floors, and the option
+labels.
+
+The labels matter more than they look. They are frozen onto the order and are
+what staff read at the counter, and the client and the server generate them
+independently. Both produce:
+
+```
+2 vetkoeks, 2 Polony, Cheese slice
+No vetkoek, Snoek
+3 Chappies, Assorted mix packet
+```
+
+`Selection` is a data class, so cart lines can key on it directly and
+"Vetkoek · 2 Polony" stays a separate line from "Vetkoek · Snoek". Setting a
+count to zero removes the entry rather than storing a zero, so two identical
+builds compare equal.
+
+### Client and server agree
+
+The same six orders are asserted twice, independently:
+
+| | Client | Server |
+|---|---|---|
+| | `PriceCalculatorTest` | `supabase/tests/pricing_test.sql` |
+| 2 vetkoeks + 2 polony + 1 cheese | R17.00 | R17.00 |
+| 0 vetkoeks + 1 snoek | R10.00, 0 units | R10.00, 0 units |
+| 3 Chappies + 1 mix | R13.00 | R13.00 |
+| Large chips | R40.00 | R40.00 |
+| Tea, any options | R10.00 | R10.00 |
+| 4 Cokes | R64.00 | R64.00 |
+
+### Still to build
+
+- The menu screen proper: navy hero, wallet balance, search, category chips,
+  stock pills, "from R…" pricing, active order card
+- The item sheet with the full option engine
+- `CartRepository` in memory
+- Realtime stock updates
+
+These need a live database to be worth testing, so they wait on the same two
+blockers.
 
 ---
 
