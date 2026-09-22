@@ -6,10 +6,22 @@
 
 export type Json = Record<string, unknown>;
 
+/**
+ * The web build (GitHub Pages) calls these functions from a browser, and a
+ * browser will not send a PATCH or a JSON POST cross-origin until the
+ * server says it may. The Android app neither needs nor notices this.
+ */
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
+  "Access-Control-Allow-Methods": "POST, PATCH, OPTIONS",
+  "Access-Control-Max-Age": "86400",
+};
+
 export function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { ...CORS, "Content-Type": "application/json" },
   });
 }
 
@@ -75,6 +87,8 @@ export function fromDatabase(error: { message?: string; details?: string | null;
  */
 export function handle(method: string, fn: (body: Json, req: Request) => Promise<Response>) {
   return async (req: Request): Promise<Response> => {
+    // The browser's preflight. Answer it before anything else.
+    if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     if (req.method !== method) return fail(405, "METHOD_NOT_ALLOWED");
 
     let body: Json;
