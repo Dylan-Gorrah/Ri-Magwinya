@@ -28,6 +28,7 @@ account and make a staff user)
 **Phase 13 — Multi-language · DONE** (translations need a first-language review)
 **Phase 14 — Weather · DONE**
 **Phase 15 — Tests and CI · DONE** (Dylan owes the GitHub repo and secrets)
+**Phase 16 — Release preparation · DONE** (Dylan owes the keystore)
 
 The Supabase MCP connector (`supabase-rm` in `.mcp.json`, project
 `jykswltsegssjmvnqqbi`) is signed in and working. The publishable key is in
@@ -823,6 +824,44 @@ language after a switch.
 - Repository secrets: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, and later
   `GOOGLE_SERVICES_JSON` (base64) and `GOOGLE_WEB_CLIENT_ID`. CI passes
   without them — the app builds with empty keys on purpose.
+
+---
+
+## Phase 16 — Release preparation · DONE
+
+- **versionCode 1, versionName 1.0.0.**
+- **R8 and resource shrinking on** for release, with keep rules in
+  `app/proguard-rules.pro` — kotlinx.serialization (without which the
+  release build crashes the first time it parses the menu), Retrofit,
+  supabase-kt and Ktor, Room, the messaging service, and the domain models.
+  Every rule has its reason written next to it.
+- **Signing** reads the keystore from `local.properties`. Without it the
+  release build still assembles, unsigned, so CI and anyone without the
+  keystore can build.
+- **No `applicationIdSuffix` on debug**, on purpose: Firebase and the Google
+  OAuth Android client are both tied to `com.rimagwinya.app`, and a
+  `.debug` build would match neither.
+- **`docs/privacy-policy.md`** — the same POPIA text as the in-app page, as
+  markdown for the store listing, which needs a public URL.
+- **`docs/store-listing.md`** — short and full descriptions, the data-safety
+  answers, the screenshot list and the graphic sizes.
+- **`./gradlew assembleRelease` succeeds with R8 on**: a 5.4 MB APK,
+  against 14.4 MB for debug. It has not been installed yet — that is the
+  last line of the QA checklist, and where a missing keep rule would show
+  up.
+- **`docs/qa-checklist.md`** — the walkthrough on the phone, including the
+  awkward cases (two phones racing for the last item, cancelling mid-
+  preparation, offline ordering) and the release-build check.
+
+### What Dylan owes for this phase
+
+1. *Build → Generate Signed App Bundle* to create the upload keystore.
+   Keep the passwords somewhere safe; the file is gitignored and cannot be
+   replaced once the app is on Play.
+2. Add the four `RELEASE_*` lines to `local.properties`.
+3. Publish `docs/privacy-policy.md` somewhere public and put the URL in the
+   listing.
+4. Walk `docs/qa-checklist.md` on the phone.
 
 ---
 

@@ -27,8 +27,10 @@ android {
         applicationId = "com.rimagwinya.app"
         minSdk = 24
         targetSdk = 36
+        // Bump versionCode for every upload to Play; versionName is what
+        // people see.
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,11 +46,41 @@ android {
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperty("GOOGLE_WEB_CLIENT_ID")}\"")
     }
 
+    /**
+     * Signing for the release build, from local.properties (gitignored):
+     *
+     *   RELEASE_STORE_FILE=C:/path/to/rimagwinya.jks
+     *   RELEASE_STORE_PASSWORD=...
+     *   RELEASE_KEY_ALIAS=rimagwinya
+     *   RELEASE_KEY_PASSWORD=...
+     *
+     * Absent, the release build still assembles — unsigned — so CI and
+     * anyone without the keystore can build it.
+     */
+    val releaseStore = localProperty("RELEASE_STORE_FILE")
+    signingConfigs {
+        if (releaseStore.isNotBlank() && file(releaseStore).exists()) {
+            create("release") {
+                storeFile = file(releaseStore)
+                storePassword = localProperty("RELEASE_STORE_PASSWORD")
+                keyAlias = localProperty("RELEASE_KEY_ALIAS")
+                keyPassword = localProperty("RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.findByName("release")
+        }
+        debug {
+            // Deliberately no applicationIdSuffix: Firebase and the Google
+            // OAuth Android client are both tied to com.rimagwinya.app, and
+            // a suffixed debug build would match neither.
+            versionNameSuffix = "-debug"
         }
     }
 

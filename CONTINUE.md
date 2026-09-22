@@ -1,108 +1,115 @@
 # Where we are
 
-**Phases 0–4 are written. Phases 2–4 have never touched a real database.**
+**All 16 phases are built.** 147 unit tests pass, lint is clean, and the
+database, the three server functions and the security rules are live on your
+real Supabase project.
 
-Everything compiles, 58 unit tests pass, and the SQL is tested against a
-throwaway local Postgres. But no migration has been run on your actual
-Supabase project and the app has never made a real request.
-
-That's four phases of work resting on two small things only you can do.
-Worth clearing before I build anything else.
-
----
-
-## Done
-
-- [x] **Phase 0** — project set up, renamed to `com.rimagwinya.app`, minSdk 24
-- [x] **Phase 1** — design system, Inter font, 41 icons, all components, navigation
-- [x] **Phase 2** — 11 migrations, RLS, networking layer *(written, not applied)*
-- [x] **Phase 3** — welcome, login, register, role from the server *(built, not tried)*
-- [x] **Phase 4** — pricing engine, cart, menu screen, item sheet *(built, not tried)*
-
-Detail on any of it is in `docs/PROGRESS.md`.
+What has **not** happened: the app has never been run on your phone. Every
+screen is verified by tests, by curl against the live server, and by the
+build — not by a person tapping it. That is the next thing, and
+`docs/qa-checklist.md` is the list to walk.
 
 ---
 
-## Not done
+## What works right now, with no further setup
 
-- [ ] Realtime stock updates (last bit of Phase 4 — needs a live database)
-- [ ] Phase 5 onwards — Edge Functions, cart/checkout, orders, staff, and the rest
+- Sign in and register, with the role coming from the server.
+- The whole student side: menu, item options, cart, checkout, orders.
+- The whole staff side: queue, stock, sales with a chart and CSV, top-ups.
+- Profile, settings, theme, fingerprint unlock, the POPIA page.
+- Offline: the menu opens, the cart survives, orders queue and send later.
+- English, Afrikaans and Sesotho.
+- Weather-aware menu ordering.
+
+## What is built but switched off until you do something
+
+| Feature | What it needs |
+|---|---|
+| Push notifications | A Firebase project and `google-services.json` in `app/` |
+| Google sign-in | A Google Cloud Web client id in `local.properties` |
+| Automatic builds | The GitHub repo, and the repository secrets |
+| Signed release | Your upload keystore |
+
+None of these break the app while they are missing. The Google button hides
+itself, push does nothing, and the release build is simply unsigned.
 
 ---
 
-## What I need you to do
+## Your list, in the order I would do it
 
-Three things, in this order.
+### 1. Run it on your phone (30 minutes)
 
-### 1. Restart Claude Code
+Press Run in Android Studio, sign in as **user123@gmail.com / FrogybyD1**,
+and walk `docs/qa-checklist.md`. Ideally have a second phone signed in as
+**admin@gmail.com / Admin1234!** so you can watch an order land on the staff
+queue while you place it.
 
-This is the big one. The Supabase connector is registered but **this session
-started before it existed**, and Claude Code only loads connectors at startup.
-So nothing I do mid-session can fix it.
+Tell me anything that looks wrong and I will fix it.
+
+### 2. Rotate the secret key
+
+It was pasted into a chat. Supabase → Project Settings → API keys →
+regenerate the **secret** key. The app does not use it, so nothing breaks.
+
+### 3. The GitHub repo
+
+Never created. Once it exists:
 
 ```
-exit
-claude --continue
+git remote add origin https://github.com/Dylan-Gorrah/ri-magwinya.git
+git push -u origin main
 ```
 
-`--continue` picks this conversation back up instead of starting cold.
+Then add the repository secrets `SUPABASE_URL` and `SUPABASE_ANON_KEY`, and
+the Actions tab should go green.
 
-Then check it worked:
+### 4. Launcher icon
 
-```
-/mcp
-```
+Still the Android Studio default. *File → New → Image Asset* with your PNG.
 
-You should see **supabase-rm**. First use will ask you to sign in to Supabase.
+### 5. Firebase, for push (Phase 11)
 
-*If it's still not there:* tell me and I'll dig further — don't keep
-re-running `claude mcp add`, the config is already correct.
+1. Firebase project → add an Android app with package `com.rimagwinya.app`.
+2. Download `google-services.json` into `app/` (already gitignored).
+3. *Project settings → Service accounts → Generate new private key.*
+4. In Supabase, set Edge Function secrets `FCM_SERVICE_ACCOUNT` (the whole
+   JSON) and `FCM_PROJECT_ID`.
 
-### 2. Get me the anon key
+### 6. Google sign-in (Phase 12)
 
-Supabase dashboard → **Project Settings → API keys** → the **anon / public**
-one. Not the service role key — that never goes near the app.
+1. Google Cloud Console: OAuth consent screen, a **Web** client id, and an
+   **Android** client id using the SHA-1 from `./gradlew signingReport`.
+2. Supabase → Authentication → Providers → Google: enable, paste the Web
+   client id and secret.
+3. `GOOGLE_WEB_CLIENT_ID=…` in `local.properties`.
 
-Paste both lines into `local.properties` (already gitignored):
+### 7. The translations (Phase 13)
 
-```properties
-SUPABASE_URL=https://jykswltsegssjmvnqqbi.supabase.co
-SUPABASE_ANON_KEY=<paste it here>
-```
+Afrikaans and Sesotho are machine-assisted and need a first-language speaker
+to read them. `app/src/main/res/values-af/strings.xml` and `values-st/`.
+The Sesotho needs it more than the Afrikaans.
 
-### 3. Turn off email confirmation
+### 8. Release (Phase 16)
 
-Supabase → **Authentication → Sign In / Providers → Email** → switch off
-**Confirm email**.
-
-Otherwise every test account needs an inbox visit before it can sign in.
+*Build → Generate Signed App Bundle* to make the keystore, then add the four
+`RELEASE_*` lines to `local.properties`. Publish `docs/privacy-policy.md`
+somewhere public for the store listing.
 
 ---
 
-## Then say this
+## Things worth knowing
 
-> Connector's live and the key is in. Apply the migrations and let's test it.
-
-I'll then:
-
-1. Run all 11 migrations against your project
-2. Check the menu loads on your phone
-3. Walk you through registering an account and making a staff user
-4. Finish Phase 4's realtime bit
-5. Report, and wait for your go on Phase 5
-
----
-
-## If you want something else instead
-
-- **"carry on building"** — I'll keep going on Phase 5 (Edge Functions) with
-  everything still unverified. Possible, but the risk keeps stacking.
-- **"just do the migrations by hand"** — I'll hand you the 11 SQL files in
-  order to paste into the SQL Editor, no connector needed. Slower but it
-  unblocks everything.
-- **"what's in X?"** — ask about any phase, file or decision.
-
----
+- **Test data is in the database.** user123 has R33 and a couple of test
+  orders; vetkoek and chips stock is slightly down. Say the word and I will
+  reset it.
+- **Order numbers skip** (#1, then #5). Postgres uses up identity values on
+  orders that were refused and rolled back. Normal.
+- **Two decisions I made** because you did not pick: collection breaks that
+  have ended are hidden, and a break can be ordered for until 5 minutes
+  before it ends (`AppConfig.SLOT_CUTOFF_MINUTES`).
+- **Where I disagreed with the brief**, and why, is written up in
+  `docs/PROGRESS.md`: the stock stepper sends a change rather than a total,
+  and pay-at-counter requires a prior top-up.
 
 ## Quick facts
 
@@ -110,22 +117,7 @@ I'll then:
 |---|---|
 | Supabase project | `jykswltsegssjmvnqqbi` |
 | Package | `com.rimagwinya.app` |
-| minSdk / compileSdk | 24 / 37 |
-| Unit tests | 58 passing |
-| Database tests | 35 assertions, `bash supabase/tests/run.sh` |
+| Unit tests | 147, all passing |
 | Build | `.\gradlew.bat assembleDebug` |
-| Last commit | `phase-4: cart, menu screen and item sheet` |
-
-**Still outstanding from earlier:** the GitHub repo and remote were never
-created, and the launcher icon is still the Android Studio default
-(*File → New → Image Asset*). Neither blocks anything.
-
----
-
-## Settled decisions, so nobody re-opens them
-
-- Google sign-in, any Google account — no college domain
-- Students use ordinary Gmail; the **student number** identifies them
-- Loyalty is progress only, no redeeming
-- Pay-at-counter needs one prior wallet top-up, and is withdrawn after two no-shows
-- Money is integer cents everywhere; the **server** decides every price
+| Everything in detail | `docs/PROGRESS.md` |
+| The phone walkthrough | `docs/qa-checklist.md` |
