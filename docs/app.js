@@ -290,8 +290,25 @@
     go("welcome");
   }
 
+  /** The signed-in user's id: from the session, or else from the token. */
+  function userId() {
+    var s = S.session;
+    if (!s) return null;
+    if (s.user && s.user.id) return s.user.id;
+    try {
+      var part = s.access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(atob(part)).sub || null;
+    } catch (e) { return null; }
+  }
+
+  /**
+   * Your own row, asked for by id. Without the filter, RLS hands staff
+   * every profile, and the first one (a student) would load in their place.
+   */
   async function loadProfile() {
-    var rows = await api("/rest/v1/profiles?select=*");
+    var id = userId();
+    if (!id) { S.profile = null; return null; }
+    var rows = await api("/rest/v1/profiles?select=*&id=eq." + encodeURIComponent(id));
     S.profile = (rows && rows[0]) || null;
     return S.profile;
   }
