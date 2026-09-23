@@ -218,8 +218,8 @@
 
     <string name="topup_title">Kenya tjhelete sepatjheng</string>
     <string name="topup_explainer">Moithuti o lefa pele mochining wa dikarata wa lebenkele. Mochini oo ke sistimi e arohaneng: kenya tjhelete e tshwanang mona hore e kene sepatjheng sa hae.</string>
-    <string name="topup_student_number">Nomoro ya moithuti</string>
-    <string name="topup_find">Batla moithuti</string>
+    <string name="topup_student_number">Nomoro ya moithuti kapa lebitso</string>
+    <string name="topup_find">Batla</string>
     <string name="topup_finding">Ea batla…</string>
     <string name="topup_not_found">Ha ho moithuti ya nang le nomoro eo. Sheba karata mme o leke hape.</string>
     <string name="topup_current">Tjhelete e teng hajwale %1$s</string>
@@ -232,8 +232,21 @@
     <string name="topup_confirm">E, e kenye</string>
     <string name="topup_not_yet">E seng hajwale</string>
     <string name="topup_adding">Ea kenya…</string>
-    <string name="topup_done">E kentswe. %1$s jwale o na le %2$s.</string>
-    <string name="topup_another">Kenyetsa moithuti e mong</string>
+    <string name="topup_another">Batla moithuti e mong</string>
+    <string name="topup_no_results">Ha ho moithuti ya tsamaellanang. Sheba karata, kapa o leke karolo ya lebitso la hae.</string>
+    <string name="topup_results">Baithuti</string>
+    <string name="topup_change">Fetola moithuti</string>
+    <string name="topup_details">Dintlha tsa moithuti</string>
+    <string name="topup_email">Imeile</string>
+    <string name="topup_phone">Mohala</string>
+    <string name="topup_no_shows">Ha a a tla</string>
+    <string name="topup_balance">Tjhelete e teng</string>
+    <string name="topup_added">%1$s e kentswe. Tjhelete e ntjha %2$s.</string>
+    <string name="topup_history">Ketsahalo ya morao tjena sepatjheng</string>
+    <string name="topup_history_empty">Ha ho ketsahalo sepatjheng hajwale.</string>
+    <string name="wallet_entry_topup">Tjhelete e kentsweng</string>
+    <string name="wallet_entry_payment">Tefo ya odara</string>
+    <string name="wallet_entry_refund">Tjhelete e kgutlisitsweng</string>
 
     <string name="profile_student">Moithuti</string>
     <string name="profile_staff">Mosebetsi wa lebenkele</string>

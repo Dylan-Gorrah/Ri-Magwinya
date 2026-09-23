@@ -247,9 +247,9 @@
     <!-- Staff: wallet top-up -->
     <string name="topup_title">Top up a wallet</string>
     <string name="topup_explainer">The student pays on the tuckshop speed point first. The speed point is a separate system: enter the same amount here to add it to their wallet.</string>
-    <string name="topup_student_number">Student number</string>
-    <string name="topup_find">Find student</string>
-    <string name="topup_finding">Finding…</string>
+    <string name="topup_student_number">Student number or name</string>
+    <string name="topup_find">Search</string>
+    <string name="topup_finding">Searching…</string>
     <string name="topup_not_found">No student with that number. Check the card and try again.</string>
     <string name="topup_current">Current balance %1$s</string>
     <string name="topup_amount">Amount</string>
@@ -261,8 +261,21 @@
     <string name="topup_confirm">Yes, add it</string>
     <string name="topup_not_yet">Not yet</string>
     <string name="topup_adding">Adding…</string>
-    <string name="topup_done">Added. %1$s now has %2$s.</string>
-    <string name="topup_another">Top up another student</string>
+    <string name="topup_another">Find another student</string>
+    <string name="topup_no_results">No student matches that. Check the card, or try part of their name.</string>
+    <string name="topup_results">Students</string>
+    <string name="topup_change">Change student</string>
+    <string name="topup_details">Student details</string>
+    <string name="topup_email">Email</string>
+    <string name="topup_phone">Phone</string>
+    <string name="topup_no_shows">No-shows</string>
+    <string name="topup_balance">Balance</string>
+    <string name="topup_added">Added %1$s. New balance %2$s.</string>
+    <string name="topup_history">Recent wallet activity</string>
+    <string name="topup_history_empty">No wallet activity yet.</string>
+    <string name="wallet_entry_topup">Top-up</string>
+    <string name="wallet_entry_payment">Order payment</string>
+    <string name="wallet_entry_refund">Refund</string>
 
     <!-- Profile -->
     <string name="profile_student">Student</string>

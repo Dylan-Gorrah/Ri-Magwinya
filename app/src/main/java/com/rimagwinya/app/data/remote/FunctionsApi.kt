@@ -140,6 +140,14 @@ data class OrderItemDto(
     val subtotal: Double,
 )
 
+/** A row of `wallet_transactions`. Staff can read anyone's; RLS says so. */
+@Serializable
+data class WalletTransactionDto(
+    val amount: Double,
+    val type: String,
+    @SerialName("created_at") val createdAt: String,
+)
+
 @Serializable
 data class TopUpResultDto(
     val id: String,

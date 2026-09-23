@@ -27,13 +27,37 @@ data class HourCount(val hour: Int, val orders: Int) {
 
 data class TopItem(val name: String, val quantity: Int, val revenue: Money)
 
-/** A student found by number on the top-up screen. */
+/** A student found on the top-up screen, by number or by name. */
 data class StudentAccount(
     val id: String,
     val fullName: String,
     val studentNumber: String,
     val balance: Money,
+    val email: String = "",
+    /** Optional; students add it on their profile whenever they like. */
+    val phone: String? = null,
+    val noShowCount: Int = 0,
 )
+
+/** One line of a student's wallet history, as staff see it. */
+data class WalletEntry(
+    /** Positive for a top-up or refund, negative for a payment. */
+    val amount: Money,
+    val type: WalletEntryType,
+    val at: java.time.Instant,
+)
+
+enum class WalletEntryType {
+    TopUp, Payment, Refund;
+
+    companion object {
+        fun from(raw: String): WalletEntryType = when (raw) {
+            "topup" -> TopUp
+            "refund" -> Refund
+            else -> Payment
+        }
+    }
+}
 
 /** What the item editor produces. Money in cents, like everywhere else. */
 data class ItemDraft(

@@ -17,6 +17,7 @@ import com.rimagwinya.app.domain.model.ItemDraft
 import com.rimagwinya.app.domain.model.MenuItem
 import com.rimagwinya.app.domain.model.SalesSummary
 import com.rimagwinya.app.domain.model.StudentAccount
+import com.rimagwinya.app.domain.model.WalletEntry
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -60,21 +61,40 @@ open class StaffRepository @Inject constructor(
         api.salesSummary(SalesRangeBody(day.toString(), day.toString())).toDomain()
     }
 
-    open suspend fun findStudent(studentNumber: String): Result<StudentAccount> = call {
-        val number = Validation.normaliseStudentNumber(studentNumber)
-        api.profileByStudentNumber("eq.$number").firstOrNull()?.toStudentAccount()
-            ?: throw ApiError.NotFound
+    /**
+     * Students whose number or name contains [query]. An exact number match
+     * comes first, so scanning a card still lands on one obvious row.
+     */
+    open suspend fun searchStudents(query: String): Result<List<StudentAccount>> = call {
+        val term = studentSearchTerm(query)
+        if (term.isEmpty()) return@call emptyList()
+        val found = api.searchStudents("(student_number.ilike.*$term*,full_name.ilike.*$term*)")
+            .map { it.toStudentAccount() }
+        val exact = Validation.normaliseStudentNumber(query)
+        found.sortedByDescending { it.studentNumber == exact }
     }
 
-    /** Records a top-up already paid on the speed point. */
-    open suspend fun topUp(studentNumber: String, amount: Money): Result<StudentAccount> = call {
-        val result = functions.loadWallet(LoadWalletBody(studentNumber, amount.cents / 100.0))
-        StudentAccount(
-            id = result.id,
-            fullName = result.fullName,
-            studentNumber = result.studentNumber,
-            balance = Money.fromDecimal(result.walletBalance),
-        )
+    open suspend fun walletHistory(studentId: String): Result<List<WalletEntry>> = call {
+        api.walletHistory("eq.$studentId").map { it.toDomain() }
+    }
+
+    /**
+     * Records a top-up already paid on the speed point. The function only
+     * returns the new balance, so the rest of [student] is carried over.
+     */
+    open suspend fun topUp(student: StudentAccount, amount: Money): Result<StudentAccount> = call {
+        val result = functions.loadWallet(LoadWalletBody(student.studentNumber, amount.cents / 100.0))
+        student.copy(balance = Money.fromDecimal(result.walletBalance))
+    }
+
+    companion object {
+        /**
+         * The search text made safe for a PostgREST `or=(...)` filter:
+         * commas, brackets, quotes and wildcards would change the filter's
+         * meaning, so they are dropped.
+         */
+        fun studentSearchTerm(query: String): String =
+            query.trim().filterNot { it in ",()*\"\\:" }.replace(Regex("\\s+"), " ")
     }
 
     private suspend fun <T> call(block: suspend () -> T): Result<T> = withContext(io) {

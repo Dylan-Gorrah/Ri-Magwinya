@@ -7,6 +7,8 @@ import com.rimagwinya.app.domain.model.SalesSummary
 import com.rimagwinya.app.domain.model.StudentAccount
 import com.rimagwinya.app.domain.model.Temperature
 import com.rimagwinya.app.domain.model.TopItem
+import com.rimagwinya.app.domain.model.WalletEntry
+import com.rimagwinya.app.domain.model.WalletEntryType
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
@@ -31,6 +33,15 @@ fun ProfileDto.toStudentAccount(): StudentAccount = StudentAccount(
     fullName = fullName,
     studentNumber = studentNumber.orEmpty(),
     balance = Money.fromDecimal(walletBalance),
+    email = email,
+    phone = phone?.takeIf { it.isNotBlank() },
+    noShowCount = noShowCount,
+)
+
+fun WalletTransactionDto.toDomain(): WalletEntry = WalletEntry(
+    amount = Money.fromDecimal(amount),
+    type = WalletEntryType.from(type),
+    at = parseInstant(createdAt),
 )
 
 /** "Creme Soda 440ml" -> "creme-soda-440ml". */

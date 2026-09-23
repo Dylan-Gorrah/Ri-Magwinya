@@ -138,12 +138,27 @@ interface SupabaseApi {
     @retrofit2.http.DELETE("rest/v1/menu_items")
     suspend fun deleteItem(@Query("id") id: String)
 
-    /** Staff looking a student up for a top-up. RLS lets only staff see others. */
+    /**
+     * Staff searching students by part of a number or a name, e.g.
+     * `or=(student_number.ilike.*ST10*,full_name.ilike.*ST10*)`.
+     */
     @GET("rest/v1/profiles")
-    suspend fun profileByStudentNumber(
-        @Query("student_number") studentNumber: String,
+    suspend fun searchStudents(
+        @Query("or") or: String,
+        @Query("role") role: String = "eq.student",
+        @Query("order") order: String = "full_name",
+        @Query("limit") limit: Int = 20,
         @Query("select") select: String = "*",
     ): List<ProfileDto>
+
+    /** A student's latest wallet movements, for the staff top-up screen. */
+    @GET("rest/v1/wallet_transactions")
+    suspend fun walletHistory(
+        @Query("user_id") userId: String,
+        @Query("order") order: String = "created_at.desc",
+        @Query("limit") limit: Int = 10,
+        @Query("select") select: String = "amount,type,created_at",
+    ): List<WalletTransactionDto>
 
     companion object {
         const val MENU_SELECT = "*,option_groups(*,options(*))"

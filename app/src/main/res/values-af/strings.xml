@@ -218,8 +218,8 @@
 
     <string name="topup_title">Laai \'n beursie</string>
     <string name="topup_explainer">Die student betaal eers op die snoepie se speedpoint. Die speedpoint is \'n aparte stelsel: voer dieselfde bedrag hier in om dit by hul beursie te voeg.</string>
-    <string name="topup_student_number">Studentenommer</string>
-    <string name="topup_find">Vind student</string>
+    <string name="topup_student_number">Studentenommer of naam</string>
+    <string name="topup_find">Soek</string>
     <string name="topup_finding">Soek…</string>
     <string name="topup_not_found">Geen student met daardie nommer nie. Kontroleer die kaart en probeer weer.</string>
     <string name="topup_current">Huidige saldo %1$s</string>
@@ -232,8 +232,21 @@
     <string name="topup_confirm">Ja, voeg dit by</string>
     <string name="topup_not_yet">Nog nie</string>
     <string name="topup_adding">Voeg by…</string>
-    <string name="topup_done">Bygevoeg. %1$s het nou %2$s.</string>
-    <string name="topup_another">Laai \'n ander student se beursie</string>
+    <string name="topup_another">Vind \'n ander student</string>
+    <string name="topup_no_results">Niemand pas nie. Kontroleer die kaart, of probeer deel van hul naam.</string>
+    <string name="topup_results">Studente</string>
+    <string name="topup_change">Verander student</string>
+    <string name="topup_details">Studentbesonderhede</string>
+    <string name="topup_email">E-pos</string>
+    <string name="topup_phone">Foon</string>
+    <string name="topup_no_shows">Nie opgedaag nie</string>
+    <string name="topup_balance">Saldo</string>
+    <string name="topup_added">%1$s bygevoeg. Nuwe saldo %2$s.</string>
+    <string name="topup_history">Onlangse beursie-aktiwiteit</string>
+    <string name="topup_history_empty">Nog geen beursie-aktiwiteit nie.</string>
+    <string name="wallet_entry_topup">Aanvulling</string>
+    <string name="wallet_entry_payment">Bestelling betaal</string>
+    <string name="wallet_entry_refund">Terugbetaling</string>
 
     <string name="profile_student">Student</string>
     <string name="profile_staff">Snoepiepersoneel</string>
