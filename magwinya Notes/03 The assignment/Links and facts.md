@@ -72,3 +72,7 @@ The SHA-1s were read from the signed APKs (`app-debug.apk` and `Ri-magwinya-v1.0
 | Android | `523823420799-a1eu4v3085j7ef8mgard976lm3h1hpjo.apps.googleusercontent.com` |
 
 Client IDs aren't secret. The client secret is never needed by the app.
+
+## Part 3 demo video
+
+https://youtu.be/WvmOFFofuYo (uploaded 5 Nov 2026). It's in the README and on the `final-poe` release.

@@ -51,3 +51,4 @@ supabase/tests/err.txt
 /.claude/
 /.idea/deviceManager.xml
 /.kotlin/
+/supabase/.temp/

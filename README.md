@@ -12,7 +12,7 @@ Version **1.1.0**.
 
 | | |
 |---|---|
-| **Demo video** | _Link goes here once it is uploaded_ |
+| **Demo video** | <https://youtu.be/WvmOFFofuYo> |
 | **Download the APK** | [Releases](https://github.com/Dylan-Gorrah/Ri-Magwinya/releases): the `.apk` under Assets |
 | **Try it in a browser** | <https://dylan-gorrah.github.io/Ri-Magwinya/> |
 | **Test accounts** | Student `user123@gmail.com` / `FrogybyD1` · Staff `admin@gmail.com` / `Admin1234!` |
@@ -153,9 +153,15 @@ rendered by [`docs/play-store/src/render.py`](docs/play-store/src/render.py).
 
 <img src="docs/play-store/icon-512.png" width="120" alt="Ri-magwinya app icon">
 
-Phone screenshots of each screen are listed in
-[`docs/play-store/screenshots.md`](docs/play-store/screenshots.md) and saved in
-the same folder.
+### Screenshots
+
+| Welcome | Menu | Building a vetkoek | Order and code | Profile |
+|---|---|---|---|---|
+| <img src="docs/play-store/00-welcome.png" width="160" alt="Welcome screen with the Student and Staff cards"> | <img src="docs/play-store/01-menu.png" width="160" alt="Menu with the wallet, weather strip and active order"> | <img src="docs/play-store/02-vetkoek.png" width="160" alt="Vetkoek sheet with vetkoek and filling steppers"> | <img src="docs/play-store/04-order-status.png" width="160" alt="Order status with the four-digit code and progress rail"> | <img src="docs/play-store/08-profile-settings.png" width="160" alt="Profile with wallet, loyalty stamps and settings"> |
+| Two cards; the account decides the role | Live stock, wallet, weather, the active order | Feature 1: built-to-order pricing | Feature 4: the code and live progress | Settings, wallet and loyalty |
+
+The full screenshot list is in
+[`docs/play-store/screenshots.md`](docs/play-store/screenshots.md).
 
 ---
 

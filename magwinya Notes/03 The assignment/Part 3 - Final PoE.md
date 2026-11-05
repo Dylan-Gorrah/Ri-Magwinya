@@ -61,7 +61,7 @@ The app has to be finished: no errors, runs on a real phone, and updated with th
 | AI write-up | 5 | Unclear if Part 2 had one | Write or update it, 500 words max, with citations |
 | User interface | 10 | Done | Nothing |
 | GitHub, README and tests | 10 | 172 tests, Actions builds and tests | Commit the 13 Oct work, rewrite the README, add release notes, tag `final-poe`, keep CI green once Firebase is on |
-| Demo video | 5 | Part 2 video only | New video covering everything above |
+| Demo video | 5 | Done 5 Nov: https://youtu.be/WvmOFFofuYo | Nothing |
 
 Register, login, settings and the REST API have no marks of their own this time, but they still have to be in the video.
 

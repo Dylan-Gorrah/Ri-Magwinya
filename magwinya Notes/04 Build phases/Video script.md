@@ -88,4 +88,6 @@ See [[Signing in]].
 
 ## After recording
 
+**Done:** https://youtu.be/WvmOFFofuYo
+
 Upload it unlisted and send the link. It goes in the README, then the `final-poe` tag goes on (Phase 8).

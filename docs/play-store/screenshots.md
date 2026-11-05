@@ -1,5 +1,7 @@
 # Store screenshots
 
+**Taken 5 Nov:** `00-welcome.png`, `01-menu.png`, `02-vetkoek.png`, `04-order-status.png`, `08-profile-settings.png`. They're shown in the main README.
+
 Play needs at least 2 and takes up to 8: PNG or JPEG, 9:16, at least 1080 px
 on the short side for the best placement. Take them on the phone, in light
 mode, with the release APK. Save them here as `01-menu.png`, `02-vetkoek.png`
