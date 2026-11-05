@@ -138,3 +138,9 @@ The FCM sender is written in **Phase 5**, six phases before the secrets exist.
 It has to do nothing quietly when `FCM_SERVICE_ACCOUNT` isn't set. If a
 missing secret threw, placing an order would fail for six phases of
 development for a reason that has nothing to do with placing orders.
+
+## Tapping a notification (updated 5 Nov)
+
+Opens that order with the menu underneath, so Back goes to the menu. Tapping
+the same notification twice doesn't stack two copies. Signed in as staff, an
+order tap is ignored: order screens belong to students.

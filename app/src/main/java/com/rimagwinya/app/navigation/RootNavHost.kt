@@ -139,10 +139,18 @@ fun RootNavHost(
     val sync by syncViewModel.state.collectAsStateWithLifecycle()
 
     // A tapped notification opens that order, once the graph is in place.
+    // Order screens are the student's: staff get order pushes only for
+    // their own orders, never another student's, so for staff it is dropped.
+    // Back from the order goes to the menu.
     LaunchedEffect(deepLinkOrderId, signedIn) {
         val id = deepLinkOrderId
         if (id != null && signedIn) {
-            navController.navigate(Route.OrderDetail(id))
+            if (role == UserRole.Student) {
+                navController.navigate(Route.OrderDetail(id)) {
+                    popUpTo(Route.Menu)
+                    launchSingleTop = true
+                }
+            }
             onDeepLinkHandled()
         }
     }
@@ -203,11 +211,13 @@ fun RootNavHost(
                 // Profile is shared by both roles, so it lives at the root
                 // rather than being declared twice — two graphs cannot own
                 // the same route.
-                composable<Route.Profile> {
-                    ProfileScreen(onOpenPrivacy = { navController.navigate(Route.Privacy) })
+                composable<Route.Profile> { entry ->
+                    ProfileScreen(onOpenPrivacy = {
+                        entry.ifResumed { navController.navigate(Route.Privacy) }
+                    })
                 }
-                composable<Route.Privacy> {
-                    PrivacyScreen(onBack = { navController.popBackStack() })
+                composable<Route.Privacy> { entry ->
+                    PrivacyScreen(onBack = { entry.ifResumed { navController.popBackStack() } })
                 }
             }
         }
@@ -225,6 +235,11 @@ private fun NavHostController.isIn(graph: Any): Boolean =
  */
 internal fun NavBackStackEntry.isResumed(): Boolean =
     lifecycle.currentState == Lifecycle.State.RESUMED
+
+/** Runs [block] only from the screen in front. Two fast taps on Back popped two screens. */
+internal inline fun NavBackStackEntry.ifResumed(block: () -> Unit) {
+    if (isResumed()) block()
+}
 
 /** Which tab a destination belongs to. */
 private fun tabFor(destination: NavDestination): String? = when {
@@ -276,45 +291,49 @@ private fun NavGraphBuilder.studentGraph(
     balance: Money,
 ) {
     navigation<Route.StudentGraph>(startDestination = Route.Menu) {
-        composable<Route.Menu> {
+        composable<Route.Menu> { entry ->
             MenuScreen(
                 fullName = firstName,
                 balance = balance,
-                onOpenOrder = { navController.navigate(Route.OrderDetail(it)) },
+                onOpenOrder = { id -> entry.ifResumed { navController.navigate(Route.OrderDetail(id)) } },
             )
         }
-        composable<Route.Cart> {
+        composable<Route.Cart> { entry ->
             CartScreen(
                 onBrowseMenu = {
-                    navController.navigate(Route.Menu) {
+                    if (entry.isResumed()) navController.navigate(Route.Menu) {
                         popUpTo(Route.StudentGraph) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }
                 },
-                onCheckout = { navController.navigate(Route.Checkout) },
+                onCheckout = { entry.ifResumed { navController.navigate(Route.Checkout) } },
             )
         }
-        composable<Route.Checkout> {
+        composable<Route.Checkout> { entry ->
             CheckoutScreen(
-                onBack = { navController.popBackStack() },
+                onBack = { entry.ifResumed { navController.popBackStack() } },
                 onQueued = {
-                    navController.navigate(Route.Orders) { popUpTo(Route.Menu) }
+                    navController.navigate(Route.Orders) {
+                        popUpTo(Route.Menu)
+                        launchSingleTop = true
+                    }
                 },
                 onPlaced = { orderId ->
                     // Back from the new order goes to the menu, not to an
                     // empty checkout.
                     navController.navigate(Route.OrderDetail(orderId)) {
                         popUpTo(Route.Menu)
+                        launchSingleTop = true
                     }
                 },
             )
         }
-        composable<Route.Orders> {
-            OrdersScreen(onOpen = { navController.navigate(Route.OrderDetail(it)) })
+        composable<Route.Orders> { entry ->
+            OrdersScreen(onOpen = { id -> entry.ifResumed { navController.navigate(Route.OrderDetail(id)) } })
         }
-        composable<Route.OrderDetail> {
-            OrderDetailScreen(onBack = { navController.popBackStack() })
+        composable<Route.OrderDetail> { entry ->
+            OrderDetailScreen(onBack = { entry.ifResumed { navController.popBackStack() } })
         }
     }
 }
@@ -322,9 +341,13 @@ private fun NavGraphBuilder.studentGraph(
 /** Queue, stock, sales, top-up. */
 private fun NavGraphBuilder.staffGraph(navController: NavHostController) {
     navigation<Route.StaffGraph>(startDestination = Route.Queue) {
-        composable<Route.Queue> { QueueScreen(onTopUp = { navController.navigate(Route.TopUp) }) }
+        composable<Route.Queue> { entry ->
+            QueueScreen(onTopUp = { entry.ifResumed { navController.navigate(Route.TopUp) } })
+        }
         composable<Route.Stock> { StockScreen() }
         composable<Route.Sales> { SalesScreen() }
-        composable<Route.TopUp> { TopUpScreen(onBack = { navController.popBackStack() }) }
+        composable<Route.TopUp> { entry ->
+            TopUpScreen(onBack = { entry.ifResumed { navController.popBackStack() } })
+        }
     }
 }
