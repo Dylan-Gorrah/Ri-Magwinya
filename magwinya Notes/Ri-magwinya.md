@@ -32,6 +32,7 @@ The app is built. Part 3 is the final PoE, and it's due today.
 | [[Tonight - Dylan's clicks]] | Firebase, Google Cloud and Supabase, click by click. |
 | [[What Dylan has to do himself]] | Every dashboard, secret and phone job, in one list. |
 | [[Claude Code Rules]] | How Claude Code works with you on Part 3. |
+| [[Video script]] | The demo video, step by step, with the logins. |
 | [[Links and facts]] | Repo, video, test accounts, keys and package name. |
 
 ---

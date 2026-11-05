@@ -43,6 +43,8 @@ The IDs are in [[Links and facts]].
 - **Pushed 5 Nov, 21:43.** `gh` is switched to `Dylan-Gorrah` now.
 - **Phase 7 done.** Version 1.1.0 (versionCode 4). README rewritten as the report, with release notes from the prototype to v1.1.0. `docs/AI-use.md` (478 words, **Dylan edits it**). `docs/play-store/` has the listing, privacy policy, screenshot list, 512 icon, feature graphic and the signed AAB (not committed). **The launcher icon was still Android's default**; it's now the brand mark.
 - Phase 6 (Facebook) skipped.
+- **Both CI runs green** (5 Nov, 21:55), with push on in the CI build.
+- Video flow is in [[Video script]].
 - Next: Phase 8. The tag waits for the video link.
 
 ## What's not set up yet
