@@ -8,8 +8,8 @@ Claude Code works through these in order: one phase, report, stop, wait for "go"
 
 | # | Phase | Marked or extra | Needs Dylan | Status |
 |---|---|---|---|---|
-| 0 | Save the 13 Oct work | Marked (GitHub) | No | Not started |
-| 1 | Login flow revamp | Marked (SSO, UI, runs on phone) | Tell it the glitches you've seen | Not started |
+| 0 | Save the 13 Oct work | Marked (GitHub) | No | Done 5 Nov. Committed. **Push waits on Dylan** (GitHub account) |
+| 1 | Login flow revamp | Marked (SSO, UI, runs on phone) | Tell it the glitches you've seen | Done 5 Nov. 182 tests, 36 SQL checks. Needs a phone test |
 | 2 | Navigation clean-up | Marked (runs on phone, UI) | No | Not started |
 | 3 | Logging and code references | Required by the brief | No | Not started |
 | 4 | Switch on Google sign-in | Marked (SSO, 10) | Yes: Google Cloud and Supabase | Not started |

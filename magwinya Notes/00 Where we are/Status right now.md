@@ -21,14 +21,11 @@ Updated Thu 5 Nov 2026, evening.
 
 **Claude Code runs in `Desktop\RI-magwinya`.**
 
-## Uncommitted work from 13 Oct
+## Tonight's progress (5 Nov)
 
-Done on your PC but never committed or pushed. Commit it first so it isn't lost.
-
-- Sign-in and session rework: `AuthRepository.kt`, `SessionViewModel.kt`, `RootNavHost.kt`.
-- A new test file, `SessionViewModelTest.kt`. That's why the overview says 172 tests and GitHub has 169.
-- Version bumped to 1.0.2 (versionCode 3). The APK `Ri-magwinya-v1.0.2.apk` is in the folder.
-- `docs/APP_OVERVIEW.md`, the 13 Oct overview.
+- **Phase 0 done.** The 13 Oct work is committed (`a197ff7`), and so are the notes. **Not pushed yet:** this PC's active GitHub account is `RI-Dev-Bloom`, which can't push to the repo. Dylan pushes (see [[Part 3 phases]]).
+- **Phase 1 done.** Staff screen is email and password only, a student on the staff screen is refused, and six login glitches are fixed. See [[Signing in]]. 182 unit tests and 36 SQL checks pass.
+- Next: Phase 2 (navigation), then Phase 3 (logging).
 
 ## What's not set up yet
 

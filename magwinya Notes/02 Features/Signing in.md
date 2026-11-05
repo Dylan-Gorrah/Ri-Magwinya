@@ -9,10 +9,16 @@ them.
 
 Brand mark, the name, and two cards: *I'm a student* and *I'm staff*.
 
-**Those cards decide nothing.** They pick which sign-in copy you see and
-that's all. Your actual role comes from your row in the database when you
-sign in. Tap the staff card with a student account and you land on the student
-menu.
+**The cards pick which sign-in screen you get. The role still comes from the
+database.** (Changed 5 Nov, Part 3.)
+
+- **Student card:** sign in, create account, and "Continue with Google".
+- **Staff card:** email and password only. No sign-up, no Google. One line
+  under the form: "Staff accounts are set up by the tuckshop manager."
+- Staff who sign in on the student screen still land in the staff app.
+- A student who signs in on the staff screen is signed straight back out and
+  sees "This account isn't a staff account." They never see the student app
+  flash past first.
 
 The prototype set the role from the card. That's a demo shortcut. See
 [[The two roles]].
@@ -107,6 +113,26 @@ The anon key is public and does nothing on its own. The bearer token is what
 the security rules read to decide what you can see. See [[Security rules]].
 
 Tokens are never logged, in debug or anywhere else.
+
+## Login glitches fixed (5 Nov)
+
+- **Welcome flashed** for someone already signed in. The splash now stays up
+  until the session is restored, and the app starts straight in the right
+  half.
+- **A double tap** on a welcome card or link opened the screen twice. Only the
+  screen in front can navigate now.
+- **The sign-in button came back to life** after success, while the profile was
+  still loading, so a second tap sent a second sign-in. It stays busy now.
+- **A slow profile answer put staff into the student app** (the 13 Oct bug).
+  Fixed: a profile only counts if it belongs to whoever is signed in now.
+- **The keyboard's Next and Done keys did nothing.** Next moves to the next
+  field, Done on the last field signs in.
+- **With fingerprint unlock on**, signing in or out could try to navigate before
+  the screens existed. Now it waits.
+
+Tests: `LoginViewModelTest` (staff screen, student on the staff screen, wrong
+password, no signal, double tap, empty fields) and `SessionViewModelTest`. The
+SQL tests check that a sign-up asking for `role: staff` still gets a student.
 
 ## After sign-in
 
