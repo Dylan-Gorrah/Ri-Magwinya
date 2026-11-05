@@ -14,8 +14,8 @@ Claude Code works through these in order: one phase, report, stop, wait for "go"
 | 3 | Logging and code references | Required by the brief | No | Done 5 Nov. 76 log lines, 9 references. See [[Logging]] |
 | 4 | Switch on Google sign-in | Marked (SSO, 10) | Yes: Google Cloud and Supabase | Done 5 Nov. Needs the GitHub secret and a phone test |
 | 5 | Switch on push notifications | Marked (push, 10) | Yes: Firebase and Supabase secrets | Done 5 Nov. Needs place-order deployed, the GitHub secret and a phone test |
-| 6 | Facebook login | Extra (no marks) | Yes: Meta developer app | Not started |
-| 7 | README, release notes, AI write-up, Play Store folder | Marked (GitHub 10, Play Store 5, AI 5) | Screenshots, read the AI write-up | Not started |
+| 6 | Facebook login | Extra (no marks) | Yes: Meta developer app | Skipped (no marks, no time) |
+| 7 | README, release notes, AI write-up, Play Store folder | Marked (GitHub 10, Play Store 5, AI 5) | Screenshots, read the AI write-up | Done 5 Nov. v1.1.0. Waiting on screenshots and Dylan's edit of AI-use.md |
 | 8 | Final checks and the `final-poe` tag | Marked | Phone test, video link | Not started |
 
 ---

@@ -40,7 +40,10 @@ The IDs are in [[Links and facts]].
 - **Phase 4 done.** Google sign-in is on in the debug and release builds. CI reads `GOOGLE_WEB_CLIENT_ID` from a GitHub secret. See [[Google sign-in]].
 - **Phase 5 done.** Push is on. CI writes `google-services.json` from a secret. New: low-stock alerts to staff from `place-order`. See [[Notifications]].
 - **Dylan still has to:** push the commits, add 2 GitHub secrets, deploy `place-order`, and test on the phone.
-- Next: Phase 7 (README, release notes, AI write-up, Play Store). Phase 6 (Facebook) only if there's time.
+- **Pushed 5 Nov, 21:43.** `gh` is switched to `Dylan-Gorrah` now.
+- **Phase 7 done.** Version 1.1.0 (versionCode 4). README rewritten as the report, with release notes from the prototype to v1.1.0. `docs/AI-use.md` (478 words, **Dylan edits it**). `docs/play-store/` has the listing, privacy policy, screenshot list, 512 icon, feature graphic and the signed AAB (not committed). **The launcher icon was still Android's default**; it's now the brand mark.
+- Phase 6 (Facebook) skipped.
+- Next: Phase 8. The tag waits for the video link.
 
 ## What's not set up yet
 
