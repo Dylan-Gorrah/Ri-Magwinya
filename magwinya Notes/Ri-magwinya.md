@@ -12,6 +12,30 @@ haven't written yet.
 
 ---
 
+## Where we are (5 Nov 2026)
+
+The app is built. Part 3 is the final PoE, and it's due today.
+
+| Part | What it was | Status | More |
+|---|---|---|---|
+| Part 1 | Research report, plus planning and design, in one PDF | Submitted 24 Aug. **90%** | [[Part 1 - Research and design]] |
+| Part 2 | Build the app | Submitted 22 Sep. Mark not on file | [[Part 2 - Build the app]] |
+| Part 3 | Final PoE: SSO, offline, push, languages, Play Store ready | **Due 5 Nov.** Brief and rubric in | [[Part 3 - Final PoE]] |
+
+## Start here for Part 3
+
+| Note | Why it's here |
+|---|---|
+| [[Status right now]] | Where the code is, what doesn't line up, and the questions to answer first. |
+| [[The brief in plain English]] | What the whole module asks for, and which part marks what. |
+| [[Part 3 phases]] | The phases Claude Code works through tonight, with their status. |
+| [[Tonight - Dylan's clicks]] | Firebase, Google Cloud and Supabase, click by click. |
+| [[What Dylan has to do himself]] | Every dashboard, secret and phone job, in one list. |
+| [[Claude Code Rules]] | How Claude Code works with you on Part 3. |
+| [[Links and facts]] | Repo, video, test accounts, keys and package name. |
+
+---
+
 ## Start with the big picture
 
 | Note | Why it's here |
@@ -88,5 +112,6 @@ haven't written yet.
 | Note | Why it's here |
 |---|---|
 | [[The build plan]] | All 17 phases, in order, one line each. |
-| [[Open decisions]] | Things I still need Dylan to confirm. |
+| [[Open decisions]] | What was decided, and why. |
 | [[What Dylan has to do himself]] | Every checkpoint that needs a human, in one list. |
+| [[Claude Code Rules]] | How Claude Code works with Dylan. |
