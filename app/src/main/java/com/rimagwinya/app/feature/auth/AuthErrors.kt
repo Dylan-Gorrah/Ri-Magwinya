@@ -32,6 +32,7 @@ fun ApiError.authMessageRes(): Int = when (this) {
         ConflictCode.BAD_CREDENTIALS -> R.string.error_credentials
         ConflictCode.EMAIL_TAKEN -> R.string.error_email_taken
         ConflictCode.STUDENT_NUMBER_TAKEN -> R.string.error_student_number_taken
+        ConflictCode.NOT_STAFF -> R.string.error_not_staff
         else -> R.string.error_generic
     }
     else -> R.string.error_generic

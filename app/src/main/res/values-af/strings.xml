@@ -44,6 +44,7 @@
     <string name="error_name_short">Voer asseblief jou volle naam in.</string>
     <string name="error_student_number">Gebruik die studentenommer op jou kaart.</string>
     <string name="error_credentials">E-pos of wagwoord is verkeerd.</string>
+    <string name="error_not_staff">Hierdie rekening is nie \'n personeelrekening nie.</string>
     <string name="error_email_taken">Daardie e-pos het reeds \'n rekening. Meld eerder aan.</string>
     <string name="error_student_number_taken">Daardie studentenommer is reeds geregistreer.</string>
     <string name="error_network">Geen verbinding nie. Kontroleer jou sein en probeer weer.</string>
@@ -338,6 +339,8 @@
 
     <string name="title_welcome">Welkom</string>
     <string name="title_login">Meld aan</string>
+    <string name="title_login_staff">Personeel meld aan</string>
+    <string name="auth_staff_accounts_note">Personeelrekeninge word deur die snoepiewinkelbestuurder opgestel.</string>
     <string name="title_register">Skep jou rekening</string>
     <string name="title_menu">Vandag se spyskaart</string>
     <string name="title_cart">Jou mandjie</string>

@@ -1,6 +1,7 @@
 package com.rimagwinya.app.feature.auth
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.core.network.ApiError
@@ -25,6 +26,8 @@ data class LoginUiState(
     val isSubmitting: Boolean = false,
     @StringRes val formError: Int? = null,
     val signedIn: Boolean = false,
+    /** The staff card was tapped: email and password only, staff accounts only. */
+    val staffOnly: Boolean = false,
 ) {
     val emailResult: FieldResult get() = Validation.email(email)
     val passwordResult: FieldResult get() = Validation.password(password)
@@ -45,9 +48,13 @@ data class LoginUiState(
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val auth: AuthRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(LoginUiState())
+    // Route.Login(staffHint) arrives as a saved-state argument of that name.
+    private val _state = MutableStateFlow(
+        LoginUiState(staffOnly = savedStateHandle.get<Boolean>("staffHint") ?: false)
+    )
     val state: StateFlow<LoginUiState> = _state.asStateFlow()
 
     fun onEmail(value: String) = _state.update {
@@ -67,11 +74,13 @@ class LoginViewModel @Inject constructor(
 
         _state.update { it.copy(isSubmitting = true, formError = null) }
         viewModelScope.launch {
-            auth.signIn(current.email, current.password)
+            auth.signIn(current.email, current.password, staffOnly = current.staffOnly)
                 .onSuccess {
                     // Where they land is decided by the profile's role, which
                     // the session observer reads. Nothing here chooses it.
-                    _state.update { it.copy(isSubmitting = false, signedIn = true) }
+                    // The button stays busy: this screen is about to go, and
+                    // a second tap must not send a second sign-in.
+                    _state.update { it.copy(signedIn = true) }
                 }
                 .onFailure { throwable ->
                     val error = (throwable as? ApiError) ?: throwable.asApiError()

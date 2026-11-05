@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,7 +47,9 @@ fun LoginScreen(
         verticalArrangement = Arrangement.spacedBy(Space.x20),
     ) {
         Text(
-            text = stringResource(R.string.title_login),
+            text = stringResource(
+                if (state.staffOnly) R.string.title_login_staff else R.string.title_login
+            ),
             style = RmTheme.type.largeTitle,
             color = RmTheme.colors.text,
         )
@@ -70,6 +73,8 @@ fun LoginScreen(
             isPassword = true,
             keyboardType = KeyboardType.Password,
             leadingIcon = R.drawable.ic_lock,
+            imeAction = ImeAction.Done,
+            onImeDone = viewModel::submit,
             modifier = Modifier.onFocusChanged { if (!it.isFocused) viewModel.onPasswordBlur() },
         )
 
@@ -85,13 +90,23 @@ fun LoginScreen(
             enabled = state.canSubmit,
         )
 
-        GoogleSignInButton()
+        if (state.staffOnly) {
+            // Staff cannot sign up here: the manager creates staff accounts
+            // in Supabase, and the server makes every app sign-up a student.
+            Text(
+                text = stringResource(R.string.auth_staff_accounts_note),
+                style = RmTheme.type.secondary,
+                color = RmTheme.colors.text2,
+            )
+        } else {
+            GoogleSignInButton()
 
-        RmButton(
-            text = stringResource(R.string.auth_no_account),
-            onClick = onRegister,
-            style = RmButtonStyle.Quiet,
-        )
+            RmButton(
+                text = stringResource(R.string.auth_no_account),
+                onClick = onRegister,
+                style = RmButtonStyle.Quiet,
+            )
+        }
     }
 }
 
@@ -182,6 +197,8 @@ fun RegisterScreen(
             isPassword = true,
             keyboardType = KeyboardType.Password,
             leadingIcon = R.drawable.ic_lock,
+            imeAction = ImeAction.Done,
+            onImeDone = viewModel::submit,
             modifier = Modifier.onFocusChanged {
                 if (!it.isFocused) viewModel.onBlur(RegisterField.ConfirmPassword)
             },

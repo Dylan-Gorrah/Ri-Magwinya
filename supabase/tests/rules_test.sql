@@ -294,3 +294,18 @@ select pg_temp.expect_fail('ordering without a student number',
 select pg_temp.expect_fail('claiming a taken student number',
     'insert into auth.users (email, raw_user_meta_data) values (''dup@gmail.com'', ''{"full_name":"Dup","student_number":"ST2024001"}''::jsonb)',
     'STUDENT_NUMBER_TAKEN');
+
+-- ---------------------------------------------------------------------------
+-- Staff cannot sign themselves up
+-- ---------------------------------------------------------------------------
+-- The app's staff screen has no sign-up, but the API is public. Asking for
+-- staff in the sign-up metadata must still make a student: staff accounts
+-- are only made by the manager in Supabase.
+\echo '--- sign-up role'
+insert into auth.users (id, email, raw_user_meta_data)
+values ('55555555-5555-5555-5555-555555555555', 'sneaky@gmail.com',
+        '{"full_name":"Sneaky","student_number":"ST2024555","role":"staff"}'::jsonb);
+
+select pg_temp.say('sign-up asking for staff gets student',
+    (select role::text from profiles where id = '55555555-5555-5555-5555-555555555555'),
+    'student');

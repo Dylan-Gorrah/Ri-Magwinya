@@ -65,6 +65,8 @@ enum class ConflictCode {
     EMPTY_SELECTION,
     SLOT_NOT_TODAY,
     OPTION_REQUIRED,
+    /** A student account used the staff sign-in. Raised by the app, not the server. */
+    NOT_STAFF,
     UNKNOWN;
 
     companion object {

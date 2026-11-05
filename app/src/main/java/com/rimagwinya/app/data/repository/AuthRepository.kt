@@ -8,6 +8,7 @@ import com.rimagwinya.app.core.util.Validation
 import com.rimagwinya.app.data.remote.SupabaseApi
 import com.rimagwinya.app.data.remote.toDomain
 import com.rimagwinya.app.domain.model.Profile
+import com.rimagwinya.app.domain.model.UserRole
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
@@ -98,16 +99,53 @@ class AuthRepository @Inject constructor(
         }.recoverCatching { throw it.toAuthError() }
     }
 
-    suspend fun signIn(email: String, password: String): Result<Unit> =
-        withContext(io) {
+    private val _signingIn = MutableStateFlow(false)
+
+    /**
+     * True while [signIn] is still checking who signed in. The session
+     * observer waits for this before routing, so a student on the staff
+     * screen is signed out again before the student app ever appears.
+     */
+    val signingIn: StateFlow<Boolean> = _signingIn.asStateFlow()
+
+    /**
+     * Signs in and loads the profile in one step, so the caller only hears
+     * "success" once there is a role to route by.
+     *
+     * [staffOnly] is the staff screen: a student account is signed straight
+     * back out and refused with [ConflictCode.NOT_STAFF]. The other way
+     * round needs no check: staff on the student screen still land in the
+     * staff app, because the role on the server decides.
+     */
+    suspend fun signIn(
+        email: String,
+        password: String,
+        staffOnly: Boolean = false,
+    ): Result<Profile> = withContext(io) {
+        _signingIn.value = true
+        try {
             runCatching {
                 client.auth.signInWith(Email) {
                     this.email = Validation.normaliseEmail(email)
                     this.password = password
                 }
-                Unit
+                val signedIn = profile().getOrElse { cause ->
+                    // A session with no readable profile is not usable.
+                    runCatching { client.auth.clearSession() }
+                    throw cause
+                }
+                if (staffOnly && signedIn.role != UserRole.Staff) {
+                    _currentProfile.value = null
+                    runCatching { client.auth.signOut() }
+                        .onFailure { runCatching { client.auth.clearSession() } }
+                    throw ApiError.Conflict(ConflictCode.NOT_STAFF)
+                }
+                signedIn
             }.recoverCatching { throw it.toAuthError() }
+        } finally {
+            _signingIn.value = false
         }
+    }
 
     /**
      * Signs in with a Google ID token from Credential Manager.

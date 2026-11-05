@@ -9,6 +9,7 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,7 +36,12 @@ class SessionViewModel @Inject constructor(
             // keeps someone signed in for weeks.
             auth.sessionStatus.collect { status ->
                 when (status) {
-                    is SessionStatus.Authenticated -> loadProfile()
+                    is SessionStatus.Authenticated -> {
+                        // A sign-in still checking the role (the staff
+                        // screen) decides first; it may sign straight out.
+                        auth.signingIn.first { !it }
+                        if (auth.currentUserId() != null) loadProfile()
+                    }
                     is SessionStatus.NotAuthenticated -> _state.value = AuthState.SignedOut
                     is SessionStatus.Initializing -> _state.value = AuthState.Loading
                     is SessionStatus.RefreshFailure -> {
@@ -72,7 +78,14 @@ class SessionViewModel @Inject constructor(
     }
 
     private suspend fun loadProfile() {
-        auth.profile()
+        // The sign-in just fetched it; no need to ask the server twice.
+        val fresh = auth.currentProfile.value?.takeIf { it.id == auth.currentUserId() }
+        val result = if (fresh != null && _state.value !is AuthState.SignedIn) {
+            Result.success(fresh)
+        } else {
+            auth.profile()
+        }
+        result
             .onSuccess {
                 _state.value = AuthState.SignedIn(it)
                 push.syncToken()

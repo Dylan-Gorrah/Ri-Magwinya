@@ -56,6 +56,7 @@
 
     <!-- Sign-in failures -->
     <string name="error_credentials">Email or password is incorrect.</string>
+    <string name="error_not_staff">This account isn\'t a staff account.</string>
     <string name="error_email_taken">That email already has an account. Sign in instead.</string>
     <string name="error_student_number_taken">That student number is already registered.</string>
     <string name="error_network">No connection. Check your signal and try again.</string>
@@ -396,6 +397,8 @@
     <!-- Screen titles -->
     <string name="title_welcome">Welcome</string>
     <string name="title_login">Sign in</string>
+    <string name="title_login_staff">Staff sign in</string>
+    <string name="auth_staff_accounts_note">Staff accounts are set up by the tuckshop manager.</string>
     <string name="title_register">Create your account</string>
     <string name="title_menu">Today\'s menu</string>
     <string name="title_cart">Your cart</string>

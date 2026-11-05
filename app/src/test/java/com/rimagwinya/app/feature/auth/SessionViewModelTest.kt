@@ -38,6 +38,7 @@ class SessionViewModelTest {
     private val push = mockk<PushTokenRepository>(relaxed = true)
     private val status = MutableSharedFlow<SessionStatus>()
     private val current = MutableStateFlow<Profile?>(null)
+    private val signingIn = MutableStateFlow(false)
 
     private val staff = profile("staff-id", UserRole.Staff)
     private val student = profile("student-id", UserRole.Student)
@@ -47,6 +48,7 @@ class SessionViewModelTest {
         Dispatchers.setMain(dispatcher)
         every { auth.sessionStatus } returns status
         every { auth.currentProfile } returns current
+        every { auth.signingIn } returns signingIn
         every { auth.currentUserId() } returns staff.id
         coEvery { auth.profile() } returns Result.success(staff)
     }
@@ -94,6 +96,26 @@ class SessionViewModelTest {
         advanceUntilIdle()
 
         assertEquals(AuthState.SignedIn(staff), vm.state.value)
+    }
+
+    @Test
+    fun `routing waits until a staff-screen sign-in has checked the role`() = runTest(dispatcher) {
+        val vm = SessionViewModel(auth, push)
+        advanceUntilIdle()
+
+        // The staff screen is still checking: nothing may route yet, or a
+        // student would flash into the student app before being signed out.
+        signingIn.value = true
+        status.emit(mockk<SessionStatus.Authenticated>())
+        advanceUntilIdle()
+        assertEquals(AuthState.Loading, vm.state.value)
+
+        // The check signed them out: no session is left to route.
+        every { auth.currentUserId() } returns null
+        signingIn.value = false
+        status.emit(SessionStatus.NotAuthenticated(isSignOut = true))
+        advanceUntilIdle()
+        assertEquals(AuthState.SignedOut, vm.state.value)
     }
 
     private fun profile(id: String, role: UserRole) = Profile(

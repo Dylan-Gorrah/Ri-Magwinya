@@ -1,6 +1,9 @@
 package com.rimagwinya.app
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import com.rimagwinya.app.data.repository.AuthState
+import com.rimagwinya.app.feature.auth.SessionViewModel
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -36,8 +39,17 @@ class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var settingsRepository: SettingsRepository
 
+    // The same instance RootNavHost gets from hiltViewModel(): both are
+    // scoped to this activity.
+    private val session: SessionViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        // Keep the splash up until the stored session has been restored and
+        // its role is known. Without this the welcome screen flashed for
+        // someone who was already signed in.
+        installSplashScreen().setKeepOnScreenCondition {
+            session.state.value is AuthState.Loading
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         Notifications.createChannels(this)

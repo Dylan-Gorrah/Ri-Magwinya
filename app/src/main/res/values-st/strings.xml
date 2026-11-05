@@ -44,6 +44,7 @@
     <string name="error_name_short">Ka kopo kenya lebitso la hao le felletseng.</string>
     <string name="error_student_number">Sebedisa nomoro ya moithuti e karateng ya hao.</string>
     <string name="error_credentials">Imeile kapa phasewete ha e nepahala.</string>
+    <string name="error_not_staff">Akhaonto ena hase ya basebetsi.</string>
     <string name="error_email_taken">Imeile eo e se e na le akhaonto. Kena ho ena le hoo.</string>
     <string name="error_student_number_taken">Nomoro eo ya moithuti e se e ngodisitswe.</string>
     <string name="error_network">Ha ho kgokahano. Sheba letshwao mme o leke hape.</string>
@@ -338,6 +339,8 @@
 
     <string name="title_welcome">Kamohelo</string>
     <string name="title_login">Kena</string>
+    <string name="title_login_staff">Basebetsi ba kena</string>
+    <string name="auth_staff_accounts_note">Diakhaonto tsa basebetsi di etswa ke mookamedi wa lebenkele.</string>
     <string name="title_register">Theha akhaonto ya hao</string>
     <string name="title_menu">Menu ya kajeno</string>
     <string name="title_cart">Sekotlolo sa hao</string>

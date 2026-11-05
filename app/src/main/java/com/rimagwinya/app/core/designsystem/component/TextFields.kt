@@ -59,6 +59,10 @@ fun RmTextField(
     isPassword: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     @androidx.annotation.DrawableRes leadingIcon: Int? = null,
+    // Next moves to the field below on its own; the last field of a form
+    // passes Done and what Done should do (usually submit).
+    imeAction: androidx.compose.ui.text.input.ImeAction = androidx.compose.ui.text.input.ImeAction.Next,
+    onImeDone: (() -> Unit)? = null,
 ) {
     val c = RmTheme.colors
     val interaction = remember { MutableInteractionSource() }
@@ -105,7 +109,12 @@ fun RmTextField(
                     interactionSource = interaction,
                     textStyle = RmTheme.type.body.copy(color = c.text),
                     cursorBrush = androidx.compose.ui.graphics.SolidColor(c.navy),
-                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+                    keyboardActions = if (onImeDone != null) {
+                        androidx.compose.foundation.text.KeyboardActions(onDone = { onImeDone() })
+                    } else {
+                        androidx.compose.foundation.text.KeyboardActions.Default
+                    },
                     visualTransformation = if (isPassword && !revealed) {
                         PasswordVisualTransformation()
                     } else {

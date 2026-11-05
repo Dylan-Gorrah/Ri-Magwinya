@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.background
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.material3.Text
@@ -17,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
@@ -92,20 +95,25 @@ fun RootNavHost(
         AuthState.Loading -> null
     }
     LaunchedEffect(destinationKey) {
-        when {
-            signedIn -> navController.navigate(
-                if (role == UserRole.Staff) Route.StaffGraph else Route.StudentGraph
-            ) {
-                popUpTo(navController.graph.id) { inclusive = true }
-            }
-
-            session is AuthState.SignedOut -> navController.navigate(Route.AuthGraph) {
-                popUpTo(navController.graph.id) { inclusive = true }
-            }
-
-            else -> Unit // Loading: the splash is still up.
+        // Not composed yet (splash, lock or student-number screen): the
+        // NavHost will start in the right place by itself, below.
+        if (navController.currentBackStackEntry == null) return@LaunchedEffect
+        val target: Any = when {
+            signedIn -> roleGraph
+            session is AuthState.SignedOut -> Route.AuthGraph
+            else -> return@LaunchedEffect // Loading: the splash is still up.
+        }
+        // Already there (the NavHost started in it): leave the back stack
+        // alone rather than rebuilding the screen under the user's finger.
+        if (navController.isIn(target)) return@LaunchedEffect
+        navController.navigate(target) {
+            popUpTo(navController.graph.id) { inclusive = true }
+            launchSingleTop = true
         }
     }
+
+    // The splash covers this (MainActivity keeps it up while Loading).
+    if (session is AuthState.Loading) return
 
     // A Google account with no student number yet can browse nothing until
     // it has one: staff need something to call out at the counter.
@@ -178,9 +186,12 @@ fun RootNavHost(
                         .padding(horizontal = Space.screen, vertical = Space.x8),
                 )
             }
+            // Start where the user belongs, so a signed-in user never sees
+            // the welcome screen on the way in. Later changes navigate.
+            val start = remember { if (signedIn) roleGraph else Route.AuthGraph }
             NavHost(
                 navController = navController,
-                startDestination = Route.AuthGraph,
+                startDestination = start,
             ) {
                 authGraph(navController)
                 studentGraph(
@@ -202,6 +213,18 @@ fun RootNavHost(
         }
     }
 }
+
+/** Whether [graph] (a graph route object) is on the back stack. */
+private fun NavHostController.isIn(graph: Any): Boolean =
+    currentBackStack.value.any { it.destination.hasRoute(graph::class) }
+
+/**
+ * Only the screen in front may navigate. A double tap fires twice before the
+ * first navigation finishes, and the second tap then came from a screen that
+ * was already leaving, opening the next screen twice.
+ */
+internal fun NavBackStackEntry.isResumed(): Boolean =
+    lifecycle.currentState == Lifecycle.State.RESUMED
 
 /** Which tab a destination belongs to. */
 private fun tabFor(destination: NavDestination): String? = when {
@@ -228,18 +251,20 @@ private fun routeFor(tabKey: String): Any = when (tabKey) {
 /** Welcome, login, register. */
 private fun NavGraphBuilder.authGraph(navController: NavHostController) {
     navigation<Route.AuthGraph>(startDestination = Route.Welcome) {
-        composable<Route.Welcome> {
+        composable<Route.Welcome> { entry ->
             WelcomeScreen(
                 onContinue = { staffHint ->
-                    navController.navigate(Route.Login(staffHint = staffHint))
+                    if (entry.isResumed()) navController.navigate(Route.Login(staffHint = staffHint))
                 }
             )
         }
-        composable<Route.Login> {
-            LoginScreen(onRegister = { navController.navigate(Route.Register) })
+        composable<Route.Login> { entry ->
+            LoginScreen(onRegister = {
+                if (entry.isResumed()) navController.navigate(Route.Register)
+            })
         }
-        composable<Route.Register> {
-            RegisterScreen(onSignIn = { navController.popBackStack() })
+        composable<Route.Register> { entry ->
+            RegisterScreen(onSignIn = { if (entry.isResumed()) navController.popBackStack() })
         }
     }
 }
