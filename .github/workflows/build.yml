@@ -34,6 +34,8 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      # Without it the APK hides "Continue with Google".
+      GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
 
     steps:
       - name: Check out the code
@@ -52,6 +54,21 @@ jobs:
       # is developed, so the runner needs it set.
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+
+      # google-services.json is gitignored, so it comes from a secret
+      # (base64 of the file). app/build.gradle.kts applies the Google
+      # Services plugin only when the file exists: without the secret the
+      # build still passes, with push switched off.
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON" ]; then
+            echo "$GOOGLE_SERVICES_JSON" | base64 --decode > app/google-services.json
+            echo "google-services.json written, push is on"
+          else
+            echo "::warning::No GOOGLE_SERVICES_JSON secret, building with push off"
+          fi
 
       - name: Unit tests
         run: ./gradlew testDebugUnitTest --no-daemon

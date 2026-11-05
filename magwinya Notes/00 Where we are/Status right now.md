@@ -11,6 +11,16 @@ Updated Thu 5 Nov 2026, evening.
 - **The plan is in [[Part 3 phases]].** Claude Code works through it in order and ticks it off.
 - **So most of Part 3 is switching things on, proving they work, and writing it up.** Very little is building from scratch.
 
+## Setup done on 5 Nov, evening
+
+- **Firebase:** project `ri-magwinya` made, Android app `com.rimagwinya.app` registered, Cloud Messaging V1 is on. The service account key was generated.
+- **Google sign-in:** switched on through Firebase Authentication, which made the Web and both Android OAuth clients. Debug and release SHA-1s added. The OAuth app is "In production", so any Google account works.
+- **`local.properties`:** `GOOGLE_WEB_CLIENT_ID` added.
+- **Supabase:** the Google provider is on, with the Web and Android client IDs. No client secret is needed for the in-app sign-in. All three Edge Functions are deployed.
+- **Still Dylan's:** paste `FCM_SERVICE_ACCOUNT` into Supabase Secrets, and drag `google-services.json` into `app/`.
+
+The IDs are in [[Links and facts]].
+
 ## Where the code is
 
 | Copy | What's in it |
@@ -27,14 +37,17 @@ Updated Thu 5 Nov 2026, evening.
 - **Phase 1 done.** Staff screen is email and password only, a student on the staff screen is refused, and six login glitches are fixed. See [[Signing in]]. 182 unit tests and 36 SQL checks pass.
 - **Phase 2 done.** Every link and Back button ignores a second fast tap (two taps on Back used to pop the menu too and leave a blank screen). Notification taps open the order for students only, with Back going to the menu. The unused placeholder screen is gone.
 - **Phase 3 done.** `Log.d` and `Log.e` across sign-in, checkout, queue, top-up, sync and push, all under `Rm` tags. 9 IIE Harvard references in the code and the README. See [[Logging]].
-- Next: Phase 4 (Google sign-in) and Phase 5 (push) wait for Dylan's Firebase and Google Cloud setup.
+- **Phase 4 done.** Google sign-in is on in the debug and release builds. CI reads `GOOGLE_WEB_CLIENT_ID` from a GitHub secret. See [[Google sign-in]].
+- **Phase 5 done.** Push is on. CI writes `google-services.json` from a secret. New: low-stock alerts to staff from `place-order`. See [[Notifications]].
+- **Dylan still has to:** push the commits, add 2 GitHub secrets, deploy `place-order`, and test on the phone.
+- Next: Phase 7 (README, release notes, AI write-up, Play Store). Phase 6 (Facebook) only if there's time.
 
 ## What's not set up yet
 
 Checked in `local.properties` and `app/`:
 
-- **No `GOOGLE_WEB_CLIENT_ID`**, so Google sign-in is switched off.
-- **No `google-services.json`**, so push notifications are switched off.
+- ~~No `GOOGLE_WEB_CLIENT_ID`~~ Done 5 Nov.
+- ~~No `google-services.json`~~ Done 5 Nov (it was in the project root; moved to `app/`).
 - The Supabase keys and the release signing keys are there.
 
 ## Things that don't line up

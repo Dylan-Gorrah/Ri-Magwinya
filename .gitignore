@@ -50,3 +50,4 @@ supabase/tests/err.txt
 # Per-machine IDE and agent state
 /.claude/
 /.idea/deviceManager.xml
+/.kotlin/

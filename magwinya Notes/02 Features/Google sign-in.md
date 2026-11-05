@@ -109,3 +109,15 @@ is a sign-in that works perfectly in testing and fails on the installed app.
 It was on the table — if college mail ran on Microsoft 365, Supabase's Azure
 provider would have been the better fit. It doesn't. Google it is, and the
 Azure option is dropped rather than left half-there.
+
+## Switched on (5 Nov, Part 3)
+
+- `GOOGLE_WEB_CLIENT_ID` is in `local.properties`, and CI gets it from the GitHub secret of the same name, so the release APK shows the button too.
+- Supabase: the Google provider is on (checked through `/auth/v1/settings`).
+- The Android OAuth client uses both SHA-1s: debug `42:5B:32:…:E1` and release `72:45:8A:…:16`. See [[Links and facts]].
+- Only on the **student** sign-in and register screens. The staff screen has no Google button. See [[Signing in]].
+- Cancelling the account sheet shows nothing. `RmGoogle` in Logcat says "cancelled by the user".
+- Credential Manager ships its own R8 keep rule, so the shrunk release build keeps working.
+
+**If the sheet opens but sign-in fails:** in Supabase, under *Authentication → Providers → Google*, check that the Web client ID is in **Client IDs**. ID-token sign-in is refused without it.
+

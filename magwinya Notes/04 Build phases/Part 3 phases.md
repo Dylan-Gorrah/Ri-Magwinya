@@ -12,8 +12,8 @@ Claude Code works through these in order: one phase, report, stop, wait for "go"
 | 1 | Login flow revamp | Marked (SSO, UI, runs on phone) | Tell it the glitches you've seen | Done 5 Nov. 182 tests, 36 SQL checks. Needs a phone test |
 | 2 | Navigation clean-up | Marked (runs on phone, UI) | No | Done 5 Nov. Needs a phone test |
 | 3 | Logging and code references | Required by the brief | No | Done 5 Nov. 76 log lines, 9 references. See [[Logging]] |
-| 4 | Switch on Google sign-in | Marked (SSO, 10) | Yes: Google Cloud and Supabase | Not started |
-| 5 | Switch on push notifications | Marked (push, 10) | Yes: Firebase and Supabase secrets | Not started |
+| 4 | Switch on Google sign-in | Marked (SSO, 10) | Yes: Google Cloud and Supabase | Done 5 Nov. Needs the GitHub secret and a phone test |
+| 5 | Switch on push notifications | Marked (push, 10) | Yes: Firebase and Supabase secrets | Done 5 Nov. Needs place-order deployed, the GitHub secret and a phone test |
 | 6 | Facebook login | Extra (no marks) | Yes: Meta developer app | Not started |
 | 7 | README, release notes, AI write-up, Play Store folder | Marked (GitHub 10, Play Store 5, AI 5) | Screenshots, read the AI write-up | Not started |
 | 8 | Final checks and the `final-poe` tag | Marked | Phone test, video link | Not started |

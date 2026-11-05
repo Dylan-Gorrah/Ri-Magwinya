@@ -64,3 +64,11 @@ Only the **publishable** key ever goes in the app. The secret key stays in Edge 
 | Release SHA-1 | `72:45:8A:31:23:07:BF:74:FA:69:0E:34:DA:9E:AA:83:41:83:8A:16` |
 
 The SHA-1s were read from the signed APKs (`app-debug.apk` and `Ri-magwinya-v1.0.2.apk`). They aren't secret.
+
+| Google OAuth client | ID |
+|---|---|
+| Web (this goes in `GOOGLE_WEB_CLIENT_ID`) | `523823420799-f7obfphnu0vb6r94mbhq16hn1i57efn1.apps.googleusercontent.com` |
+| Android | `523823420799-48sthmuhoh8n7bkqlgll0sqkc8ih380q.apps.googleusercontent.com` |
+| Android | `523823420799-a1eu4v3085j7ef8mgard976lm3h1hpjo.apps.googleusercontent.com` |
+
+Client IDs aren't secret. The client secret is never needed by the app.

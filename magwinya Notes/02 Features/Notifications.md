@@ -144,3 +144,14 @@ development for a reason that has nothing to do with placing orders.
 Opens that order with the menu underneath, so Back goes to the menu. Tapping
 the same notification twice doesn't stack two copies. Signed in as staff, an
 order tap is ignored: order screens belong to students.
+
+## Switched on (5 Nov, Part 3)
+
+- `app/google-services.json` is in place (gitignored), so the build has push on (`PUSH_ENABLED = true`). CI writes the file from the `GOOGLE_SERVICES_JSON` secret (base64).
+- Supabase secrets `FCM_SERVICE_ACCOUNT` and `FCM_PROJECT_ID` are set, so the Edge Functions can send.
+- **Order ready → student.** `order-status` pushes "Order #1047 is ready" with the code.
+- **Low stock → every staff member. New.** `place-order` checks whether the order took an item down to its reorder level. Staff get one alert when it crosses, "Score Energy is running low, 4 left", and a row in their in-app notifications. They don't get one per sale after that. "Sold out" when it hits 0.
+- **Wallet top-up → student**, from `load-wallet`.
+
+`place-order` has to be **deployed** again for the low-stock alert to go live.
+
