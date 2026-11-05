@@ -73,8 +73,20 @@ class PushTokenRepository @Inject constructor(
         runCatching {
             FirebaseMessaging.getInstance().token
                 .addOnCompleteListener { task ->
-                    continuation.resume(task.result.takeIf { task.isSuccessful })
+                    // task.result throws when the task failed, and this runs on
+                    // the main thread outside runCatching, so reading it first
+                    // crashed the app straight after sign-in whenever Firebase
+                    // could not issue a token. Check, then read.
+                    if (task.isSuccessful) {
+                        continuation.resume(task.result)
+                    } else {
+                        Log.e(TAG, "token: Firebase could not issue one", task.exception)
+                        continuation.resume(null)
+                    }
                 }
-        }.onFailure { continuation.resume(null) }
+        }.onFailure {
+            Log.e(TAG, "token: Firebase is not available", it)
+            continuation.resume(null)
+        }
     }
 }

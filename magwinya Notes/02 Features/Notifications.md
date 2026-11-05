@@ -155,3 +155,19 @@ order tap is ignored: order screens belong to students.
 
 `place-order` has to be **deployed** again for the low-stock alert to go live.
 
+## Crash after sign-in (fixed 5 Nov)
+
+Once push was switched on, the app crashed a moment after the dashboard
+appeared, for students and staff. Fetching this phone's push token read
+`task.result` before checking that the task worked. When Firebase can't issue
+a token, that throws on the main thread and takes the app down. Now a failed
+fetch is logged (`RmPush`, "token: Firebase could not issue one", with the
+reason) and the app carries on without push.
+
+**If that line appears in Logcat, push won't arrive on that phone.** Usual
+causes:
+- The phone's Google Play services are out of date or signed out.
+- The Firebase API key is restricted. In Google Cloud → *Credentials* →
+  *Android key (auto created by Firebase)*, either have no app restriction,
+  or list `com.rimagwinya.app` with **both** SHA-1s from [[Links and facts]].
+

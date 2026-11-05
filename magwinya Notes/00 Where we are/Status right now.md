@@ -46,6 +46,7 @@ The IDs are in [[Links and facts]].
 - **Both CI runs green** (5 Nov, 21:55), with push on in the CI build.
 - Video flow is in [[Video script]].
 - **Create account bug fixed.** A taken student number showed "Something went wrong" instead of saying so. See [[Signing in]]. 183 tests.
+- **Crash after sign-in fixed.** Push-token fetch crashed the app when Firebase couldn't issue a token. See [[Notifications]].
 - Next: Phase 8. The tag waits for the video link.
 
 ## What's not set up yet
