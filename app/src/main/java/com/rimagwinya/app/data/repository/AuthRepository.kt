@@ -127,11 +127,19 @@ class AuthRepository @Inject constructor(
     }
 
     suspend fun signOut(): Result<Unit> = withContext(io) {
+        // Forget the profile first, so nothing on screen can show the last
+        // person's role or balance while the sign-out is in flight.
+        _currentProfile.value = null
         runCatching {
             client.auth.signOut()
-            _currentProfile.value = null
             Unit
-        }.recoverCatching { throw it.asApiError() }
+        }.recoverCatching {
+            // No signal means the server never heard the logout, and
+            // supabase-kt then keeps the session. Sign out on this phone
+            // anyway: a sign-out button that does nothing offline would leave
+            // the next person using this account.
+            client.auth.clearSession()
+        }
         // Phase 11 also clears profiles.fcm_token here. On a shared or
         // handed-down phone, leaving it behind means the next person gets
         // the last person's order notifications.
@@ -148,7 +156,21 @@ class AuthRepository @Inject constructor(
             api.profile("eq.$id").firstOrNull()?.toDomain()
                 ?: throw ApiError.NotFound
         }.recoverCatching { throw it.asApiError() }
-            .onSuccess { _currentProfile.value = it }
+            .onSuccess(::publish)
+    }
+
+    /**
+     * Makes [profile] the current one, but only if that person is still the
+     * one signed in.
+     *
+     * A request started before a sign-out can land after the next sign-in
+     * (the profile screen asks for the profile as it opens, and a slow
+     * network holds the answer). Without this check a student's late answer
+     * replaced the staff profile that had just loaded, and staff were dropped
+     * into the student app.
+     */
+    private fun publish(profile: Profile) {
+        if (profile.id == currentUserId()) _currentProfile.value = profile
     }
 
     /**
@@ -182,7 +204,7 @@ class AuthRepository @Inject constructor(
                     ),
                 ).firstOrNull()?.toDomain() ?: throw ApiError.NotFound
             }.recoverCatching { throw it.asApiError() }
-                .onSuccess { _currentProfile.value = it }
+                .onSuccess(::publish)
         }
 
     /**
@@ -213,7 +235,7 @@ class AuthRepository @Inject constructor(
                     )
                 ).toDomain()
             }.recoverCatching { throw it.asApiError() }
-                .onSuccess { _currentProfile.value = it }
+                .onSuccess(::publish)
         }
 
     fun currentUserId(): String? = client.auth.currentSessionOrNull()?.user?.id

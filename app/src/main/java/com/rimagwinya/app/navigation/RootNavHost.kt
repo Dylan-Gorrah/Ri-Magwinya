@@ -82,7 +82,16 @@ fun RootNavHost(
 
     // Signing in or out swaps the whole graph underneath whatever is on
     // screen, so no individual screen has to know where to go afterwards.
-    LaunchedEffect(session) {
+    //
+    // Keyed on who and which role, not the whole session: the profile is
+    // replaced every time the balance changes, and re-running this then threw
+    // the student back to the menu straight after placing an order.
+    val destinationKey: Any? = when (session) {
+        is AuthState.SignedIn -> profile?.id to role
+        AuthState.SignedOut -> AuthState.SignedOut
+        AuthState.Loading -> null
+    }
+    LaunchedEffect(destinationKey) {
         when {
             signedIn -> navController.navigate(
                 if (role == UserRole.Staff) Route.StaffGraph else Route.StudentGraph

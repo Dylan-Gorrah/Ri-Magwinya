@@ -38,6 +38,7 @@ supabase/tests/err.txt
 /VIDEO_PLAN.md
 /.mcp.json
 /docs/PROGRESS.md
+/docs/BUILD_BRIEF.md
 /docs/qa-checklist.md
 /docs/privacy-policy.md
 /docs/store-listing.md
@@ -45,3 +46,7 @@ supabase/tests/err.txt
 /PART2_APP_CHECKLIST.md
 /VIDEO_CHECKLIST.md
 /supabase/tests/README.md
+
+# Per-machine IDE and agent state
+/.claude/
+/.idea/deviceManager.xml

@@ -39,10 +39,15 @@ class SessionViewModel @Inject constructor(
                     is SessionStatus.NotAuthenticated -> _state.value = AuthState.SignedOut
                     is SessionStatus.Initializing -> _state.value = AuthState.Loading
                     is SessionStatus.RefreshFailure -> {
-                        // The refresh token is gone or rejected. Treat it as
-                        // signed out rather than leaving the app in a state
-                        // where every request quietly 401s.
-                        _state.value = AuthState.SignedOut
+                        // supabase-kt reports a rejected token as
+                        // NotAuthenticated; RefreshFailure means the refresh
+                        // could not reach the server, and it retries. Someone
+                        // already in the app stays in it (offline mode), and
+                        // only a cold start with nothing loaded falls back to
+                        // sign-in.
+                        if (_state.value !is AuthState.SignedIn) {
+                            _state.value = AuthState.SignedOut
+                        }
                     }
                 }
             }
@@ -50,8 +55,11 @@ class SessionViewModel @Inject constructor(
         viewModelScope.launch {
             // A newer profile (after an order or a top-up) replaces the one
             // on screen, but never signs anyone in by itself.
+            // It must be the same person, too: only loadProfile decides who
+            // is signed in.
             auth.currentProfile.collect { profile ->
-                if (profile != null && _state.value is AuthState.SignedIn) {
+                val current = _state.value as? AuthState.SignedIn ?: return@collect
+                if (profile != null && profile.id == current.profile.id) {
                     _state.value = AuthState.SignedIn(profile)
                 }
             }
@@ -70,9 +78,13 @@ class SessionViewModel @Inject constructor(
                 push.syncToken()
             }
             .onFailure {
-                // A valid session with no readable profile is not a usable
-                // state, so fall back to signed out rather than guessing a
-                // role.
+                // A token refresh re-runs this. If the same person is already
+                // in and the network blipped, keep the profile they have.
+                val current = _state.value as? AuthState.SignedIn
+                if (current != null && current.profile.id == auth.currentUserId()) return@onFailure
+                // Otherwise a valid session with no readable profile is not a
+                // usable state, so fall back to signed out rather than
+                // guessing a role.
                 _state.value = AuthState.SignedOut
             }
     }
