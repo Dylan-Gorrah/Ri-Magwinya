@@ -134,6 +134,24 @@ Tests: `LoginViewModelTest` (staff screen, student on the staff screen, wrong
 password, no signal, double tap, empty fields) and `SessionViewModelTest`. The
 SQL tests check that a sign-up asking for `role: staff` still gets a student.
 
+## "Something went wrong" on Create account (fixed 5 Nov)
+
+The real cause was a **student number that's already registered**. The
+database refuses it (`STUDENT_NUMBER_TAKEN`), but Supabase sends that back as
+a 500 with the reason in `message`, and supabase-kt only reads `error_code`.
+The reason was lost, so the app fell back to "Something went wrong".
+
+- **Email sign-up:** a 500 from sign-up now shows "That student number is
+  already registered." It's the only way the sign-up trigger can fail.
+- **Google's student-number screen:** the same reason was lost another way.
+  PostgREST puts `P0001` in `code` and the reason in `message`, and the app
+  only read `code`. It now takes the first field that is a reason it knows.
+- A taken email already worked: "That email is already registered."
+
+Tested against the live server with `curl`: a new account signs up and gets
+a session, a taken number gives 500 `STUDENT_NUMBER_TAKEN`, and a taken
+email gives 422 `user_already_exists`.
+
 ## After sign-in
 
 Fetch the profile, read `role`, route:

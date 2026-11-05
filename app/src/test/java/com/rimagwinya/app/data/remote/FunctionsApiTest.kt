@@ -170,6 +170,15 @@ class FunctionsApiTest {
     }
 
     @Test
+    fun `a PostgREST raise keeps its reason from message, not the P0001 code`() = runTest {
+        // What claim_student_number sends back for a taken number. The
+        // student-number screen showed "Something went wrong" for this.
+        respond(400, """{"code":"P0001","details":null,"hint":"That student number is already registered.","message":"STUDENT_NUMBER_TAKEN"}""")
+        val error = refusal { api.loadWallet(LoadWalletBody("TEST001", 50.0)) }
+        assertEquals(ConflictCode.STUDENT_NUMBER_TAKEN, (error as ApiError.Conflict).code)
+    }
+
+    @Test
     fun `a malformed request is a server-side bug, not a user message`() = runTest {
         respond(400, """{"code":"BAD_REQUEST","detail":"slot_id must be a uuid"}""")
         assertTrue(refusal { api.placeOrder(order) } is ApiError.Server)

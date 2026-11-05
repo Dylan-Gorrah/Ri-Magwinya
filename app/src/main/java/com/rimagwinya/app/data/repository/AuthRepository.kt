@@ -16,6 +16,7 @@ import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
 import io.github.jan.supabase.auth.status.SessionStatus
+import io.github.jan.supabase.auth.exception.AuthRestException
 import io.github.jan.supabase.exceptions.RestException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -109,7 +110,7 @@ class AuthRepository @Inject constructor(
             // False when "Confirm email" is on in Supabase: the account was
             // created, but there is no session until the link is clicked.
             client.auth.currentSessionOrNull() != null
-        }.recoverCatching { throw it.toAuthError() }
+        }.recoverCatching { throw it.toSignUpError() }
             .onSuccess { Log.d(TAG, "register: account created, signed in = $it") }
             .onFailure { Log.e(TAG, "register: failed (${it.javaClass.simpleName})") }
     }
@@ -314,13 +315,31 @@ class AuthRepository @Inject constructor(
 }
 
 /**
+ * Sign-up's one database failure. The handle_new_user trigger only raises
+ * STUDENT_NUMBER_TAKEN (on a unique violation), and Supabase answers it with
+ * a 500 whose reason is in `message`. supabase-kt reads only `error_code`,
+ * so the reason is lost and the 500 arrives as "Unknown Error". Without
+ * this, a taken student number showed "Something went wrong".
+ */
+internal fun Throwable.toSignUpError(): Throwable =
+    if (this is RestException && statusCode == 500) {
+        ApiError.Conflict(ConflictCode.STUDENT_NUMBER_TAKEN)
+    } else {
+        toAuthError()
+    }
+
+/**
  * Supabase returns 400 for a wrong password, which is not what 400 usually
  * means, so it is translated here rather than leaking into the screens.
  */
-private fun Throwable.toAuthError(): Throwable {
+internal fun Throwable.toAuthError(): Throwable {
     val message = message.orEmpty().lowercase()
+    val code = (this as? AuthRestException)?.error.orEmpty()
     return when {
         this is ApiError -> this
+        code == "user_already_exists" || code == "email_exists" ->
+            ApiError.Conflict(ConflictCode.EMAIL_TAKEN)
+        code == "invalid_credentials" -> ApiError.Conflict(ConflictCode.BAD_CREDENTIALS)
         message.contains("student_number_taken") ->
             ApiError.Conflict(ConflictCode.STUDENT_NUMBER_TAKEN)
         message.contains("already registered") || message.contains("already been registered") ->

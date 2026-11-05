@@ -31,7 +31,13 @@ class ErrorMappingInterceptor @Inject constructor(
 
         response.close()
 
-        val code = ConflictCode.from(parsed?.code ?: parsed?.error ?: parsed?.message)
+        // Edge Functions put the reason in `code`. PostgREST puts a SQL
+        // error's own code there (P0001 for `raise exception`) and the
+        // reason in `message`, so take the first field that is a reason we
+        // know rather than the first field that is present.
+        val code = listOf(parsed?.code, parsed?.error, parsed?.message)
+            .map(ConflictCode::from)
+            .firstOrNull { it != ConflictCode.UNKNOWN } ?: ConflictCode.UNKNOWN
         val detail = parsed?.detail ?: parsed?.hint
 
         throw when {
