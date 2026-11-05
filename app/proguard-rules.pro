@@ -55,3 +55,8 @@
 # --- Keep line numbers in crash reports, hide the file names -----------------
 -keepattributes SourceFile, LineNumberTable
 -renamesourcefileattribute SourceFile
+
+# Credential Manager (Google sign-in): no rule needed here.
+# credentials-play-services-auth ships its own consumer rule that keeps
+# androidx.credentials.playservices.CredentialProviderPlayServicesImpl.
+# Checked 5 Nov 2026 in the release mapping.txt: kept, not renamed.
