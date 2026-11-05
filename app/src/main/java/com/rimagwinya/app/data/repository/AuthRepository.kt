@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.repository
 
+import android.util.Log
 import com.rimagwinya.app.core.network.ApiError
 import com.rimagwinya.app.core.network.ConflictCode
 import com.rimagwinya.app.core.network.IoDispatcher
@@ -27,6 +28,15 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+// Every class logs under its own "Rm" tag, so filtering Logcat by "Rm"
+// shows the app's own story. Reference: Google. 2026. Log. [Online].
+// Available at: <https://developer.android.com/reference/android/util/Log> [Accessed 5 November 2026].
+private const val TAG = "RmAuth"
+
+// Auth failures are logged by type only. supabase-kt's error messages can
+// include the request headers, and those carry the access token.
 
 /** Whether anyone is signed in, and who. */
 sealed interface AuthState {
@@ -80,6 +90,9 @@ class AuthRepository @Inject constructor(
         fullName: String,
         studentNumber: String,
     ): Result<Boolean> = withContext(io) {
+        Log.d(TAG, "register: started")
+        // Reference: Supabase. 2026. Kotlin: Create a new user. [Online]. Available at:
+        // <https://supabase.com/docs/reference/kotlin/auth-signup> [Accessed 5 November 2026].
         runCatching {
             client.auth.signUpWith(Email) {
                 this.email = Validation.normaliseEmail(email)
@@ -97,6 +110,8 @@ class AuthRepository @Inject constructor(
             // created, but there is no session until the link is clicked.
             client.auth.currentSessionOrNull() != null
         }.recoverCatching { throw it.toAuthError() }
+            .onSuccess { Log.d(TAG, "register: account created, signed in = $it") }
+            .onFailure { Log.e(TAG, "register: failed (${it.javaClass.simpleName})") }
     }
 
     private val _signingIn = MutableStateFlow(false)
@@ -123,7 +138,10 @@ class AuthRepository @Inject constructor(
         staffOnly: Boolean = false,
     ): Result<Profile> = withContext(io) {
         _signingIn.value = true
+        Log.d(TAG, "signIn: started, staffOnly=$staffOnly")
         try {
+            // Reference: Supabase. 2026. Kotlin: Sign in a user. [Online]. Available at:
+            // <https://supabase.com/docs/reference/kotlin/auth-signinwithpassword> [Accessed 5 November 2026].
             runCatching {
                 client.auth.signInWith(Email) {
                     this.email = Validation.normaliseEmail(email)
@@ -135,13 +153,16 @@ class AuthRepository @Inject constructor(
                     throw cause
                 }
                 if (staffOnly && signedIn.role != UserRole.Staff) {
+                    Log.d(TAG, "signIn: not a staff account on the staff screen, signing out")
                     _currentProfile.value = null
                     runCatching { client.auth.signOut() }
                         .onFailure { runCatching { client.auth.clearSession() } }
                     throw ApiError.Conflict(ConflictCode.NOT_STAFF)
                 }
+                Log.d(TAG, "signIn: ok, user=${signedIn.id}, role=${signedIn.role}")
                 signedIn
             }.recoverCatching { throw it.toAuthError() }
+                .onFailure { Log.e(TAG, "signIn: failed (${it.javaClass.simpleName})") }
         } finally {
             _signingIn.value = false
         }
@@ -155,23 +176,30 @@ class AuthRepository @Inject constructor(
      * app then asks for — see [claimStudentNumber].
      */
     suspend fun signInWithGoogle(idToken: String): Result<Unit> = withContext(io) {
+        Log.d(TAG, "google: exchanging the ID token with Supabase")
+        // Reference: Supabase. 2026. Kotlin: Sign in with ID token. [Online]. Available at:
+        // <https://supabase.com/docs/reference/kotlin/auth-signinwithidtoken> [Accessed 5 November 2026].
         runCatching {
             client.auth.signInWith(IDToken) {
                 this.idToken = idToken
                 provider = Google
             }
+            Log.d(TAG, "google: signed in, user=${currentUserId()}")
             Unit
         }.recoverCatching { throw it.toAuthError() }
+            .onFailure { Log.e(TAG, "google: failed (${it.javaClass.simpleName})") }
     }
 
     suspend fun signOut(): Result<Unit> = withContext(io) {
         // Forget the profile first, so nothing on screen can show the last
         // person's role or balance while the sign-out is in flight.
         _currentProfile.value = null
+        Log.d(TAG, "signOut: user=${currentUserId()}")
         runCatching {
             client.auth.signOut()
             Unit
         }.recoverCatching {
+            Log.e(TAG, "signOut: server unreachable (${it.javaClass.simpleName}), clearing the session on this phone")
             // No signal means the server never heard the logout, and
             // supabase-kt then keeps the session. Sign out on this phone
             // anyway: a sign-out button that does nothing offline would leave
@@ -194,6 +222,8 @@ class AuthRepository @Inject constructor(
             api.profile("eq.$id").firstOrNull()?.toDomain()
                 ?: throw ApiError.NotFound
         }.recoverCatching { throw it.asApiError() }
+            .onSuccess { Log.d(TAG, "profile: loaded, role=${it.role}") }
+            .onFailure { Log.e(TAG, "profile: failed (${it.javaClass.simpleName})", it) }
             .onSuccess(::publish)
     }
 
@@ -208,7 +238,11 @@ class AuthRepository @Inject constructor(
      * into the student app.
      */
     private fun publish(profile: Profile) {
-        if (profile.id == currentUserId()) _currentProfile.value = profile
+        if (profile.id == currentUserId()) {
+            _currentProfile.value = profile
+        } else {
+            Log.d(TAG, "profile: ignored a late answer for a user who is no longer signed in")
+        }
     }
 
     /**

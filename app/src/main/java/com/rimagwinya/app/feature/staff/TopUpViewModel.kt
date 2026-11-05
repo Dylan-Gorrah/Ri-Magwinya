@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.staff
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.R
@@ -21,6 +22,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
+private const val TAG = "RmTopUp"
 
 /**
  * The staff wallet screen: find a student by number or name, see who they
@@ -120,9 +124,11 @@ class TopUpViewModel @Inject constructor(
         val student = s.student ?: return
         val amount = s.amount ?: return
         _state.update { it.copy(confirming = false, adding = true, error = null) }
+        Log.d(TAG, "confirm: adding ${amount.cents} cents for ${student.studentNumber}")
         viewModelScope.launch {
             staff.topUp(student, amount)
                 .onSuccess { updated ->
+                    Log.d(TAG, "confirm: done, balance is now ${updated.balance.cents} cents")
                     _state.update { st ->
                         st.copy(
                             adding = false,
@@ -138,6 +144,7 @@ class TopUpViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     val error = e.asApiError()
+                    Log.e(TAG, "confirm: top-up refused", e)
                     val message = when ((error as? ApiError.Conflict)?.code) {
                         ConflictCode.STUDENT_NOT_FOUND -> UiText(R.string.topup_not_found)
                         ConflictCode.AMOUNT_OUT_OF_RANGE -> UiText(

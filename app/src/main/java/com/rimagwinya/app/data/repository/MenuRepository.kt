@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.repository
 
+import android.util.Log
 import com.rimagwinya.app.core.database.MenuDao
 import com.rimagwinya.app.core.database.groupEntities
 import com.rimagwinya.app.core.database.optionEntities
@@ -18,6 +19,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+private const val TAG = "RmMenu"
 
 /**
  * The menu.
@@ -41,9 +45,11 @@ open class MenuRepository @Inject constructor(
         runCatching {
             val items = api.menu().map { it.toDomain() }
             cache(items)
+            Log.d(TAG, "menu: ${items.size} items from Supabase, cached")
             items
         }.recoverCatching { error ->
             val cached = dao.load().map { it.toDomain() }
+            Log.e(TAG, "menu: network failed, ${cached.size} items in the cache", error)
             // An empty cache has nothing to show, so the error stands.
             if (cached.isNotEmpty()) cached else throw error.asApiError()
         }

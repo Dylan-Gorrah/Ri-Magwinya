@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.repository
 
+import android.util.Log
 import com.rimagwinya.app.core.config.AppConfig
 import com.rimagwinya.app.core.database.OrderDao
 import com.rimagwinya.app.core.database.SlotDao
@@ -32,6 +33,9 @@ import java.time.LocalDate
 import java.time.ZonedDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+private const val TAG = "RmOrders"
 
 /**
  * Slots, placing orders, and reading them back — for students and staff.
@@ -66,8 +70,10 @@ open class OrderRepository @Inject constructor(
                 .map { it.toDomain() }
                 .sortedBy { it.startsAt }
             slotDao.replace(date.toString(), slots.map { it.toEntity() })
+            Log.d(TAG, "slots: ${slots.size} for $date")
             slots
         }.recoverCatching { error ->
+            Log.e(TAG, "slots: network failed, trying the cache", error)
             val cached = slotDao.forDate(date.toString()).map { it.cachedToDomain() }
             if (cached.isNotEmpty()) cached else throw error.asApiError()
         }
@@ -90,15 +96,19 @@ open class OrderRepository @Inject constructor(
             clientRef = clientRef,
             lines = cart.lines.map { it.toBody() },
         )
+        Log.d(TAG, "place: ${cart.lines.size} lines, slot=$slotId, method=${method.serverName}, ref=$clientRef")
         runCatching {
             val order = functions.placeOrder(body).toDomain()
             orderDao.upsert(listOf(order.toEntity()), order.lineEntities())
+            Log.d(TAG, "place: order #${order.number} placed, total=${order.total}")
             PlaceResult.Placed(order) as PlaceResult
         }.recoverCatching { error ->
             val mapped = error.asApiError()
+            Log.e(TAG, "place: failed (${mapped.javaClass.simpleName})", error)
             // No signal is not a failure here: the order waits, with its
             // client_ref, and goes as soon as there is a connection.
             if (mapped is ApiError.Offline) {
+                Log.d(TAG, "place: offline, queued for sync")
                 sync.queueOrder(body, cart.lines.joinToString(", ") { it.item.name })
                 PlaceResult.Queued
             } else {
@@ -120,8 +130,10 @@ open class OrderRepository @Inject constructor(
         runCatching {
             val orders = api.orders(limit = limit).map { it.toDomain() }
             orderDao.upsert(orders.map { it.toEntity() }, orders.flatMap { it.lineEntities() })
+            Log.d(TAG, "orders: ${orders.size} loaded")
             orders
         }.recoverCatching { error ->
+            Log.e(TAG, "orders: network failed, trying the cache", error)
             val cached = orderDao.load().map { it.cachedToDomain() }
             if (cached.isNotEmpty()) cached else throw error.asApiError()
         }
@@ -148,8 +160,9 @@ open class OrderRepository @Inject constructor(
     }
 
     open suspend fun setStatus(id: String, status: OrderStatus): Result<Order> = call {
+        Log.d(TAG, "setStatus: order=$id -> ${status.serverName}")
         functions.setOrderStatus(OrderStatusBody(id, status.serverName)).toDomain()
-    }
+    }.onFailure { Log.e(TAG, "setStatus: order=$id failed", it) }
 
     /** Fires when any visible order changes. Refetch on each. */
     fun orderChanges(): Flow<Unit> = watcher.changes("orders")

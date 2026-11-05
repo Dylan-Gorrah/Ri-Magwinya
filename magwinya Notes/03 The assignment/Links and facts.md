@@ -52,3 +52,15 @@ RELEASE_KEY_PASSWORD=...
 ```
 
 Only the **publishable** key ever goes in the app. The secret key stays in Edge Function secrets.
+
+## Firebase and Google Cloud (set up 5 Nov 2026)
+
+| | |
+|---|---|
+| Firebase and Google Cloud project | `ri-magwinya` (one project covers both) |
+| Project number (FCM sender ID) | `523823420799` |
+| Firebase Android app ID | `1:523823420799:android:8c645b7a62c1d723a4764a` |
+| Debug SHA-1 | `42:5B:32:D0:CB:8D:00:C1:62:E2:80:31:BA:47:4C:13:2B:EA:B3:E1` |
+| Release SHA-1 | `72:45:8A:31:23:07:BF:74:FA:69:0E:34:DA:9E:AA:83:41:83:8A:16` |
+
+The SHA-1s were read from the signed APKs (`app-debug.apk` and `Ri-magwinya-v1.0.2.apk`). They aren't secret.

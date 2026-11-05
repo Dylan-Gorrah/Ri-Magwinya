@@ -95,6 +95,12 @@ android {
         compose = true
         buildConfig = true
     }
+
+    // android.util.Log has no body in plain JVM unit tests. Without this,
+    // every Log.d in a ViewModel under test throws "not mocked".
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 ksp {

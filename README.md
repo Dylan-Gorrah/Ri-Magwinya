@@ -305,6 +305,33 @@ informed.
   <https://open-meteo.com/en/docs> [Accessed 22 September 2026].
 - GitHub. 2026. *Building and testing Java with Gradle.* [Online]. Available
   at: <https://docs.github.com/en/actions> [Accessed 22 September 2026].
+- Google. 2026. *Log.* [Online]. Available at:
+  <https://developer.android.com/reference/android/util/Log>
+  [Accessed 5 November 2026].
+- Google. 2026. *Splash screens.* [Online]. Available at:
+  <https://developer.android.com/develop/ui/views/launch/splash-screen>
+  [Accessed 5 November 2026].
+- Google. 2026. *Navigate to a destination.* [Online]. Available at:
+  <https://developer.android.com/guide/navigation/use-graph/navigate>
+  [Accessed 5 November 2026].
+- Google. 2026. *Authenticate users with Sign in with Google.* [Online].
+  Available at: <https://developer.android.com/identity/sign-in/credential-manager-siwg>
+  [Accessed 5 November 2026].
+- Google. 2026. *Getting started with WorkManager.* [Online]. Available at:
+  <https://developer.android.com/develop/background-work/background-tasks/persistent/getting-started>
+  [Accessed 5 November 2026].
+- Google. 2026. *Firebase: Receive messages in an Android app.* [Online].
+  Available at: <https://firebase.google.com/docs/cloud-messaging/android/receive>
+  [Accessed 5 November 2026].
+- Supabase. 2026. *Kotlin: Create a new user.* [Online]. Available at:
+  <https://supabase.com/docs/reference/kotlin/auth-signup>
+  [Accessed 5 November 2026].
+- Supabase. 2026. *Kotlin: Sign in a user.* [Online]. Available at:
+  <https://supabase.com/docs/reference/kotlin/auth-signinwithpassword>
+  [Accessed 5 November 2026].
+- Supabase. 2026. *Kotlin: Sign in with ID token.* [Online]. Available at:
+  <https://supabase.com/docs/reference/kotlin/auth-signinwithidtoken>
+  [Accessed 5 November 2026].
 - AI assistance: Anthropic. 2026. *Claude* [Large language model]. Available
   at: <https://claude.ai> [Accessed 22 September 2026]. Used to: build the app
   from the Part 1 design, write the SQL migrations and Edge Functions, write

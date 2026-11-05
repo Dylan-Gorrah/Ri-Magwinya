@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.staff
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.R
@@ -22,6 +23,9 @@ import kotlinx.coroutines.launch
 import java.time.Clock
 import java.time.LocalTime
 import javax.inject.Inject
+
+
+private const val TAG = "RmQueue"
 
 enum class QueueFilter { New, Preparing, Ready, All }
 
@@ -84,6 +88,8 @@ class QueueViewModel @Inject constructor(
     fun load() {
         viewModelScope.launch {
             orders.openOrdersToday()
+                .onSuccess { list -> Log.d(TAG, "load: ${list.size} open orders today") }
+                .onFailure { Log.e(TAG, "load: failed", it) }
                 .onSuccess { list -> _state.update { it.copy(orders = list, loading = false, error = null) } }
                 .onFailure { e -> _state.update { it.copy(loading = false, error = UiText(e.asApiError().messageRes())) } }
         }
@@ -104,9 +110,11 @@ class QueueViewModel @Inject constructor(
     private fun move(order: Order, to: OrderStatus) {
         if (order.id in _state.value.busy) return
         _state.update { it.copy(busy = it.busy + order.id, error = null) }
+        Log.d(TAG, "move: order #${order.number} ${order.status} -> $to")
         viewModelScope.launch {
             orders.setStatus(order.id, to)
                 .onSuccess { updated ->
+                    Log.d(TAG, "move: order #${order.number} is now ${updated.status}")
                     _state.update { s ->
                         s.copy(
                             busy = s.busy - order.id,
@@ -123,6 +131,7 @@ class QueueViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     val error = e.asApiError()
+                    Log.e(TAG, "move: order #${order.number} refused, reloading the queue", e)
                     val message = if ((error as? ApiError.Conflict)?.code == ConflictCode.INVALID_TRANSITION) {
                         UiText(R.string.queue_moved_on)
                     } else {

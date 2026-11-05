@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.repository
 
+import android.util.Log
 import com.rimagwinya.app.core.money.Money
 import com.rimagwinya.app.core.network.ApiError
 import com.rimagwinya.app.core.network.IoDispatcher
@@ -24,6 +25,9 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
+private const val TAG = "RmStaff"
+
 /**
  * Everything only staff can do. Each call is also refused by the database
  * for anyone else — the app hiding the staff tabs is a convenience, not the
@@ -37,8 +41,9 @@ open class StaffRepository @Inject constructor(
 ) {
     /** +1 or -1 from a stepper, or a batch replayed from the offline queue. */
     open suspend fun adjustStock(itemId: String, delta: Int): Result<MenuItem> = call {
+        Log.d(TAG, "adjustStock: item=$itemId delta=$delta")
         api.adjustStock(AdjustStockBody(itemId, delta)).toDomain()
-    }
+    }.onFailure { Log.e(TAG, "adjustStock: item=$itemId failed", it) }
 
     open suspend fun createItem(draft: ItemDraft): Result<MenuItem> = call {
         try {
@@ -58,8 +63,9 @@ open class StaffRepository @Inject constructor(
     open suspend fun deleteItem(id: String): Result<Unit> = call { api.deleteItem("eq.$id") }
 
     open suspend fun sales(day: LocalDate): Result<SalesSummary> = call {
+        Log.d(TAG, "sales: loading $day")
         api.salesSummary(SalesRangeBody(day.toString(), day.toString())).toDomain()
-    }
+    }.onFailure { Log.e(TAG, "sales: $day failed", it) }
 
     /**
      * Students whose number or name contains [query]. An exact number match
@@ -83,9 +89,11 @@ open class StaffRepository @Inject constructor(
      * returns the new balance, so the rest of [student] is carried over.
      */
     open suspend fun topUp(student: StudentAccount, amount: Money): Result<StudentAccount> = call {
+        Log.d(TAG, "topUp: ${amount.cents} cents for student ${student.studentNumber}")
         val result = functions.loadWallet(LoadWalletBody(student.studentNumber, amount.cents / 100.0))
+        Log.d(TAG, "topUp: done, new balance ${result.walletBalance}")
         student.copy(balance = Money.fromDecimal(result.walletBalance))
-    }
+    }.onFailure { Log.e(TAG, "topUp: failed", it) }
 
     companion object {
         /**

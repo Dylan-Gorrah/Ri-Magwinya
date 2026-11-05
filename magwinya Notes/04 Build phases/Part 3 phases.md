@@ -11,7 +11,7 @@ Claude Code works through these in order: one phase, report, stop, wait for "go"
 | 0 | Save the 13 Oct work | Marked (GitHub) | No | Done 5 Nov. Committed. **Push waits on Dylan** (GitHub account) |
 | 1 | Login flow revamp | Marked (SSO, UI, runs on phone) | Tell it the glitches you've seen | Done 5 Nov. 182 tests, 36 SQL checks. Needs a phone test |
 | 2 | Navigation clean-up | Marked (runs on phone, UI) | No | Done 5 Nov. Needs a phone test |
-| 3 | Logging and code references | Required by the brief | No | Not started |
+| 3 | Logging and code references | Required by the brief | No | Done 5 Nov. 76 log lines, 9 references. See [[Logging]] |
 | 4 | Switch on Google sign-in | Marked (SSO, 10) | Yes: Google Cloud and Supabase | Not started |
 | 5 | Switch on push notifications | Marked (push, 10) | Yes: Firebase and Supabase secrets | Not started |
 | 6 | Facebook login | Extra (no marks) | Yes: Meta developer app | Not started |

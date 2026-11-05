@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.repository
 
+import android.util.Log
 import com.rimagwinya.app.BuildConfig
 import com.rimagwinya.app.core.datastore.SettingsRepository
 import com.rimagwinya.app.core.network.IoDispatcher
@@ -13,6 +14,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
+
+
+private const val TAG = "RmPush"
 
 /**
  * The device token, which is what makes a push reach this phone.
@@ -34,10 +38,13 @@ class PushTokenRepository @Inject constructor(
     /** Fetches the current token and saves it against the profile. */
     suspend fun syncToken(): Result<Unit> = withContext(io) {
         runCatching {
-            if (!BuildConfig.PUSH_ENABLED) return@runCatching
+            if (!BuildConfig.PUSH_ENABLED) {
+                Log.d(TAG, "sync: push is off in this build (no google-services.json)")
+                return@runCatching
+            }
             if (!notificationsWanted()) return@runCatching
             register(currentToken() ?: return@runCatching)
-        }
+        }.onFailure { Log.e(TAG, "sync: could not save the token", it) }
     }
 
     /** Saves a token the messaging service was handed. */
@@ -45,8 +52,9 @@ class PushTokenRepository @Inject constructor(
         runCatching {
             val id = auth.currentUserId() ?: return@runCatching
             api.patchProfile("eq.$id", ProfilePatch(fcmToken = token))
+            Log.d(TAG, "register: token saved for user=$id")
             Unit
-        }
+        }.onFailure { Log.e(TAG, "register: failed", it) }
     }
 
     /**

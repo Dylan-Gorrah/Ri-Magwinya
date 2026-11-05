@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.auth
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
+private const val TAG = "RmRegister"
 
 data class RegisterUiState(
     val fullName: String = "",
@@ -90,6 +94,7 @@ class RegisterViewModel @Inject constructor(
         if (!current.canSubmit) return
 
         _state.update { it.copy(isSubmitting = true, formError = null) }
+        Log.d(TAG, "submit: creating an account")
         viewModelScope.launch {
             auth.register(
                 email = current.email,
@@ -115,6 +120,7 @@ class RegisterViewModel @Inject constructor(
                 }
                 .onFailure { throwable ->
                     val error = (throwable as? ApiError) ?: throwable.asApiError()
+                    Log.e(TAG, "submit: showing an error (${error.javaClass.simpleName})")
                     _state.update {
                         it.copy(isSubmitting = false, formError = error.authMessageRes())
                     }

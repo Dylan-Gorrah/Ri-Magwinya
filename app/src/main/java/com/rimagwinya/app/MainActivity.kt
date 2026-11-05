@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private val session: SessionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Reference: Google. 2026. Splash screens. [Online]. Available at:
+        // <https://developer.android.com/develop/ui/views/launch/splash-screen> [Accessed 5 November 2026].
         // Keep the splash up until the stored session has been restored and
         // its role is known. Without this the welcome screen flashed for
         // someone who was already signed in.

@@ -26,7 +26,8 @@ Updated Thu 5 Nov 2026, evening.
 - **Phase 0 done.** The 13 Oct work is committed (`a197ff7`), and so are the notes. **Not pushed yet:** this PC's active GitHub account is `RI-Dev-Bloom`, which can't push to the repo. Dylan pushes (see [[Part 3 phases]]).
 - **Phase 1 done.** Staff screen is email and password only, a student on the staff screen is refused, and six login glitches are fixed. See [[Signing in]]. 182 unit tests and 36 SQL checks pass.
 - **Phase 2 done.** Every link and Back button ignores a second fast tap (two taps on Back used to pop the menu too and leave a blank screen). Notification taps open the order for students only, with Back going to the menu. The unused placeholder screen is gone.
-- Next: Phase 3 (logging and references).
+- **Phase 3 done.** `Log.d` and `Log.e` across sign-in, checkout, queue, top-up, sync and push, all under `Rm` tags. 9 IIE Harvard references in the code and the README. See [[Logging]].
+- Next: Phase 4 (Google sign-in) and Phase 5 (push) wait for Dylan's Firebase and Google Cloud setup.
 
 ## What's not set up yet
 

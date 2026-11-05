@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.cart
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.R
@@ -28,6 +29,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+
+
+private const val TAG = "RmCheckout"
 
 /** Why pay-at-counter is not offered, if it is not. */
 enum class CounterBlock { NoTopUp, NoShows }
@@ -133,9 +137,11 @@ class CheckoutViewModel @Inject constructor(
         if (!current.canPlace) return
 
         local.update { it.copy(placing = true, error = null) }
+        Log.d(TAG, "place: ${current.cart.lines.size} lines, slot=${slot.name}, method=${current.method}")
         viewModelScope.launch {
             orders.place(current.cart, slot.id, current.method, clientRef)
                 .onSuccess { result ->
+                    Log.d(TAG, "place: ${result.javaClass.simpleName}, cart cleared")
                     clientRef = UUID.randomUUID().toString()
                     cartRepository.clear()
                     local.update { it.copy(placing = false) }
@@ -153,6 +159,7 @@ class CheckoutViewModel @Inject constructor(
     }
 
     private suspend fun onFailure(error: ApiError) {
+        Log.e(TAG, "place: refused (${(error as? ApiError.Conflict)?.code ?: error.javaClass.simpleName})", error)
         local.update { it.copy(placing = false, error = messageFor(error)) }
         when ((error as? ApiError.Conflict)?.code) {
             ConflictCode.SLOT_FULL, ConflictCode.SLOT_NOT_TODAY -> {

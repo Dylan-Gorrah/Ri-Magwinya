@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.auth
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
+private const val TAG = "RmLogin"
 
 data class LoginUiState(
     val email: String = "",
@@ -73,6 +77,7 @@ class LoginViewModel @Inject constructor(
         if (!current.canSubmit) return
 
         _state.update { it.copy(isSubmitting = true, formError = null) }
+        Log.d(TAG, "submit: signing in (staff screen=${current.staffOnly})")
         viewModelScope.launch {
             auth.signIn(current.email, current.password, staffOnly = current.staffOnly)
                 .onSuccess {
@@ -84,6 +89,7 @@ class LoginViewModel @Inject constructor(
                 }
                 .onFailure { throwable ->
                     val error = (throwable as? ApiError) ?: throwable.asApiError()
+                    Log.e(TAG, "submit: showing an error (${error.javaClass.simpleName})")
                     _state.update {
                         it.copy(isSubmitting = false, formError = error.authMessageRes())
                     }

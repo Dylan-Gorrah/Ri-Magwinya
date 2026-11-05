@@ -224,6 +224,10 @@ fun RootNavHost(
     }
 }
 
+// Reference: Google. 2026. Navigate to a destination. [Online]. Available at:
+// <https://developer.android.com/guide/navigation/use-graph/navigate> [Accessed 5 November 2026].
+// popUpTo, launchSingleTop and restoreState below follow this guide.
+
 /** Whether [graph] (a graph route object) is on the back stack. */
 private fun NavHostController.isIn(graph: Any): Boolean =
     currentBackStack.value.any { it.destination.hasRoute(graph::class) }

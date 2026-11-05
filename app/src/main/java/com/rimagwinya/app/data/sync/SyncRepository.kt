@@ -1,5 +1,6 @@
 package com.rimagwinya.app.data.sync
 
+import android.util.Log
 import com.rimagwinya.app.core.database.PendingActionDao
 import com.rimagwinya.app.core.database.PendingActionEntity
 import com.rimagwinya.app.core.network.ApiError
@@ -15,6 +16,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+private const val TAG = "RmSync"
 
 /** What a replay attempt ended up doing. */
 enum class SyncOutcome {
@@ -46,6 +50,7 @@ class SyncRepository @Inject constructor(
     val pending: Flow<List<PendingActionEntity>> = dao.observe()
 
     suspend fun queueOrder(body: PlaceOrderBody, summary: String): Long = withContext(io) {
+        Log.d(TAG, "queue: order saved offline, ref=${body.clientRef}")
         dao.insert(
             PendingActionEntity(
                 type = PendingActionEntity.PLACE_ORDER,
@@ -57,6 +62,7 @@ class SyncRepository @Inject constructor(
     }
 
     suspend fun queueStockChange(body: AdjustStockBody, summary: String): Long = withContext(io) {
+        Log.d(TAG, "queue: stock change saved offline")
         dao.insert(
             PendingActionEntity(
                 type = PendingActionEntity.ADJUST_STOCK,
@@ -79,7 +85,9 @@ class SyncRepository @Inject constructor(
      */
     suspend fun replay(): SyncOutcome = withContext(io) {
         var outcome = SyncOutcome.Done
-        for (action in dao.due()) {
+        val due = dao.due()
+        Log.d(TAG, "replay: ${due.size} queued actions")
+        for (action in due) {
             try {
                 when (action.type) {
                     PendingActionEntity.PLACE_ORDER ->
@@ -89,7 +97,9 @@ class SyncRepository @Inject constructor(
                     else -> Unit
                 }
                 dao.delete(action)
+                Log.d(TAG, "replay: sent ${action.type} #${action.id}")
             } catch (e: Throwable) {
+                Log.e(TAG, "replay: ${action.type} #${action.id} failed", e)
                 when (val error = e.asApiError()) {
                     is ApiError.Offline -> return@withContext SyncOutcome.Offline
                     is ApiError.Conflict -> {

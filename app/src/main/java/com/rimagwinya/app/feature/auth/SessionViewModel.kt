@@ -1,5 +1,6 @@
 package com.rimagwinya.app.feature.auth
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rimagwinya.app.data.repository.AuthRepository
@@ -12,6 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+
+private const val TAG = "RmSession"
 
 /**
  * Who is signed in, for the whole app.
@@ -35,6 +39,7 @@ class SessionViewModel @Inject constructor(
             // Emits on sign-in, sign-out, and on the silent refresh that
             // keeps someone signed in for weeks.
             auth.sessionStatus.collect { status ->
+                Log.d(TAG, "session status: ${status.javaClass.simpleName}")
                 when (status) {
                     is SessionStatus.Authenticated -> {
                         // A sign-in still checking the role (the staff
@@ -87,6 +92,7 @@ class SessionViewModel @Inject constructor(
         }
         result
             .onSuccess {
+                Log.d(TAG, "routing: signed in as ${it.role}")
                 _state.value = AuthState.SignedIn(it)
                 push.syncToken()
             }
@@ -98,6 +104,7 @@ class SessionViewModel @Inject constructor(
                 // Otherwise a valid session with no readable profile is not a
                 // usable state, so fall back to signed out rather than
                 // guessing a role.
+                Log.e(TAG, "routing: no readable profile, back to sign-in", it)
                 _state.value = AuthState.SignedOut
             }
     }
