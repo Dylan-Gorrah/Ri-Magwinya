@@ -47,7 +47,8 @@ The IDs are in [[Links and facts]].
 - Video flow is in [[Video script]].
 - **Create account bug fixed.** A taken student number showed "Something went wrong" instead of saying so. See [[Signing in]]. 183 tests.
 - **Crash after sign-in fixed.** Push-token fetch crashed the app when Firebase couldn't issue a token. See [[Notifications]].
-- Next: Phase 8. The tag waits for the video link.
+- **Phase 8 done.** Video: https://youtu.be/WvmOFFofuYo. README has the link and 5 screenshots. CI green. The last commit is tagged `final-poe`, and the GitHub Release "Final PoE (v1.1.0)" has the signed APK and AAB.
+- **Left for Dylan:** submit, and open the repo, the release and the video in an incognito window first.
 
 ## What's not set up yet
 

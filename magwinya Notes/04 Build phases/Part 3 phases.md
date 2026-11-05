@@ -16,7 +16,7 @@ Claude Code works through these in order: one phase, report, stop, wait for "go"
 | 5 | Switch on push notifications | Marked (push, 10) | Yes: Firebase and Supabase secrets | Done 5 Nov. Needs place-order deployed, the GitHub secret and a phone test |
 | 6 | Facebook login | Extra (no marks) | Yes: Meta developer app | Skipped (no marks, no time) |
 | 7 | README, release notes, AI write-up, Play Store folder | Marked (GitHub 10, Play Store 5, AI 5) | Screenshots, read the AI write-up | Done 5 Nov. v1.1.0, 5 screenshots in the README |
-| 8 | Final checks and the `final-poe` tag | Marked | Phone test, video link | In progress: video in, tagging |
+| 8 | Final checks and the `final-poe` tag | Marked | Phone test, video link | Done 5 Nov. Tagged `final-poe`, release "Final PoE (v1.1.0)" with the APK and AAB |
 
 ---
 
